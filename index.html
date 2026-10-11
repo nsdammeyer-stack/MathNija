@@ -1,0 +1,52 @@
+const APPS_SCRIPT_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+const PLAYER_NAME = "Micah";
+
+// 1. Fetch saved progress on boot
+async function loadCloudProfile() {
+  try {
+    const res = await fetch(`${APPS_SCRIPT_URL}?action=getProfile&name=${encodeURIComponent(PLAYER_NAME)}`);
+    const data = await res.json();
+    if (data.status === "success" || data.status === "new") {
+      playerXP = data.profile.xp || 0;
+      equippedNinja = data.profile.equippedNinja || "White Belt Ken";
+      updateUI();
+    }
+  } catch (err) {
+    console.warn("Using offline localStorage fallback:", err);
+  }
+}
+
+// 2. Sync whenever a problem is answered or XP is awarded
+async function syncProgressToSheets(problemDetails, isCorrect, gainedXP) {
+  const payload = {
+    name: PLAYER_NAME,
+    xp: playerXP,
+    equippedNinja: equippedNinja,
+    level: Math.floor(playerXP / 250) + 1,
+    totalSolved: stats.totalSolved,
+    accuracy: `${Math.round((stats.correctCount / Math.max(1, stats.totalSolved)) * 100)}%`,
+    log: {
+      mode: currentMode,
+      problem: problemDetails,
+      correct: isCorrect,
+      xpGained: gainedXP,
+      elapsedSeconds: problemElapsedSec
+    }
+  };
+
+  // Keep local storage fresh immediately
+  localStorage.setItem("math_ninja_xp", playerXP);
+  localStorage.setItem("math_ninja_char", equippedNinja);
+
+  // Background sync to Google Sheet (non-blocking)
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors", // Standard for simple Apps Script POST calls from static hosts
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+  } catch (e) {
+    console.error("Sheets sync error:", e);
+  }
+}
