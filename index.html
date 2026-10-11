@@ -1,52 +1,933 @@
-const APPS_SCRIPT_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
-const PLAYER_NAME = "Micah";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math Ninja: 2-Digit Multiplication Master</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
 
-// 1. Fetch saved progress on boot
-async function loadCloudProfile() {
-  try {
-    const res = await fetch(`${APPS_SCRIPT_URL}?action=getProfile&name=${encodeURIComponent(PLAYER_NAME)}`);
-    const data = await res.json();
-    if (data.status === "success" || data.status === "new") {
-      playerXP = data.profile.xp || 0;
-      equippedNinja = data.profile.equippedNinja || "White Belt Ken";
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    header {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+      gap: 1rem;
+    }
+
+    .title-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .title-icon {
+      font-size: 2.2rem;
+    }
+
+    h1 {
+      font-family: 'Fredoka', cursive;
+      font-size: 1.6rem;
+      color: #fbbf24;
+      letter-spacing: 0.5px;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .player-stats {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .ninja-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #0f172a;
+      padding: 0.4rem 0.8rem;
+      border-radius: 9999px;
+      border: 1px solid var(--card-border);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .xp-meter-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      width: 140px;
+    }
+
+    .xp-text {
+      font-size: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+    }
+
+    .xp-bar {
+      width: 100%;
+      height: 10px;
+      background: #334155;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .xp-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #f59e0b, #10b981);
+      transition: width 0.3s ease;
+    }
+
+    nav {
+      width: 100%;
+      max-width: 900px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .nav-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 0.75rem 0.5rem;
+      border-radius: 0.75rem;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: #6366f1;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+    }
+
+    main {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* CARD STYLING */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    }
+
+    /* TRICK ACADEMY */
+    .trick-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .trick-card {
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      border-radius: 0.8rem;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .trick-card:hover {
+      border-color: #fbbf24;
+      transform: translateY(-3px);
+    }
+
+    .trick-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: #fbbf24;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .trick-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-bottom: 0.75rem;
+    }
+
+    .trick-example {
+      background: #1e293b;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      font-weight: 700;
+      color: #38bdf8;
+      font-size: 0.9rem;
+    }
+
+    /* GAME PLAY PANEL */
+    .game-arena {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 1.25rem;
+    }
+
+    .companion-box {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: #0f172a;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      border: 1px solid var(--card-border);
+    }
+
+    .companion-box img, .companion-avatar {
+      font-size: 1.8rem;
+    }
+
+    .problem-box {
+      font-family: 'Fredoka', cursive;
+      font-size: 3.5rem;
+      letter-spacing: 2px;
+      color: #f8fafc;
+      background: #0f172a;
+      border: 2px solid var(--card-border);
+      padding: 1.5rem 3rem;
+      border-radius: 1.25rem;
+      min-width: 280px;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);
+    }
+
+    .streak-badge {
+      background: #f59e0b;
+      color: #1e293b;
+      font-weight: 800;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 0.75rem;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    input[type="number"], input[type="text"].calc-input {
+      width: 100%;
+      font-size: 2rem;
+      font-weight: 800;
+      text-align: center;
+      padding: 0.5rem 1rem;
+      border-radius: 0.75rem;
+      background: #0f172a;
+      border: 2px solid var(--card-border);
+      color: #fff;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 0.75rem;
+      font-weight: 800;
+      font-size: 1.1rem;
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: #334155;
+    }
+    .btn-secondary:hover {
+      background: #475569;
+    }
+
+    /* KEYPAD */
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .key-btn {
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      color: #f8fafc;
+      padding: 0.8rem;
+      border-radius: 0.5rem;
+      font-size: 1.4rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+
+    .key-btn:active {
+      background: #334155;
+    }
+
+    /* HINT OVERLAY */
+    .hint-card {
+      background: #1e1b4b;
+      border: 1px solid #6366f1;
+      border-radius: 0.75rem;
+      padding: 1rem;
+      width: 100%;
+      max-width: 450px;
+      text-align: left;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .hint-card.show {
+      display: block;
+      animation: fadeIn 0.2s ease-in;
+    }
+
+    /* NINJA ROSTER */
+    .roster-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .ninja-card {
+      background: #0f172a;
+      border: 2px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      position: relative;
+    }
+
+    .ninja-card.equipped {
+      border-color: #10b981;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+    }
+
+    .ninja-card.locked {
+      opacity: 0.55;
+      filter: grayscale(0.8);
+    }
+
+    .ninja-img-wrap {
+      font-size: 3.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .ninja-title {
+      font-family: 'Fredoka', cursive;
+      font-size: 1.15rem;
+      color: #fbbf24;
+    }
+
+    .ninja-xp-cost {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    /* CLOUD SYNC STATUS */
+    .sync-status {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+
+    .sync-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+    }
+
+    @media (max-width: 640px) {
+      h1 { font-size: 1.3rem; }
+      nav { grid-template-columns: repeat(2, 1fr); }
+      .problem-box { font-size: 2.8rem; padding: 1rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="title-group">
+      <div class="title-icon">🥷</div>
+      <div>
+        <h1>Math Ninja</h1>
+        <div class="subtitle">2-Digit Multiplication Master</div>
+      </div>
+    </div>
+
+    <div class="player-stats">
+      <div class="ninja-badge">
+        <span id="activeNinjaIcon">🥋</span>
+        <span id="activeNinjaName">White Belt Ken</span>
+      </div>
+      <div class="xp-meter-wrap">
+        <div class="xp-text">
+          <span>XP</span>
+          <span id="xpValue">0 / 150</span>
+        </div>
+        <div class="xp-bar">
+          <div class="xp-fill" id="xpFill"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-btn active" onclick="switchTab('practice')">
+      <span>⚔️</span> Practice Quest
+    </button>
+    <button class="nav-btn" onclick="switchTab('academy')">
+      <span>📜</span> Trick Academy
+    </button>
+    <button class="nav-btn" onclick="switchTab('speed')">
+      <span>⚡</span> 60s Speed Run
+    </button>
+    <button class="nav-btn" onclick="switchTab('roster')">
+      <span>🥷</span> Ninja Dojo
+    </button>
+  </nav>
+
+  <main>
+    <!-- PRACTICE QUEST PANEL -->
+    <div id="practice" class="panel active">
+      <div class="card game-arena">
+        <div class="companion-box">
+          <span class="companion-avatar" id="companionAvatar">🥋</span>
+          <span id="companionSpeech" style="font-size: 0.9rem; font-weight: 700;">"Let's master our ninja math shortcuts!"</span>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <span class="streak-badge">Streak: <span id="streakCount">0</span> 🔥</span>
+        </div>
+
+        <div class="problem-box" id="problemDisplay">30 × 40</div>
+
+        <div class="input-row">
+          <input type="number" id="answerInput" class="calc-input" placeholder="?" autocomplete="off">
+          <button class="btn" onclick="submitAnswer()">Strike!</button>
+        </div>
+
+        <div class="keypad">
+          <button class="key-btn" onclick="padPress(1)">1</button>
+          <button class="key-btn" onclick="padPress(2)">2</button>
+          <button class="key-btn" onclick="padPress(3)">3</button>
+          <button class="key-btn" onclick="padPress(4)">4</button>
+          <button class="key-btn" onclick="padPress(5)">5</button>
+          <button class="key-btn" onclick="padPress(6)">6</button>
+          <button class="key-btn" onclick="padPress(7)">7</button>
+          <button class="key-btn" onclick="padPress(8)">8</button>
+          <button class="key-btn" onclick="padPress(9)">9</button>
+          <button class="key-btn" onclick="padClear()">C</button>
+          <button class="key-btn" onclick="padPress(0)">0</button>
+          <button class="key-btn" onclick="submitAnswer()">↵</button>
+        </div>
+
+        <button class="btn btn-secondary" onclick="toggleHint()" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
+          💡 Need a Trick Hint?
+        </button>
+
+        <div class="hint-card" id="hintCard">
+          <strong>Secret Ninja Technique:</strong>
+          <div id="hintBody" style="margin-top: 0.35rem;"></div>
+        </div>
+
+        <div class="sync-status">
+          <div class="sync-dot"></div>
+          <span id="syncText">Progress saved locally</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRICK ACADEMY PANEL -->
+    <div id="academy" class="panel">
+      <div class="card">
+        <h2 style="font-family: 'Fredoka', cursive; color: #fbbf24; margin-bottom: 1rem;">Ninja Multiplication Scrolls</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.25rem;">
+          Tap any secret scroll below to learn shortcuts that make multiplying two-digit numbers easy to calculate mentally:
+        </p>
+
+        <div class="trick-grid">
+          <div class="trick-card" onclick="loadPracticeCategory('zeros')">
+            <h3><span>0️⃣</span> The Zero Hero</h3>
+            <p>When numbers end in 0 (like <strong>30 × 40</strong>), ignore the zeros! Multiply 3 × 4 = 12, then put both zeros back!</p>
+            <div class="trick-example">30 × 40 = 1,200</div>
+          </div>
+
+          <div class="trick-card" onclick="loadPracticeCategory('eleven')">
+            <h3><span>🪄</span> The 11s Magic Trick</h3>
+            <p>To multiply any 2-digit number by 11 (like <strong>35 × 11</strong>), pull 3 and 5 apart, add them (3+5=8), and place 8 in the middle!</p>
+            <div class="trick-example">35 × 11 = 385</div>
+          </div>
+
+          <div class="trick-card" onclick="loadPracticeCategory('split')">
+            <h3><span>🪓</span> The Break & Split</h3>
+            <p>Split a number into friendly tens and ones! For <strong>31 × 35</strong>: (30 × 35) + (1 × 35) = 1,050 + 35 = 1,085.</p>
+            <div class="trick-example">31 × 35 = 1,085</div>
+          </div>
+
+          <div class="trick-card" onclick="loadPracticeCategory('double_half')">
+            <h3><span>⚖️</span> Double & Halve</h3>
+            <p>If one number ends in 5 and the other is even (like <strong>15 × 24</strong>), double 15 to 30 and halve 24 to 12!</p>
+            <div class="trick-example">30 × 12 = 360</div>
+          </div>
+
+          <div class="trick-card" onclick="loadPracticeCategory('ending_five')">
+            <h3><span>⚡</span> Square Ending in 5</h3>
+            <p>For <strong>35 × 35</strong>: Take the first digit (3), multiply by the next number up (3 × 4 = 12), and tack on 25!</p>
+            <div class="trick-example">35 × 35 = 1,225</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 60s SPEED RUN -->
+    <div id="speed" class="panel">
+      <div class="card game-arena">
+        <h2 style="font-family: 'Fredoka', cursive; color: #f59e0b;">60-Second Ninja Strike</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">Solve as many 2-digit problems as you can before the sand runs out!</p>
+
+        <div style="display: flex; gap: 1.5rem; font-size: 1.5rem; font-weight: 800; margin: 1rem 0;">
+          <div>⏱️ <span id="speedTimer">60</span>s</div>
+          <div>🏆 Score: <span id="speedScore">0</span></div>
+        </div>
+
+        <div id="speedStartArea">
+          <button class="btn" style="font-size: 1.3rem; padding: 1rem 2.5rem;" onclick="startSpeedRun()">
+            Begin Trial! ⚡
+          </button>
+        </div>
+
+        <div id="speedPlayArea" style="display: none; width: 100%; max-width: 320px;">
+          <div class="problem-box" id="speedProblemDisplay" style="margin-bottom: 1rem;">20 × 30</div>
+          <div class="input-row" style="margin-bottom: 1rem;">
+            <input type="number" id="speedAnswerInput" class="calc-input" placeholder="?">
+            <button class="btn" onclick="submitSpeedAnswer()">Hit!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NINJA ROSTER -->
+    <div id="roster" class="panel">
+      <div class="card">
+        <h2 style="font-family: 'Fredoka', cursive; color: #fbbf24; margin-bottom: 0.5rem;">Ninja Character Dojo</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
+          Solve problems and level up your XP to unlock legendary ninja champions!
+        </p>
+
+        <div class="roster-grid" id="rosterContainer"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // -------------------------------------------------------------------------
+    // CONFIGURATION: Set Apps Script Web App URL if Google Sheet logging is active
+    // -------------------------------------------------------------------------
+    const APPS_SCRIPT_URL = ""; // Optional: Paste your deployed Apps Script URL here
+    const PLAYER_NAME = "Micah";
+
+    // Game State
+    let playerXP = parseInt(localStorage.getItem("math_ninja_xp") || "0");
+    let equippedNinja = localStorage.getItem("math_ninja_char") || "White Belt Ken";
+    let currentStreak = 0;
+    let currentProblem = null;
+    let currentMode = "practice";
+
+    // Ninja Definitions
+    const NINJAS = [
+      { name: "White Belt Ken", icon: "🥋", reqXP: 0, title: "Novice Trainee", desc: "Just starting his mental journey." },
+      { name: "Shadow Kage", icon: "👤", reqXP: 150, title: "Speed Specialist", desc: "Master of The 11s Magic Trick." },
+      { name: "Ember Blaze Kai", icon: "🔥", reqXP: 350, title: "Fire Element", desc: "Doubling and halving expert." },
+      { name: "Jade Viper Ren", icon: "🐍", reqXP: 650, title: "Forest Tactician", desc: "Break & Split box method strategist." },
+      { name: "Thunder Raiden", icon: "⚡", reqXP: 1000, title: "Lightning Ronin", desc: "Strikes zero-multiplication in a flash." },
+      { name: "Frost Phantom Yuki", icon: "❄️", reqXP: 1500, title: "Ice Grandmaster", desc: "Master of squares ending in 5." },
+      { name: "Golden Sensei Shin", icon: "👑", reqXP: 2200, title: "Grand Champion", desc: "Legendary master of all numbers." }
+    ];
+
+    // Sound Synthesizer (No audio downloads needed)
+    function playBeep(freq = 440, duration = 0.1, type = "sine") {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function soundSuccess() {
+      playBeep(523.25, 0.08);
+      setTimeout(() => playBeep(659.25, 0.08), 80);
+      setTimeout(() => playBeep(783.99, 0.15), 160);
+    }
+
+    function soundMiss() {
+      playBeep(220, 0.2, "sawtooth");
+    }
+
+    // Problem Generators
+    function generateProblem(category = "mixed") {
+      const types = ["zeros", "eleven", "ending_five", "double_half", "split"];
+      const chosen = category === "mixed" ? types[Math.floor(Math.random() * types.length)] : category;
+
+      let a, b, hint;
+
+      if (chosen === "zeros") {
+        a = (Math.floor(Math.random() * 8) + 2) * 10;
+        b = (Math.floor(Math.random() * 8) + 2) * 10;
+        const nonZeroA = a / 10;
+        const nonZeroB = b / 10;
+        hint = `Zero Hero: Multiply ${nonZeroA} × ${nonZeroB} = ${nonZeroA * nonZeroB}. Then bring back two 0s to make ${a * b}!`;
+      } else if (chosen === "eleven") {
+        a = Math.floor(Math.random() * 80) + 11;
+        b = 11;
+        const tens = Math.floor(a / 10);
+        const ones = a % 10;
+        hint = `11s Trick: Pull ${tens} and ${ones} apart. Add ${tens} + ${ones} = ${tens + ones}. Put that in the middle!`;
+      } else if (chosen === "ending_five") {
+        const t = Math.floor(Math.random() * 7) + 2;
+        a = t * 10 + 5;
+        b = a;
+        hint = `Square 5s: Take the tens digit (${t}), multiply by the next number (${t} × ${t + 1} = ${t * (t + 1)}), and tag on 25!`;
+      } else if (chosen === "double_half") {
+        a = [15, 25, 35, 45][Math.floor(Math.random() * 4)];
+        b = (Math.floor(Math.random() * 6) + 2) * 2;
+        hint = `Double & Halve: Double ${a} into ${a * 2}, halve ${b} into ${b / 2}. Now calculate ${a * 2} × ${b / 2}!`;
+      } else {
+        // Break & Split
+        a = [21, 31, 41, 51][Math.floor(Math.random() * 4)];
+        b = Math.floor(Math.random() * 30) + 12;
+        const tens = a - 1;
+        hint = `Break & Split: Split ${a} into ${tens} + 1. Calculate (${tens} × ${b}) + (1 × ${b})!`;
+      }
+
+      return { a, b, answer: a * b, hint, type: chosen };
+    }
+
+    function renderProblem() {
+      currentProblem = generateProblem();
+      document.getElementById("problemDisplay").textContent = `${currentProblem.a} × ${currentProblem.b}`;
+      document.getElementById("answerInput").value = "";
+      document.getElementById("hintCard").classList.remove("show");
+      document.getElementById("hintBody").textContent = currentProblem.hint;
+      document.getElementById("answerInput").focus();
+    }
+
+    function toggleHint() {
+      document.getElementById("hintCard").classList.toggle("show");
+    }
+
+    function padPress(digit) {
+      document.getElementById("answerInput").value += digit;
+    }
+
+    function padClear() {
+      document.getElementById("answerInput").value = "";
+    }
+
+    function submitAnswer() {
+      const input = document.getElementById("answerInput");
+      const val = parseInt(input.value);
+      if (isNaN(val)) return;
+
+      if (val === currentProblem.answer) {
+        soundSuccess();
+        const gained = 15;
+        playerXP += gained;
+        currentStreak++;
+        document.getElementById("streakCount").textContent = currentStreak;
+        document.getElementById("companionSpeech").textContent = "“Direct hit! Your ninja math senses are sharp!”";
+        saveProgress(currentProblem, true, gained);
+        renderProblem();
+      } else {
+        soundMiss();
+        currentStreak = 0;
+        document.getElementById("streakCount").textContent = 0;
+        document.getElementById("companionSpeech").textContent = `“Keep focus! ${currentProblem.a} × ${currentProblem.b} was ${currentProblem.answer}.”`;
+        toggleHint();
+        saveProgress(currentProblem, false, 0);
+      }
       updateUI();
     }
-  } catch (err) {
-    console.warn("Using offline localStorage fallback:", err);
-  }
-}
 
-// 2. Sync whenever a problem is answered or XP is awarded
-async function syncProgressToSheets(problemDetails, isCorrect, gainedXP) {
-  const payload = {
-    name: PLAYER_NAME,
-    xp: playerXP,
-    equippedNinja: equippedNinja,
-    level: Math.floor(playerXP / 250) + 1,
-    totalSolved: stats.totalSolved,
-    accuracy: `${Math.round((stats.correctCount / Math.max(1, stats.totalSolved)) * 100)}%`,
-    log: {
-      mode: currentMode,
-      problem: problemDetails,
-      correct: isCorrect,
-      xpGained: gainedXP,
-      elapsedSeconds: problemElapsedSec
+    function loadPracticeCategory(cat) {
+      switchTab("practice");
+      currentProblem = generateProblem(cat);
+      document.getElementById("problemDisplay").textContent = `${currentProblem.a} × ${currentProblem.b}`;
+      document.getElementById("answerInput").value = "";
+      document.getElementById("hintCard").classList.remove("show");
+      document.getElementById("hintBody").textContent = currentProblem.hint;
     }
-  };
 
-  // Keep local storage fresh immediately
-  localStorage.setItem("math_ninja_xp", playerXP);
-  localStorage.setItem("math_ninja_char", equippedNinja);
+    // UI & Navigation
+    function switchTab(tabId) {
+      document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+      document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+      document.getElementById(tabId).classList.add("active");
+      event.currentTarget.classList.add("active");
+    }
 
-  // Background sync to Google Sheet (non-blocking)
-  try {
-    await fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors", // Standard for simple Apps Script POST calls from static hosts
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+    function updateUI() {
+      localStorage.setItem("math_ninja_xp", playerXP);
+      localStorage.setItem("math_ninja_char", equippedNinja);
+
+      // Find next ninja threshold
+      const nextNinja = NINJAS.find(n => n.reqXP > playerXP) || NINJAS[NINJAS.length - 1];
+      const prevNinja = [...NINJAS].reverse().find(n => n.reqXP <= playerXP) || NINJAS[0];
+
+      const pct = Math.min(100, Math.round((playerXP / (nextNinja.reqXP || 1)) * 100));
+      document.getElementById("xpFill").style.width = `${pct}%`;
+      document.getElementById("xpValue").textContent = `${playerXP} / ${nextNinja.reqXP} XP`;
+
+      const current = NINJAS.find(n => n.name === equippedNinja) || NINJAS[0];
+      document.getElementById("activeNinjaIcon").textContent = current.icon;
+      document.getElementById("activeNinjaName").textContent = current.name;
+      document.getElementById("companionAvatar").textContent = current.icon;
+
+      renderRoster();
+    }
+
+    function renderRoster() {
+      const container = document.getElementById("rosterContainer");
+      container.innerHTML = "";
+
+      NINJAS.forEach(n => {
+        const unlocked = playerXP >= n.reqXP;
+        const isEquipped = n.name === equippedNinja;
+
+        const card = document.createElement("div");
+        card.className = `ninja-card ${unlocked ? "" : "locked"} ${isEquipped ? "equipped" : ""}`;
+        card.innerHTML = `
+          <div class="ninja-img-wrap">${n.icon}</div>
+          <div class="ninja-title">${n.name}</div>
+          <div style="font-size: 0.85rem; font-weight: 700; color: #38bdf8;">${n.title}</div>
+          <div style="font-size: 0.8rem; color: #94a3b8; margin: 0.25rem 0;">${n.desc}</div>
+          <div class="ninja-xp-cost">${unlocked ? "Unlocked" : `Needs ${n.reqXP} XP`}</div>
+          ${unlocked 
+            ? `<button class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; margin-top: 0.5rem;" onclick="equipNinja('${n.name}')">${isEquipped ? "Equipped" : "Equip"}</button>`
+            : `<button class="btn btn-secondary" disabled style="padding: 0.4rem 0.8rem; font-size: 0.85rem; margin-top: 0.5rem;">Locked</button>`
+          }
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function equipNinja(name) {
+      equippedNinja = name;
+      updateUI();
+    }
+
+    // Google Sheets Sync
+    async function saveProgress(prob, isCorrect, gainedXP) {
+      if (!APPS_SCRIPT_URL) return;
+
+      const payload = {
+        name: PLAYER_NAME,
+        xp: playerXP,
+        equippedNinja: equippedNinja,
+        level: Math.floor(playerXP / 200) + 1,
+        totalSolved: 1,
+        accuracy: isCorrect ? "100%" : "0%",
+        log: {
+          mode: currentMode,
+          problem: `${prob.a}x${prob.b}`,
+          correct: isCorrect,
+          xpGained: gainedXP,
+          elapsedSeconds: 5
+        }
+      };
+
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        document.getElementById("syncText").textContent = "Synced with Google Sheet ✓";
+      } catch (err) {
+        document.getElementById("syncText").textContent = "Saved locally";
+      }
+    }
+
+    // 60-Second Speed Run Logic
+    let speedTimerVal = 60;
+    let speedScoreVal = 0;
+    let speedInterval = null;
+    let currentSpeedProblem = null;
+
+    function startSpeedRun() {
+      speedTimerVal = 60;
+      speedScoreVal = 0;
+      document.getElementById("speedScore").textContent = 0;
+      document.getElementById("speedTimer").textContent = 60;
+      document.getElementById("speedStartArea").style.display = "none";
+      document.getElementById("speedPlayArea").style.display = "block";
+      nextSpeedProblem();
+
+      clearInterval(speedInterval);
+      speedInterval = setInterval(() => {
+        speedTimerVal--;
+        document.getElementById("speedTimer").textContent = speedTimerVal;
+        if (speedTimerVal <= 0) {
+          clearInterval(speedInterval);
+          endSpeedRun();
+        }
+      }, 1000);
+    }
+
+    function nextSpeedProblem() {
+      currentSpeedProblem = generateProblem("zeros"); // Fast problems for speed
+      document.getElementById("speedProblemDisplay").textContent = `${currentSpeedProblem.a} × ${currentSpeedProblem.b}`;
+      document.getElementById("speedAnswerInput").value = "";
+      document.getElementById("speedAnswerInput").focus();
+    }
+
+    function submitSpeedAnswer() {
+      const val = parseInt(document.getElementById("speedAnswerInput").value);
+      if (val === currentSpeedProblem.answer) {
+        soundSuccess();
+        speedScoreVal++;
+        playerXP += 20;
+        document.getElementById("speedScore").textContent = speedScoreVal;
+      } else {
+        soundMiss();
+      }
+      updateUI();
+      nextSpeedProblem();
+    }
+
+    function endSpeedRun() {
+      document.getElementById("speedStartArea").style.display = "block";
+      document.getElementById("speedPlayArea").style.display = "none";
+      alert(`Time's up! You scored ${speedScoreVal} problems and earned extra Ninja XP!`);
+    }
+
+    // Physical Keyboard Enter Listener
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        if (document.getElementById("practice").classList.contains("active")) {
+          submitAnswer();
+        } else if (document.getElementById("speed").classList.contains("active")) {
+          submitSpeedAnswer();
+        }
+      }
     });
-  } catch (e) {
-    console.error("Sheets sync error:", e);
-  }
-}
+
+    // Boot
+    renderProblem();
+    updateUI();
+  </script>
+</body>
+</html>
