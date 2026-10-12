@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Math Ninja: Grade Champions Dojo</title>
+  <title>Math Ninja: Elemental Combat Academy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;800;900&family=Bungee&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #4f46e5;
-      --primary-dark: #3730a3;
+      --primary: #6366f1;
+      --primary-dark: #4338ca;
       --accent: #f59e0b;
       --success: #10b981;
-      --bg: #0f172a;
-      --card-bg: #1e293b;
-      --card-border: #334155;
+      --bg: #090d16;
+      --card-bg: #131b2e;
+      --card-border: #1e293b;
       --text: #f8fafc;
       --text-muted: #94a3b8;
     }
@@ -29,6 +29,7 @@
 
     body {
       background-color: var(--bg);
+      background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #090d16 65%);
       color: var(--text);
       min-height: 100vh;
       display: flex;
@@ -39,38 +40,51 @@
 
     header {
       width: 100%;
-      max-width: 1000px;
+      max-width: 1020px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      padding: 1rem 1.5rem;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 1rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+      padding: 0.85rem 1.5rem;
+      background: rgba(19, 27, 46, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1.25rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.5);
       gap: 1rem;
     }
 
     .title-group {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.85rem;
     }
 
-    .title-icon { font-size: 2.2rem; }
+    .title-icon-badge {
+      width: 46px;
+      height: 46px;
+      background: linear-gradient(135deg, #6366f1, #d946ef);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+    }
 
     h1 {
       font-family: 'Fredoka', cursive;
-      font-size: 1.6rem;
+      font-size: 1.65rem;
       color: #fbbf24;
       letter-spacing: 0.5px;
+      line-height: 1.1;
     }
 
     .subtitle {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
+      font-weight: 700;
     }
 
     .player-stats {
@@ -84,8 +98,8 @@
       display: flex;
       align-items: center;
       gap: 0.4rem;
-      background: #0f172a;
-      padding: 0.35rem 0.6rem;
+      background: #0b1120;
+      padding: 0.35rem 0.65rem;
       border-radius: 9999px;
       border: 1px solid var(--card-border);
     }
@@ -126,35 +140,48 @@
     .ninja-badge {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      background: #0f172a;
-      padding: 0.4rem 0.8rem;
+      gap: 0.6rem;
+      background: #0b1120;
+      padding: 0.35rem 0.85rem;
       border-radius: 9999px;
-      border: 1px solid var(--card-border);
-      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-weight: 800;
       font-size: 0.9rem;
+    }
+
+    .active-emblem {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      background: #1e293b;
     }
 
     .xp-meter-wrap {
       display: flex;
       flex-direction: column;
       gap: 0.25rem;
-      width: 140px;
+      width: 130px;
     }
 
     .xp-text {
       font-size: 0.75rem;
       display: flex;
       justify-content: space-between;
-      font-weight: 700;
+      font-weight: 800;
+      color: #94a3b8;
     }
 
     .xp-bar {
       width: 100%;
       height: 10px;
-      background: #334155;
+      background: #0b1120;
       border-radius: 9999px;
       overflow: hidden;
+      border: 1px solid #1e293b;
     }
 
     .xp-fill {
@@ -162,23 +189,24 @@
       width: 0%;
       background: linear-gradient(90deg, #f59e0b, #10b981);
       transition: width 0.3s ease;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
     }
 
     nav {
       width: 100%;
-      max-width: 1000px;
+      max-width: 1020px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 0.5rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
     }
 
     .nav-btn {
-      background: var(--card-bg);
+      background: rgba(19, 27, 46, 0.7);
       border: 1px solid var(--card-border);
       color: var(--text-muted);
       padding: 0.75rem 0.5rem;
-      border-radius: 0.75rem;
+      border-radius: 0.9rem;
       font-weight: 800;
       font-size: 0.95rem;
       cursor: pointer;
@@ -190,16 +218,16 @@
     }
 
     .nav-btn.active {
-      background: var(--primary);
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
       color: #fff;
-      border-color: #6366f1;
+      border-color: #818cf8;
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+      box-shadow: 0 8px 20px -4px rgba(79, 70, 229, 0.5);
     }
 
     main {
       width: 100%;
-      max-width: 1000px;
+      max-width: 1020px;
     }
 
     .panel { display: none; }
@@ -208,10 +236,10 @@
     .card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 1rem;
+      border-radius: 1.25rem;
       padding: 1.5rem;
       margin-bottom: 1.5rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.4);
     }
 
     .controls-row {
@@ -227,7 +255,7 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      background: #0f172a;
+      background: #0b1120;
       padding: 0.5rem 0.85rem;
       border-radius: 0.75rem;
       border: 1px solid var(--card-border);
@@ -252,25 +280,125 @@
       cursor: pointer;
     }
 
+    /* ========================================================
+       HERO COMBAT ARENA & ANIMATED NINJA CHARACTER
+       ======================================================== */
     .game-arena {
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 1.1rem;
+      gap: 1.2rem;
+      position: relative;
     }
 
-    .companion-box {
+    .combat-stage {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      background: #0f172a;
-      padding: 0.5rem 1rem;
-      border-radius: 9999px;
-      border: 1px solid var(--card-border);
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+      position: relative;
     }
 
-    .companion-avatar { font-size: 1.8rem; }
+    .ninja-portrait-wrapper {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ninja-aura {
+      position: absolute;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      filter: blur(12px);
+      opacity: 0.5;
+      transition: all 0.3s;
+      animation: pulseAura 2.5s infinite alternate;
+    }
+
+    @keyframes pulseAura {
+      0% { transform: scale(0.9); opacity: 0.35; }
+      100% { transform: scale(1.15); opacity: 0.65; }
+    }
+
+    .ninja-figure {
+      position: relative;
+      z-index: 2;
+      width: 100px;
+      height: 100px;
+      border-radius: 24px;
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 3px solid #6366f1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: idleBob 3s ease-in-out infinite;
+    }
+
+    @keyframes idleBob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .ninja-figure.attack {
+      animation: strikeAnim 0.35s ease-out;
+    }
+
+    @keyframes strikeAnim {
+      0% { transform: scale(1) translateX(0); }
+      40% { transform: scale(1.25) translateX(18px) rotate(8deg); }
+      100% { transform: scale(1) translateX(0) rotate(0); }
+    }
+
+    .ninja-figure.hit {
+      animation: stumbleAnim 0.4s ease-out;
+    }
+
+    @keyframes stumbleAnim {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-12px) rotate(-6deg); }
+      40% { transform: translateX(10px) rotate(4deg); }
+      60% { transform: translateX(-6px); }
+      80% { transform: translateX(4px); }
+    }
+
+    .ninja-avatar-svg {
+      width: 72px;
+      height: 72px;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
+    }
+
+    .speech-bubble {
+      position: relative;
+      background: #0b1120;
+      border: 2px solid #334155;
+      padding: 0.75rem 1.25rem;
+      border-radius: 1rem;
+      max-width: 320px;
+      text-align: left;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #f8fafc;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+
+    .speech-bubble::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: -12px;
+      transform: translateY(-50%);
+      border-width: 6px 12px 6px 0;
+      border-style: solid;
+      border-color: transparent #334155 transparent transparent;
+    }
 
     .visual-counter {
       font-size: 2.2rem;
@@ -281,86 +409,106 @@
 
     .problem-box {
       font-family: 'Fredoka', cursive;
-      font-size: 3.5rem;
+      font-size: 3.6rem;
       letter-spacing: 2px;
       color: #f8fafc;
-      background: #0f172a;
-      border: 2px solid var(--card-border);
-      padding: 1rem 2.25rem;
-      border-radius: 1.25rem;
-      min-width: 280px;
+      background: #0b1120;
+      border: 2px solid #1e293b;
+      padding: 1.1rem 2.5rem;
+      border-radius: 1.5rem;
+      min-width: 290px;
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0,0,0,0.3);
     }
 
     .streak-badge {
-      background: #f59e0b;
-      color: #1e293b;
-      font-weight: 800;
-      padding: 0.25rem 0.75rem;
-      border-radius: 9999px;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #0b1120;
+      font-family: 'Bungee', cursive;
       font-size: 0.85rem;
+      letter-spacing: 0.5px;
+      padding: 0.3rem 0.9rem;
+      border-radius: 9999px;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
     }
 
     .input-row {
       display: flex;
       gap: 0.75rem;
       width: 100%;
-      max-width: 320px;
+      max-width: 330px;
     }
 
     input[type="number"] {
       width: 100%;
-      font-size: 2rem;
+      font-size: 2.1rem;
       font-weight: 800;
       text-align: center;
       padding: 0.5rem 1rem;
-      border-radius: 0.75rem;
-      background: #0f172a;
-      border: 2px solid var(--card-border);
+      border-radius: 0.9rem;
+      background: #0b1120;
+      border: 2px solid #1e293b;
       color: #fff;
       outline: none;
     }
 
     input:focus {
       border-color: #6366f1;
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.35);
     }
 
     .btn {
-      background: var(--primary);
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
       color: white;
       border: none;
-      border-radius: 0.75rem;
+      border-radius: 0.9rem;
       font-weight: 800;
-      font-size: 1.1rem;
-      padding: 0.75rem 1.5rem;
+      font-size: 1.15rem;
+      padding: 0.75rem 1.6rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
+      box-shadow: 0 6px 18px rgba(79, 70, 229, 0.35);
+      transition: all 0.15s ease;
     }
 
-    .btn:hover { background: var(--primary-dark); }
-    .btn-secondary { background: #334155; }
-    .btn-secondary:hover { background: #475569; }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(79, 70, 229, 0.5);
+    }
+
+    .btn:active { transform: translateY(0); }
+
+    .btn-secondary {
+      background: #1e293b;
+      box-shadow: none;
+    }
+    .btn-secondary:hover { background: #334155; }
 
     .keypad {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 0.5rem;
       width: 100%;
-      max-width: 280px;
+      max-width: 290px;
     }
 
     .key-btn {
-      background: #0f172a;
-      border: 1px solid var(--card-border);
+      background: #0b1120;
+      border: 1px solid #1e293b;
       color: #f8fafc;
-      padding: 0.8rem;
-      border-radius: 0.5rem;
-      font-size: 1.4rem;
+      padding: 0.85rem;
+      border-radius: 0.65rem;
+      font-size: 1.45rem;
       font-weight: 800;
       cursor: pointer;
+      transition: background 0.1s, transform 0.05s;
+    }
+
+    .key-btn:active {
+      background: #334155;
+      transform: scale(0.96);
     }
 
     .hint-card {
@@ -389,9 +537,9 @@
     }
 
     .trick-card {
-      background: #0f172a;
+      background: #0b1120;
       border: 2px solid var(--card-border);
-      border-radius: 1rem;
+      border-radius: 1.15rem;
       padding: 1.35rem;
       cursor: pointer;
       transition: all 0.25s ease;
@@ -402,24 +550,10 @@
       overflow: hidden;
     }
 
-    .trick-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, #6366f1, #fbbf24);
-      opacity: 0;
-      transition: opacity 0.25s;
-    }
-
     .trick-card:hover {
       border-color: #fbbf24;
       transform: translateY(-4px);
       box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.45);
-    }
-
-    .trick-card:hover::before {
-      opacity: 1;
     }
 
     .trick-card h3 {
@@ -432,21 +566,15 @@
       gap: 0.6rem;
     }
 
-    .trick-card h3 span {
-      font-size: 1.5rem;
-    }
-
     .trick-card p {
       font-size: 0.9rem;
       color: #cbd5e1;
       line-height: 1.5;
       margin-bottom: 1rem;
-      flex-grow: 1;
     }
 
     .trick-example {
       background: #1e293b;
-      border: 1px solid #334155;
       border-left: 4px solid #38bdf8;
       padding: 0.65rem 0.9rem;
       border-radius: 0.5rem;
@@ -454,46 +582,44 @@
       color: #38bdf8;
       font-size: 0.95rem;
       font-family: 'Fredoka', cursive;
-      letter-spacing: 0.5px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    .trick-example::after {
-      content: 'Practice ⚔️';
-      font-size: 0.72rem;
-      font-weight: 800;
-      color: #fbbf24;
-      background: #0f172a;
-      padding: 0.25rem 0.5rem;
-      border-radius: 0.35rem;
-      border: 1px solid #334155;
-    }
-
-    /* DOJO GRID */
+    /* ========================================================
+       COLLECTIBLE CCG NINJA CARDS (DOJO)
+       ======================================================== */
     .roster-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-      gap: 1.1rem;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.25rem;
     }
 
     .ninja-card {
-      background: #0f172a;
-      border: 2px solid var(--card-border);
-      border-radius: 1rem;
-      padding: 1.1rem;
+      background: linear-gradient(180deg, #131b2e 0%, #090e18 100%);
+      border: 2px solid #243049;
+      border-radius: 1.25rem;
+      padding: 1.25rem 1rem;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.35rem;
+      gap: 0.45rem;
       position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      transition: all 0.25s ease;
+    }
+
+    .ninja-card:hover:not(.locked) {
+      transform: translateY(-5px);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.6);
     }
 
     .ninja-card.equipped {
       border-color: #10b981;
-      box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.35);
     }
 
     .ninja-card.locked {
@@ -501,21 +627,55 @@
       filter: grayscale(0.85);
     }
 
-    .ninja-img-wrap { font-size: 2.9rem; }
+    .rarity-pill {
+      font-family: 'Bungee', cursive;
+      font-size: 0.62rem;
+      letter-spacing: 0.5px;
+      padding: 0.2rem 0.55rem;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+
+    .rarity-apprentice { background: #334155; color: #cbd5e1; }
+    .rarity-rare { background: #0369a1; color: #bae6fd; }
+    .rarity-epic { background: #7c3aed; color: #ede9fe; }
+    .rarity-legendary { background: #b45309; color: #fef3c7; }
+    .rarity-mythic { background: linear-gradient(90deg, #ec4899, #8b5cf6); color: #fff; }
+
+    .card-portrait-wrap {
+      width: 76px;
+      height: 76px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0.35rem 0;
+      position: relative;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
+    }
+
     .ninja-title {
       font-family: 'Fredoka', cursive;
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       color: #fbbf24;
+      line-height: 1.15;
+    }
+
+    .ninja-role {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #38bdf8;
     }
 
     .rule-tag {
       font-size: 0.72rem;
       font-weight: 800;
-      text-transform: uppercase;
       padding: 0.2rem 0.5rem;
       border-radius: 0.4rem;
-      background: #1e293b;
-      color: #38bdf8;
+      background: #0b1120;
+      color: #94a3b8;
+      border: 1px solid #1e293b;
     }
 
     .ninja-xp-cost {
@@ -573,7 +733,7 @@
       width: 100%;
       padding: 0.75rem;
       border-radius: 0.5rem;
-      background: #0f172a;
+      background: #0b1120;
       border: 1px solid var(--card-border);
       color: #fff;
       font-size: 1.1rem;
@@ -593,7 +753,8 @@
       nav { grid-template-columns: repeat(2, 1fr); }
       .problem-box { font-size: 2.8rem; padding: 0.75rem 1.25rem; }
       .controls-row { flex-direction: column; align-items: stretch; }
-      .trick-grid { grid-template-columns: 1fr; }
+      .combat-stage { flex-direction: column; gap: 0.75rem; }
+      .speech-bubble::before { display: none; }
     }
   </style>
 </head>
@@ -601,10 +762,10 @@
 
   <header>
     <div class="title-group">
-      <div class="title-icon">🥷</div>
+      <div class="title-icon-badge">⚔️</div>
       <div>
         <h1>Math Ninja</h1>
-        <div class="subtitle" id="headerSubtitle">Hero Dojo</div>
+        <div class="subtitle" id="headerSubtitle">Elemental Combat Academy</div>
       </div>
     </div>
 
@@ -616,7 +777,7 @@
       </div>
 
       <div class="ninja-badge">
-        <span id="activeNinjaIcon">🥋</span>
+        <div class="active-emblem" id="activeEmblem">🥋</div>
         <span id="activeNinjaName">Trainee</span>
       </div>
       <div class="xp-meter-wrap">
@@ -667,9 +828,17 @@
           </div>
         </div>
 
-        <div class="companion-box">
-          <span class="companion-avatar" id="companionAvatar">🥋</span>
-          <span id="companionSpeech" style="font-size: 0.9rem; font-weight: 700;">"Focus your ninja mind!"</span>
+        <!-- ANIMATED HERO COMBAT STAGE -->
+        <div class="combat-stage">
+          <div class="ninja-portrait-wrapper">
+            <div class="ninja-aura" id="ninjaAura"></div>
+            <div class="ninja-figure" id="ninjaFigure">
+              <div id="ninjaFigureSvg"></div>
+            </div>
+          </div>
+          <div class="speech-bubble" id="companionSpeech">
+            "Draw your blade, ninja! Let's strike true!"
+          </div>
         </div>
 
         <div class="visual-counter" id="visualCounter"></div>
@@ -760,7 +929,7 @@
           <span style="font-size: 0.85rem; color: #38bdf8; font-weight: 800;" id="dojoSubheading">25 Champions Available</span>
         </div>
         <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.25rem;">
-          Earn experience in specific rules to unlock your grade's ninja warriors!
+          Collect elemental warrior cards! Level up rule-specific XP to unlock them:
         </p>
         <div class="roster-grid" id="rosterContainer"></div>
       </div>
@@ -802,108 +971,157 @@
     let currentStreak = 0;
     let currentProblem = null;
 
-    // 25 NINJAS PER GRADE
+    // PROCEDURAL SVG NINJA GENERATOR (Rich, distinctive character visuals)
+    function getNinjaSvg(color = "#6366f1", headwear = "headband", weapon = "shuriken") {
+      let maskColor = "#0f172a";
+      let eyeColor = "#38bdf8";
+
+      // Headwear element
+      let headwearSvg = `<path d="M12 28 Q32 20 52 28 L50 33 Q32 25 14 33 Z" fill="${color}"/>`;
+      if (headwear === "horns") {
+        headwearSvg += `<path d="M16 24 L10 10 L22 20 Z M48 24 L54 10 L42 20 Z" fill="${color}"/>`;
+      } else if (headwear === "crown") {
+        headwearSvg += `<polygon points="18,24 24,12 32,22 40,12 46,24" fill="#fbbf24"/>`;
+      } else if (headwear === "flame") {
+        headwearSvg += `<path d="M26 22 Q32 8 38 22 Q35 14 32 10 Q29 14 26 22 Z" fill="#f59e0b"/>`;
+      } else if (headwear === "ice") {
+        headwearSvg += `<polygon points="32,8 36,22 28,22" fill="#bae6fd"/>`;
+      }
+
+      // Weapon / Accessory
+      let weaponSvg = '';
+      if (weapon === "dual_swords") {
+        weaponSvg = `<line x1="6" y1="6" x2="22" y2="22" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round"/>
+                     <line x1="58" y1="6" x2="42" y2="22" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round"/>`;
+      } else if (weapon === "axe") {
+        weaponSvg = `<line x1="56" y1="12" x2="48" y2="40" stroke="#78350f" stroke-width="3"/>
+                     <path d="M52 16 Q62 10 58 24 Z" fill="#94a3b8"/>`;
+      } else if (weapon === "shuriken") {
+        weaponSvg = `<circle cx="50" cy="50" r="4" fill="${color}"/>`;
+      }
+
+      return `
+        <svg class="ninja-avatar-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          ${weaponSvg}
+          <!-- Hood / Body -->
+          <circle cx="32" cy="32" r="22" fill="${maskColor}"/>
+          <path d="M16 48 Q32 58 48 48 L52 62 L12 62 Z" fill="${color}"/>
+          <!-- Face Slot -->
+          <ellipse cx="32" cy="31" rx="15" ry="9" fill="#1e293b"/>
+          <!-- Eyes -->
+          <ellipse cx="26" cy="30" rx="3" ry="1.8" fill="${eyeColor}"/>
+          <circle cx="27" cy="29.5" r="0.8" fill="#fff"/>
+          <ellipse cx="38" cy="30" rx="3" ry="1.8" fill="${eyeColor}"/>
+          <circle cx="39" cy="29.5" r="0.8" fill="#fff"/>
+          <!-- Brow Focus -->
+          <line x1="23" y1="27" x2="29" y2="29" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="41" y1="27" x2="35" y2="29" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>
+          ${headwearSvg}
+        </svg>
+      `;
+    }
+
+    // 25 NINJAS PER GRADE WITH THEMED COLORS, WEAPONS & COMBAT SHOUTS
     const GRADE_NINJAS = {
       preschool: [
-        { name: "Apple Sprout Ken", icon: "🌱", ruleKey: "overall", reqXP: 0, ruleLabel: "Starter", title: "Novice Sprout", desc: "Takes first steps in counting." },
-        { name: "Finger Counter Pip", icon: "🖐️", ruleKey: "count", reqXP: 30, ruleLabel: "🍎 Counting", title: "Finger Scout", desc: "Counts each finger carefully." },
-        { name: "Button Finder Bo", icon: "🔘", ruleKey: "count", reqXP: 60, ruleLabel: "🍎 Counting", title: "Item Spotter", desc: "Finds and counts hidden items." },
-        { name: "Acorn Collector Kiri", icon: "🌰", ruleKey: "count", reqXP: 90, ruleLabel: "🍎 Counting", title: "Grove Scout", desc: "Counts forest nuts accurately." },
-        { name: "Toy Box Sorter Jin", icon: "🧸", ruleKey: "count", reqXP: 135, ruleLabel: "🍎 Counting", title: "Toy Master", desc: "Counts up blocks and teddy bears." },
-        { name: "Starlight Teller Riku", icon: "✨", ruleKey: "count", reqXP: 180, ruleLabel: "🍎 Counting", title: "Sky Spotter", desc: "Counts shooting stars in the night." },
+        { name: "Apple Sprout Ken", color: "#10b981", headwear: "headband", weapon: "shuriken", rarity: "apprentice", ruleKey: "overall", reqXP: 0, ruleLabel: "Starter", title: "Novice Sprout", desc: "First steps in counting.", shout: "“Let's count our snacks!”" },
+        { name: "Finger Counter Pip", color: "#06b6d4", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "count", reqXP: 30, ruleLabel: "🍎 Counting", title: "Finger Scout", desc: "Counts fingers carefully.", shout: "“One, two, three... strike!”" },
+        { name: "Button Finder Bo", color: "#3b82f6", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "count", reqXP: 60, ruleLabel: "🍎 Counting", title: "Item Spotter", desc: "Finds and counts hidden items.", shout: "“I spotted every single one!”" },
+        { name: "Acorn Collector Kiri", color: "#d97706", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "count", reqXP: 90, ruleLabel: "🍎 Counting", title: "Grove Scout", desc: "Counts forest acorns.", shout: "“Gathering the forest numbers!”" },
+        { name: "Toy Box Sorter Jin", color: "#8b5cf6", headwear: "headband", weapon: "shuriken", rarity: "epic", ruleKey: "count", reqXP: 135, ruleLabel: "🍎 Counting", title: "Toy Master", desc: "Sorts blocks and toys.", shout: "“Blocks stacked and counted!”" },
+        { name: "Starlight Teller Riku", color: "#ec4899", headwear: "crown", weapon: "shuriken", rarity: "epic", ruleKey: "count", reqXP: 180, ruleLabel: "🍎 Counting", title: "Sky Spotter", desc: "Counts shooting stars.", shout: "“Starlight numbers shine!”" },
         
-        { name: "Snack Nibbler Yoshi", icon: "🍓", ruleKey: "sub_5", reqXP: 30, ruleLabel: "➖ Take Away", title: "Berry Chomper", desc: "Takes berries away to find what's left." },
-        { name: "Cookie Cruncher Chip", icon: "🍪", ruleKey: "sub_5", reqXP: 60, ruleLabel: "➖ Take Away", title: "Snack Ninja", desc: "Quickly nibbles snacks down to 0." },
-        { name: "Leaf Dropper Fumi", icon: "🍂", ruleKey: "sub_5", reqXP: 90, ruleLabel: "➖ Take Away", title: "Breeze Runner", desc: "Counts how many leaves fell." },
-        { name: "Bubble Popper Poko", icon: "🫧", ruleKey: "sub_5", reqXP: 135, ruleLabel: "➖ Take Away", title: "Bubble Ninja", desc: "Pops bubbles one by one!" },
-        { name: "Shadow Sneak Shino", icon: "🐾", ruleKey: "sub_5", reqXP: 180, ruleLabel: "➖ Take Away", title: "Quiet Stepper", desc: "Leaves fewer tracks with every step." },
+        { name: "Snack Nibbler Yoshi", color: "#ef4444", headwear: "headband", weapon: "shuriken", rarity: "apprentice", ruleKey: "sub_5", reqXP: 30, ruleLabel: "➖ Take Away", title: "Berry Chomper", desc: "Takes snacks away to count leftovers.", shout: "“Crunch! One snack taken away!”" },
+        { name: "Cookie Cruncher Chip", color: "#f59e0b", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "sub_5", reqXP: 60, ruleLabel: "➖ Take Away", title: "Snack Ninja", desc: "Nibbles numbers down fast.", shout: "“Cookie subtracted!”" },
+        { name: "Leaf Dropper Fumi", color: "#84cc16", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "sub_5", reqXP: 90, ruleLabel: "➖ Take Away", title: "Breeze Runner", desc: "Counts fallen leaves.", shout: "“Falling leaves minus count!”" },
+        { name: "Bubble Popper Poko", color: "#06b6d4", headwear: "headband", weapon: "shuriken", rarity: "epic", ruleKey: "sub_5", reqXP: 135, ruleLabel: "➖ Take Away", title: "Bubble Ninja", desc: "Pops bubbles one by one.", shout: "“POP! Fewer bubbles remain!”" },
+        { name: "Shadow Sneak Shino", color: "#64748b", headwear: "horns", weapon: "dual_swords", rarity: "epic", ruleKey: "sub_5", reqXP: 180, ruleLabel: "➖ Take Away", title: "Quiet Stepper", desc: "Leaves fewer tracks.", shout: "“Vanishing footprints!”" },
 
-        { name: "Star Catcher Hoshi", icon: "⭐", ruleKey: "add_5", reqXP: 30, ruleLabel: "➕ Add to 5", title: "Star Weaver", desc: "Combines two stars into one." },
-        { name: "Pair Maker Nami", icon: "🍒", ruleKey: "add_5", reqXP: 60, ruleLabel: "➕ Add to 5", title: "Pair Scout", desc: "Matches two groups together." },
-        { name: "Puppy Pal Paws", icon: "🐶", ruleKey: "add_5", reqXP: 90, ruleLabel: "➕ Add to 5", title: "Pack Leader", desc: "Adds playful puppies up to five." },
-        { name: "Flower Bloom Hana", icon: "🌸", ruleKey: "add_5", reqXP: 135, ruleLabel: "➕ Add to 5", title: "Petal Gatherer", desc: "Adds blossom petals up to five." },
-        { name: "Rainbow Arch Niji", icon: "🌈", ruleKey: "add_5", reqXP: 180, ruleLabel: "➕ Add to 5", title: "Prism Weaver", desc: "Builds a full arch of five colors." },
+        { name: "Star Catcher Hoshi", color: "#eab308", headwear: "crown", weapon: "shuriken", rarity: "apprentice", ruleKey: "add_5", reqXP: 30, ruleLabel: "➕ Add to 5", title: "Star Weaver", desc: "Combines two stars into one.", shout: "“Stars added together!”" },
+        { name: "Pair Maker Nami", color: "#f43f5e", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "add_5", reqXP: 60, ruleLabel: "➕ Add to 5", title: "Pair Scout", desc: "Matches groups together.", shout: "“Double cherry combo!”" },
+        { name: "Puppy Pal Paws", color: "#14b8a6", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "add_5", reqXP: 90, ruleLabel: "➕ Add to 5", title: "Pack Leader", desc: "Adds puppies up to five.", shout: "“Pack formed up!”" },
+        { name: "Flower Bloom Hana", color: "#ec4899", headwear: "headband", weapon: "shuriken", rarity: "epic", ruleKey: "add_5", reqXP: 135, ruleLabel: "➕ Add to 5", title: "Petal Gatherer", desc: "Adds blossom petals.", shout: "“Petals joined in full bloom!”" },
+        { name: "Rainbow Arch Niji", color: "#a855f7", headwear: "crown", weapon: "dual_swords", rarity: "epic", ruleKey: "add_5", reqXP: 180, ruleLabel: "➕ Add to 5", title: "Prism Weaver", desc: "Builds rainbow arches.", shout: "“Rainbow bridge strike!”" },
 
-        { name: "Ten-Strike Titan", icon: "🔟", ruleKey: "add_10", reqXP: 45, ruleLabel: "⭐ Add to 10", title: "Two-Hand Striker", desc: "Uses all 10 fingers together!" },
-        { name: "Golden Coin Zeni", icon: "🪙", ruleKey: "add_10", reqXP: 90, ruleLabel: "⭐ Add to 10", title: "Treasure Guard", desc: "Fills treasure chest up to ten." },
-        { name: "Bowling Pin Goro", icon: "🎳", ruleKey: "add_10", reqXP: 135, ruleLabel: "⭐ Add to 10", title: "Strike Roller", desc: "Counts all ten bowling pins." },
-        { name: "Rocket Booster Tora", icon: "🚀", ruleKey: "add_10", reqXP: 180, ruleLabel: "⭐ Add to 10", title: "Blastoff Scout", desc: "Counts up the ten second countdown." },
-        { name: "Solar Flare Suni", icon: "☀️", ruleKey: "add_10", reqXP: 225, ruleLabel: "⭐ Add to 10", title: "Sun Striker", desc: "Warms up complete sets of ten." },
+        { name: "Ten-Strike Titan", color: "#3b82f6", headwear: "horns", weapon: "dual_swords", rarity: "rare", ruleKey: "add_10", reqXP: 45, ruleLabel: "⭐ Add to 10", title: "Two-Hand Striker", desc: "Uses all 10 fingers together.", shout: "“Ten fingers assembled!”" },
+        { name: "Golden Coin Zeni", color: "#eab308", headwear: "crown", weapon: "shuriken", rarity: "rare", ruleKey: "add_10", reqXP: 90, ruleLabel: "⭐ Add to 10", title: "Treasure Guard", desc: "Fills chests up to ten.", shout: "“Ten golden coins secured!”" },
+        { name: "Bowling Pin Goro", color: "#ef4444", headwear: "headband", weapon: "shuriken", rarity: "epic", ruleKey: "add_10", reqXP: 135, ruleLabel: "⭐ Add to 10", title: "Strike Roller", desc: "Knocks down all ten pins.", shout: "“STRIKE! Ten out of ten!”" },
+        { name: "Rocket Booster Tora", color: "#f97316", headwear: "flame", weapon: "dual_swords", rarity: "epic", ruleKey: "add_10", reqXP: 180, ruleLabel: "⭐ Add to 10", title: "Blastoff Scout", desc: "Ten second rocket launch.", shout: "“Blastoff sequence ready!”" },
+        { name: "Solar Flare Suni", color: "#fbbf24", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "add_10", reqXP: 225, ruleLabel: "⭐ Add to 10", title: "Sun Striker", desc: "Warms up complete sets of ten.", shout: "“Full ten solar blast!”" },
 
-        { name: "Copper Belt Kento", icon: "🥉", ruleKey: "overall", reqXP: 150, ruleLabel: "Overall XP", title: "Playground Hero", desc: "Demonstrates consistent kindergarten readiness." },
-        { name: "Silver Belt Ginji", icon: "🥈", ruleKey: "overall", reqXP: 300, ruleLabel: "Overall XP", title: "Counting Champion", desc: "Quickly masters every basic count." },
-        { name: "Gold Belt Kin", icon: "🥇", ruleKey: "overall", reqXP: 500, ruleLabel: "Overall XP", title: "Kinder Dojo Sensei", desc: "Complete master of numbers to ten!" },
-        { name: "Supreme Dragon Ryu", icon: "🐉", ruleKey: "overall", reqXP: 750, ruleLabel: "Overall XP", title: "Preschool Legend", desc: "The ultimate little dragon of mathematics!" }
+        { name: "Copper Belt Kento", color: "#b45309", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "overall", reqXP: 150, ruleLabel: "Overall XP", title: "Playground Hero", desc: "Kindergarten ready.", shout: "“Copper belt power!”" },
+        { name: "Silver Belt Ginji", color: "#94a3b8", headwear: "headband", weapon: "dual_swords", rarity: "epic", ruleKey: "overall", reqXP: 300, ruleLabel: "Overall XP", title: "Counting Champion", desc: "Fast on every count.", shout: "“Silver blade precision!”" },
+        { name: "Gold Belt Kin", color: "#f59e0b", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "overall", reqXP: 500, ruleLabel: "Overall XP", title: "Kinder Dojo Sensei", desc: "Master of numbers to ten.", shout: "“Golden sensei wisdom!”" },
+        { name: "Supreme Dragon Ryu", color: "#ec4899", headwear: "crown", weapon: "dual_swords", rarity: "mythic", ruleKey: "overall", reqXP: 750, ruleLabel: "Overall XP", title: "Preschool Legend", desc: "Ultimate little dragon.", shout: "“LITTLE DRAGON ROAR!”" }
       ],
 
       grade2: [
-        { name: "White Belt Ken", icon: "🥋", ruleKey: "overall", reqXP: 0, ruleLabel: "Starter", title: "Novice", desc: "Starting the path of mental addition." },
-        { name: "Twin Strike Ren", icon: "👯", ruleKey: "doubles", reqXP: 45, ruleLabel: "👯 Doubles", title: "Twin Striker", desc: "Fast on 6+6, 7+7, 8+8." },
-        { name: "Mirror Twin Kazu", icon: "🪞", ruleKey: "doubles", reqXP: 90, ruleLabel: "👯 Doubles", title: "Reflector", desc: "Sees identical numbers instantly." },
-        { name: "Double Dragon Ryuto", icon: "🐲", ruleKey: "doubles", reqXP: 150, ruleLabel: "👯 Doubles", title: "Twin Drake", desc: "Strikes twins like dual dragon claws." },
-        { name: "Near-Twin Kage", icon: "⚡", ruleKey: "doubles", reqXP: 210, ruleLabel: "👯 Near Doubles", title: "Shadow Striker", desc: "Solves 7+8 via 7+7+1 in a flash." },
-        { name: "Offset Blade Saya", icon: "🗡️", ruleKey: "doubles", reqXP: 270, ruleLabel: "👯 Near Doubles", title: "Split Edge", desc: "Master of doubles plus or minus one." },
+        { name: "White Belt Ken", color: "#6366f1", headwear: "headband", weapon: "shuriken", rarity: "apprentice", ruleKey: "overall", reqXP: 0, ruleLabel: "Starter", title: "Novice", desc: "Mental addition apprentice.", shout: "“Sharpening our arithmetic!”" },
+        { name: "Twin Strike Ren", color: "#06b6d4", headwear: "headband", weapon: "dual_swords", rarity: "rare", ruleKey: "doubles", reqXP: 45, ruleLabel: "👯 Doubles", title: "Twin Striker", desc: "Instant on 6+6, 7+7, 8+8.", shout: "“TWIN BLADES UNITE!”" },
+        { name: "Mirror Twin Kazu", color: "#38bdf8", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "doubles", reqXP: 90, ruleLabel: "👯 Doubles", title: "Reflector", desc: "Sees identical numbers instantly.", shout: "“Reflected across the mirror!”" },
+        { name: "Double Dragon Ryuto", color: "#8b5cf6", headwear: "horns", weapon: "dual_swords", rarity: "epic", ruleKey: "doubles", reqXP: 150, ruleLabel: "👯 Doubles", title: "Twin Drake", desc: "Strikes twins like dragon claws.", shout: "“DOUBLE DRAGON STRIKE!”" },
+        { name: "Near-Twin Kage", color: "#f59e0b", headwear: "horns", weapon: "shuriken", rarity: "epic", ruleKey: "doubles", reqXP: 210, ruleLabel: "👯 Near Doubles", title: "Shadow Striker", desc: "Solves 7+8 via 7+7+1.", shout: "“Double plus one... direct hit!”" },
+        { name: "Offset Blade Saya", color: "#ec4899", headwear: "headband", weapon: "dual_swords", rarity: "legendary", ruleKey: "doubles", reqXP: 270, ruleLabel: "👯 Near Doubles", title: "Split Edge", desc: "Master of doubles +/- 1.", shout: "“Offset strike landed!”" },
 
-        { name: "Bridge Ten Jin", icon: "🎯", ruleKey: "make_ten", reqXP: 45, ruleLabel: "🎯 Make Ten", title: "Bridge Builder", desc: "Bridges numbers across 10 in his mind." },
-        { name: "Anchor Stone Toru", icon: "⚓", ruleKey: "make_ten", reqXP: 90, ruleLabel: "🎯 Make Ten", title: "Anchor Guard", desc: "Anchors difficult sums to ten." },
-        { name: "Deca Scout Tenro", icon: "🏯", ruleKey: "make_ten", reqXP: 150, ruleLabel: "🎯 Make Ten", title: "Castle Sentinel", desc: "Secures the base-ten foundation." },
-        { name: "Bridge Architect Maya", icon: "🌉", ruleKey: "make_ten", reqXP: 210, ruleLabel: "🎯 Make Ten", title: "Master Builder", desc: "Effortlessly spans from 8 into 15." },
-        { name: "Fortress Captain Gaku", icon: "🛡️", ruleKey: "make_ten", reqXP: 270, ruleLabel: "🎯 Make Ten", title: "Wall Commander", desc: "Impenetrable mental addition." },
+        { name: "Bridge Ten Jin", color: "#10b981", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "make_ten", reqXP: 45, ruleLabel: "🎯 Make Ten", title: "Bridge Builder", desc: "Bridges numbers across 10.", shout: "“Crossing ten in a heartbeat!”" },
+        { name: "Anchor Stone Toru", color: "#475569", headwear: "headband", weapon: "axe", rarity: "rare", ruleKey: "make_ten", reqXP: 90, ruleLabel: "🎯 Make Ten", title: "Anchor Guard", desc: "Anchors difficult sums to ten.", shout: "“Ten is locked down!”" },
+        { name: "Deca Scout Tenro", color: "#0ea5e9", headwear: "headband", weapon: "shuriken", rarity: "epic", ruleKey: "make_ten", reqXP: 150, ruleLabel: "🎯 Make Ten", title: "Castle Sentinel", desc: "Secures the base-ten foundation.", shout: "“Base ten fortress defended!”" },
+        { name: "Bridge Architect Maya", color: "#d946ef", headwear: "crown", weapon: "shuriken", rarity: "epic", ruleKey: "make_ten", reqXP: 210, ruleLabel: "🎯 Make Ten", title: "Master Builder", desc: "Spans from 8 into 15.", shout: "“Bridging numbers effortlessly!”" },
+        { name: "Fortress Captain Gaku", color: "#334155", headwear: "horns", weapon: "dual_swords", rarity: "legendary", ruleKey: "make_ten", reqXP: 270, ruleLabel: "🎯 Make Ten", title: "Wall Commander", desc: "Impenetrable addition.", shout: "“Unshakeable ten defense!”" },
 
-        { name: "Rabbit Hopper Usagi", icon: "🦘", ruleKey: "skip_count", reqXP: 45, ruleLabel: "🦘 Skip Count", title: "Speed Leaper", desc: "Hops across 2s without stopping." },
-        { name: "Five-Star Shuriken Go", icon: "⭐", ruleKey: "skip_count", reqXP: 90, ruleLabel: "🦘 Skip Count", title: "Star Tosser", desc: "Skips by 5s like clockwork." },
-        { name: "Ten-Pace Scout Deka", icon: "👟", ruleKey: "skip_count", reqXP: 150, ruleLabel: "🦘 Skip Count", title: "Deca Runner", desc: "Races by 10s into triple digits." },
-        { name: "Leaping Crane Tsuru", icon: "🦩", ruleKey: "skip_count", reqXP: 210, ruleLabel: "🦘 Skip Count", title: "Wind Hopper", desc: "Effortless cadence on all skip counts." },
-        { name: "Comet Dasher Hayate", icon: "☄️", ruleKey: "skip_count", reqXP: 270, ruleLabel: "🦘 Skip Count", title: "Flash Dasher", desc: "Fastest skip-counter in the realm." },
+        { name: "Rabbit Hopper Usagi", color: "#22c55e", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "skip_count", reqXP: 45, ruleLabel: "🦘 Skip Count", title: "Speed Leaper", desc: "Hops across 2s without stopping.", shout: "“2, 4, 6, 8... jump!”" },
+        { name: "Five-Star Shuriken Go", color: "#eab308", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "skip_count", reqXP: 90, ruleLabel: "🦘 Skip Count", title: "Star Tosser", desc: "Skips by 5s like clockwork.", shout: "“Five star pattern complete!”" },
+        { name: "Ten-Pace Scout Deka", color: "#f97316", headwear: "headband", weapon: "shuriken", rarity: "epic", ruleKey: "skip_count", reqXP: 150, ruleLabel: "🦘 Skip Count", title: "Deca Runner", desc: "Races by 10s into 100.", shout: "“Pacing by tens!”" },
+        { name: "Leaping Crane Tsuru", color: "#a855f7", headwear: "crown", weapon: "dual_swords", rarity: "epic", ruleKey: "skip_count", reqXP: 210, ruleLabel: "🦘 Skip Count", title: "Wind Hopper", desc: "Effortless skip counts.", shout: "“Rhythmic crane leaps!”" },
+        { name: "Comet Dasher Hayate", color: "#06b6d4", headwear: "flame", weapon: "dual_swords", rarity: "legendary", ruleKey: "skip_count", reqXP: 270, ruleLabel: "🦘 Skip Count", title: "Flash Dasher", desc: "Fastest skip-counter in the realm.", shout: "“Speed of light skip count!”" },
 
-        { name: "Array Apprentice Roku", icon: "🧱", ruleKey: "mult_intro", reqXP: 45, ruleLabel: "✖️ Basic Sets", title: "Block Stacker", desc: "Arranges rows and columns." },
-        { name: "Multiplier Ronin Raiden", icon: "⚔️", ruleKey: "mult_intro", reqXP: 90, ruleLabel: "✖️ Basic Sets", title: "Sets Samurai", desc: "Calculates equal groups instantly." },
-        { name: "Grid Master Koshi", icon: "🏁", ruleKey: "mult_intro", reqXP: 150, ruleLabel: "✖️ Basic Sets", title: "Tessellator", desc: "Sees products in 2D grids." },
-        { name: "Repeated Addition Ken", icon: "🔄", ruleKey: "mult_intro", reqXP: 210, ruleLabel: "✖️ Basic Sets", title: "Loop Striker", desc: "Turns repeated addition into multiplication." },
-        { name: "Set Tactician Daiki", icon: "📜", ruleKey: "mult_intro", reqXP: 270, ruleLabel: "✖️ Basic Sets", title: "Array Strategist", desc: "Master commander of grouping operations." },
+        { name: "Array Apprentice Roku", color: "#64748b", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "mult_intro", reqXP: 45, ruleLabel: "✖️ Basic Sets", title: "Block Stacker", desc: "Arranges rows and columns.", shout: "“Grid arranged!”" },
+        { name: "Multiplier Ronin Raiden", color: "#eab308", headwear: "headband", weapon: "dual_swords", rarity: "rare", ruleKey: "mult_intro", reqXP: 90, ruleLabel: "✖️ Basic Sets", title: "Sets Samurai", desc: "Calculates equal groups.", shout: "“Equal sets multiplied!”" },
+        { name: "Grid Master Koshi", color: "#0284c7", headwear: "horns", weapon: "shuriken", rarity: "epic", ruleKey: "mult_intro", reqXP: 150, ruleLabel: "✖️ Basic Sets", title: "Tessellator", desc: "Sees products in 2D grids.", shout: "“Grid locked!”" },
+        { name: "Repeated Addition Ken", color: "#8b5cf6", headwear: "headband", weapon: "dual_swords", rarity: "epic", ruleKey: "mult_intro", reqXP: 210, ruleLabel: "✖️ Basic Sets", title: "Loop Striker", desc: "Turns addition into multiplication.", shout: "“Loops condensed into one strike!”" },
+        { name: "Set Tactician Daiki", color: "#f43f5e", headwear: "crown", weapon: "axe", rarity: "legendary", ruleKey: "mult_intro", reqXP: 270, ruleLabel: "✖️ Basic Sets", title: "Array Strategist", desc: "Commander of grouping.", shout: "“Tactical product formed!”" },
 
-        { name: "Silver Guardian Gin", icon: "🥈", ruleKey: "overall", reqXP: 250, ruleLabel: "Overall XP", title: "2nd Grade Ace", desc: "Solid all-around mathematical speed." },
-        { name: "Golden Sensei Shin", icon: "🥇", ruleKey: "overall", reqXP: 450, ruleLabel: "Overall XP", title: "2nd Grade Master", desc: "Unmatched mastery of addition and sets." },
-        { name: "Imperial Shogun Nobu", icon: "👑", ruleKey: "overall", reqXP: 700, ruleLabel: "Overall XP", title: "Shogun Champion", desc: "Commands all 2nd grade mental math." },
-        { name: "Celestial Dragon Ryujin", icon: "🐉", ruleKey: "overall", reqXP: 1000, ruleLabel: "Overall XP", title: "Mythic Dragon", desc: "Supreme guardian of early elementary arithmetic!" }
+        { name: "Silver Guardian Gin", color: "#cbd5e1", headwear: "horns", weapon: "dual_swords", rarity: "rare", ruleKey: "overall", reqXP: 250, ruleLabel: "Overall XP", title: "2nd Grade Ace", desc: "Solid all-around mathematical speed.", shout: "“Silver shield defense!”" },
+        { name: "Golden Sensei Shin", color: "#fbbf24", headwear: "crown", weapon: "dual_swords", rarity: "epic", ruleKey: "overall", reqXP: 450, ruleLabel: "Overall XP", title: "2nd Grade Master", desc: "Master of addition and sets.", shout: "“Mastery of the grade!”" },
+        { name: "Imperial Shogun Nobu", color: "#dc2626", headwear: "horns", weapon: "dual_swords", rarity: "legendary", ruleKey: "overall", reqXP: 700, ruleLabel: "Overall XP", title: "Shogun Champion", desc: "Commands 2nd grade mental math.", shout: "“Imperial command issued!”" },
+        { name: "Celestial Dragon Ryujin", color: "#c084fc", headwear: "crown", weapon: "dual_swords", rarity: "mythic", ruleKey: "overall", reqXP: 1000, ruleLabel: "Overall XP", title: "Mythic Dragon", desc: "Supreme guardian of early arithmetic.", shout: "“CELESTIAL DRAGON ASCENT!”" }
       ],
 
       grade4: [
-        { name: "White Belt Ken", icon: "🥋", ruleKey: "overall", reqXP: 0, ruleLabel: "Starter", title: "Novice", desc: "Stepping into 2-digit multiplication." },
+        { name: "White Belt Ken", color: "#6366f1", headwear: "headband", weapon: "shuriken", rarity: "apprentice", ruleKey: "overall", reqXP: 0, ruleLabel: "Starter", title: "Novice", desc: "Stepping into 2-digit multiplication.", shout: "“Let's master the ninja tricks!”" },
         
-        { name: "Zero Hero Spark", icon: "⚡", ruleKey: "zeros", reqXP: 45, ruleLabel: "0️⃣ Zero Hero", title: "Zero Specialist", desc: "Multiplies front numbers and tacks on zeros." },
-        { name: "Volt Raider Raiden", icon: "🌩️", ruleKey: "zeros", reqXP: 100, ruleLabel: "0️⃣ Zero Hero", title: "Thunder Ronin", desc: "Instantly solves tens by tens in a flash." },
-        { name: "Solar Emperor Sol", icon: "☀️", ruleKey: "zeros", reqXP: 180, ruleLabel: "0️⃣ Zero Hero", title: "Solar Guardian", desc: "Vanquishes zeroes with solar radiance." },
-        { name: "Nova Cannon Katsu", icon: "💥", ruleKey: "zeros", reqXP: 270, ruleLabel: "0️⃣ Zero Hero", title: "Nova Blaster", desc: "Launches zero-trick products instantly." },
+        { name: "Zero Hero Spark", color: "#eab308", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "zeros", reqXP: 45, ruleLabel: "0️⃣ Zero Hero", title: "Zero Specialist", desc: "Front numbers × zeros.", shout: "“ZERO POWER CHARGED!”" },
+        { name: "Volt Raider Raiden", color: "#facc15", headwear: "horns", weapon: "dual_swords", rarity: "epic", ruleKey: "zeros", reqXP: 100, ruleLabel: "0️⃣ Zero Hero", title: "Thunder Ronin", desc: "Solves tens products instantly.", shout: "“LIGHTNING ZERO STRIKE!”" },
+        { name: "Solar Emperor Sol", color: "#f97316", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "zeros", reqXP: 180, ruleLabel: "0️⃣ Zero Hero", title: "Solar Guardian", desc: "Solar radiance zero math.", shout: "“SOLAR FLARE MULTIPLICATION!”" },
+        { name: "Nova Cannon Katsu", color: "#ef4444", headwear: "flame", weapon: "dual_swords", rarity: "mythic", ruleKey: "zeros", reqXP: 270, ruleLabel: "0️⃣ Zero Hero", title: "Nova Blaster", desc: "Launches zero-trick products.", shout: "“SUPERNOVA ZERO IMPACT!”" },
 
-        { name: "Mirror Fox Kitsune", icon: "🦊", ruleKey: "eleven", reqXP: 45, ruleLabel: "🪄 11s Magic", title: "Trickster Mage", desc: "Splits digits and adds the center sum." },
-        { name: "Time Bender Chrono", icon: "⏳", ruleKey: "eleven", reqXP: 100, ruleLabel: "🪄 11s Magic", title: "Chronos Walker", desc: "Calculates carry-overs without blinking." },
-        { name: "Arcane Sage Ren", icon: "🔮", ruleKey: "eleven", reqXP: 180, ruleLabel: "🪄 11s Magic", title: "Arcane Master", desc: "Effortlessly commands 11-times equations." },
-        { name: "Illusionist Genki", icon: "🎭", ruleKey: "eleven", reqXP: 270, ruleLabel: "🪄 11s Magic", title: "Phantom Weaver", desc: "Bends two-digit sums into mental speed." },
+        { name: "Mirror Fox Kitsune", color: "#ec4899", headwear: "horns", weapon: "shuriken", rarity: "rare", ruleKey: "eleven", reqXP: 45, ruleLabel: "🪄 11s Magic", title: "Trickster Mage", desc: "Splits digits and sums center.", shout: "“Split... sum... snap!”" },
+        { name: "Time Bender Chrono", color: "#8b5cf6", headwear: "headband", weapon: "shuriken", rarity: "epic", ruleKey: "eleven", reqXP: 100, ruleLabel: "🪄 11s Magic", title: "Chronos Walker", desc: "Calculates carry-overs without blinking.", shout: "“Time bends around 11!”" },
+        { name: "Arcane Sage Ren", color: "#3b82f6", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "eleven", reqXP: 180, ruleLabel: "🪄 11s Magic", title: "Arcane Master", desc: "Commands 11-times equations.", shout: "“Arcane eleven alignment!”" },
+        { name: "Illusionist Genki", color: "#a855f7", headwear: "crown", weapon: "dual_swords", rarity: "mythic", ruleKey: "eleven", reqXP: 270, ruleLabel: "🪄 11s Magic", title: "Phantom Weaver", desc: "Bends two-digit sums.", shout: "“PHANTOM 11 MIRAGE!”" },
 
-        { name: "Timber Cleaver Cho", icon: "🪓", ruleKey: "split", reqXP: 45, ruleLabel: "🪓 Break & Split", title: "Woodland Chopper", desc: "Splits numbers into tens and ones." },
-        { name: "Jade Viper Orochi", icon: "🐍", ruleKey: "split", reqXP: 100, ruleLabel: "🪓 Break & Split", title: "Forest Tactician", desc: "Box method strategist." },
-        { name: "Stone Sovereign Gou", icon: "🗿", ruleKey: "split", reqXP: 180, ruleLabel: "🪓 Break & Split", title: "Titan Crusher", desc: "Crushes multi-digit multiplication into easy sums." },
-        { name: "Mountain Slicer Iwao", icon: "⛰️", ruleKey: "split", reqXP: 270, ruleLabel: "🪓 Break & Split", title: "Earth Shaker", desc: "Splits complex factors with precision." },
+        { name: "Timber Cleaver Cho", color: "#16a34a", headwear: "headband", weapon: "axe", rarity: "rare", ruleKey: "split", reqXP: 45, ruleLabel: "🪓 Break & Split", title: "Woodland Chopper", desc: "Splits into tens and ones.", shout: "“TIMBER! Cleanly split!”" },
+        { name: "Jade Viper Orochi", color: "#10b981", headwear: "horns", weapon: "dual_swords", rarity: "epic", ruleKey: "split", reqXP: 100, ruleLabel: "🪓 Break & Split", title: "Forest Tactician", desc: "Box method strategist.", shout: "“Viper venom box strike!”" },
+        { name: "Stone Sovereign Gou", color: "#475569", headwear: "horns", weapon: "axe", rarity: "legendary", ruleKey: "split", reqXP: 180, ruleLabel: "🪓 Break & Split", title: "Titan Crusher", desc: "Crushes multi-digit into easy sums.", shout: "“Titan stone division!”" },
+        { name: "Mountain Slicer Iwao", color: "#334155", headwear: "horns", weapon: "axe", rarity: "mythic", ruleKey: "split", reqXP: 270, ruleLabel: "🪓 Break & Split", title: "Earth Shaker", desc: "Splits complex factors with precision.", shout: "“MOUNTAIN SLICER CLEAVE!”" },
 
-        { name: "Yin-Yang Haku", icon: "☯️", ruleKey: "double_half", reqXP: 45, ruleLabel: "⚖️ Double & Halve", title: "Twin Balancer", desc: "Doubles the 5, halves the even." },
-        { name: "Flame Alchemist Kai", icon: "🔥", ruleKey: "double_half", reqXP: 100, ruleLabel: "⚖️ Double & Halve", title: "Fire Alchemist", desc: "Transforms difficult multiplication in a blaze." },
-        { name: "Equinox Master Kiyo", icon: "🌙", ruleKey: "double_half", reqXP: 180, ruleLabel: "⚖️ Double & Halve", title: "Celestial Eclipse", desc: "Perfect harmony between even halves and double fives." },
-        { name: "Sun-Moon Ronin Nichi", icon: "🌅", ruleKey: "double_half", reqXP: 270, ruleLabel: "⚖️ Double & Halve", title: "Zen Duelist", desc: "Halves even factors instantly." },
+        { name: "Yin-Yang Haku", color: "#06b6d4", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "double_half", reqXP: 45, ruleLabel: "⚖️ Double & Halve", title: "Twin Balancer", desc: "Doubles the 5, halves the even.", shout: "“Double up, halve down!”" },
+        { name: "Flame Alchemist Kai", color: "#ea580c", headwear: "flame", weapon: "dual_swords", rarity: "epic", ruleKey: "double_half", reqXP: 100, ruleLabel: "⚖️ Double & Halve", title: "Fire Alchemist", desc: "Transforms tricky equations in a blaze.", shout: "“FLAME ALCHEMY IGNITION!”" },
+        { name: "Equinox Master Kiyo", color: "#6366f1", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "double_half", reqXP: 180, ruleLabel: "⚖️ Double & Halve", title: "Celestial Eclipse", desc: "Perfect harmony of halves and doubles.", shout: "“Equinox balance restored!”" },
+        { name: "Sun-Moon Ronin Nichi", color: "#d946ef", headwear: "horns", weapon: "dual_swords", rarity: "mythic", ruleKey: "double_half", reqXP: 270, ruleLabel: "⚖️ Double & Halve", title: "Zen Duelist", desc: "Halves even factors instantly.", shout: "“CELESTIAL ECLIPSE STRIKE!”" },
 
-        { name: "Glacier Yuki", icon: "❄️", ruleKey: "ending_five", reqXP: 45, ruleLabel: "⚡ Square 5s", title: "Frost Apprentice", desc: "Multiplies tens by n+1 and adds 25." },
-        { name: "Frost Wyrm Kuro", icon: "🌨️", ruleKey: "ending_five", reqXP: 100, ruleLabel: "⚡ Square 5s", title: "Blizzard Lord", desc: "Instant mental squares for numbers ending in 5." },
-        { name: "Absolute Zero Hyou", icon: "🧊", ruleKey: "ending_five", reqXP: 180, ruleLabel: "⚡ Square 5s", title: "Glacial Sovereign", desc: "Freezes squares ending in 5 in under 2 seconds." },
-        { name: "Aurora Weaver Reika", icon: "🌌", ruleKey: "ending_five", reqXP: 270, ruleLabel: "⚡ Square 5s", title: "Polar Queen", desc: "Squares ending in 5 glow like the Northern Lights." },
+        { name: "Glacier Yuki", color: "#38bdf8", headwear: "ice", weapon: "shuriken", rarity: "rare", ruleKey: "ending_five", reqXP: 45, ruleLabel: "⚡ Square 5s", title: "Frost Apprentice", desc: "Tens × (n+1) & attach 25.", shout: "“Frozen 25 attached!”" },
+        { name: "Frost Wyrm Kuro", color: "#0284c7", headwear: "ice", weapon: "dual_swords", rarity: "epic", ruleKey: "ending_five", reqXP: 100, ruleLabel: "⚡ Square 5s", title: "Blizzard Lord", desc: "Instant squares ending in 5.", shout: "“BLIZZARD SQUARE FROZEN!”" },
+        { name: "Absolute Zero Hyou", color: "#bae6fd", headwear: "ice", weapon: "dual_swords", rarity: "legendary", ruleKey: "ending_five", reqXP: 180, ruleLabel: "⚡ Square 5s", title: "Glacial Sovereign", desc: "Freezes squares in under 2 seconds.", shout: "“Absolute zero execution!”" },
+        { name: "Aurora Weaver Reika", color: "#06b6d4", headwear: "crown", weapon: "dual_swords", rarity: "mythic", ruleKey: "ending_five", reqXP: 270, ruleLabel: "⚡ Square 5s", title: "Polar Queen", desc: "Squares glow like Northern Lights.", shout: "“AURORA POLAR BOREALIS!”" },
 
-        { name: "Dragon Blade Ryu", icon: "🐉", ruleKey: "overall", reqXP: 400, ruleLabel: "Overall XP", title: "Dragon Knight", desc: "Proven mastery of all mental multiplication." },
-        { name: "Diamond Shogun Dai", icon: "💎", ruleKey: "overall", reqXP: 700, ruleLabel: "Overall XP", title: "Diamond Sensei", desc: "Crystal clear mental calculations." },
-        { name: "Void Emperor Ryu", icon: "👑", ruleKey: "overall", reqXP: 1000, ruleLabel: "Overall XP", title: "Grandmaster", desc: "Supreme conqueror of all 2-digit multiplication!" },
-        { name: "Infinity Deity Mugen", icon: "✨", ruleKey: "overall", reqXP: 1500, ruleLabel: "Overall XP", title: "Cosmic Sovereign", desc: "Transcended all limits of elementary mathematics!" }
+        { name: "Dragon Blade Ryu", color: "#dc2626", headwear: "horns", weapon: "dual_swords", rarity: "rare", ruleKey: "overall", reqXP: 400, ruleLabel: "Overall XP", title: "Dragon Knight", desc: "Master of mental multiplication.", shout: "“DRAGON BLADE SLASH!”" },
+        { name: "Diamond Shogun Dai", color: "#38bdf8", headwear: "crown", weapon: "dual_swords", rarity: "epic", ruleKey: "overall", reqXP: 700, ruleLabel: "Overall XP", title: "Diamond Sensei", desc: "Crystal clear mental calculations.", shout: "“Diamond sharp mind!”" },
+        { name: "Void Emperor Ryu", color: "#a855f7", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "overall", reqXP: 1000, ruleLabel: "Overall XP", title: "Grandmaster", desc: "Conqueror of all 2-digit math.", shout: "“VOID SUPREMACY COMMAND!”" },
+        { name: "Infinity Deity Mugen", color: "#f59e0b", headwear: "crown", weapon: "dual_swords", rarity: "mythic", ruleKey: "overall", reqXP: 1500, ruleLabel: "Overall XP", title: "Cosmic Sovereign", desc: "Transcended all mathematical limits.", shout: "“INFINITY COSMOS OMNIPRESENCE!”" }
       ]
     };
 
-    // GRADE SCROLLS CONFIGURATION
     const GRADE_CONFIG = {
       preschool: {
         title: "Preschool (Reid)",
@@ -1037,7 +1255,6 @@
       });
     }
 
-    // RENDER VISUALLY PLEASING ACADEMY SCROLL CARDS
     function renderAcademyScrolls() {
       const container = document.getElementById("academyScrolls");
       container.innerHTML = "";
@@ -1245,6 +1462,11 @@
       let gained = 0;
       let isCorrect = false;
 
+      const fig = document.getElementById("ninjaFigure");
+      const speech = document.getElementById("companionSpeech");
+      const roster = GRADE_NINJAS[currentGrade] || GRADE_NINJAS.grade4;
+      const currentActive = roster.find(n => n.name === equippedNinja) || roster[0];
+
       if (val === currentProblem.answer) {
         playBeep(587.33, 0.15);
         isCorrect = true;
@@ -1257,13 +1479,25 @@
 
         currentStreak++;
         document.getElementById("streakCount").textContent = currentStreak;
-        document.getElementById("companionSpeech").textContent = "“Direct strike! Your ninja power grows!”";
+        
+        // Attack Animation & Battle Shout
+        fig.classList.remove("attack", "hit");
+        void fig.offsetWidth;
+        fig.classList.add("attack");
+
+        speech.textContent = currentActive.shout || "“DIRECT STRIKE! Precision landing!”";
         renderProblem();
       } else {
         playBeep(220, 0.2);
         currentStreak = 0;
         document.getElementById("streakCount").textContent = 0;
-        document.getElementById("companionSpeech").textContent = `“Stay centered! ${currentProblem.text} was ${currentProblem.answer}.”`;
+
+        // Hit Wobble Animation & Recovery Shout
+        fig.classList.remove("attack", "hit");
+        void fig.offsetWidth;
+        fig.classList.add("hit");
+
+        speech.textContent = `“Stay centered! ${currentProblem.text} was ${currentProblem.answer}.”`;
         toggleHint();
       }
 
@@ -1298,9 +1532,21 @@
       document.getElementById("xpValue").textContent = `${playerXP} XP`;
 
       const current = roster.find(n => n.name === equippedNinja) || roster[0];
-      document.getElementById("activeNinjaIcon").textContent = current.icon;
       document.getElementById("activeNinjaName").textContent = current.name;
-      document.getElementById("companionAvatar").textContent = current.icon;
+
+      // Update Arena Animated Portrait
+      const aura = document.getElementById("ninjaAura");
+      const fig = document.getElementById("ninjaFigure");
+      const figSvg = document.getElementById("ninjaFigureSvg");
+      
+      aura.style.background = current.color || "#6366f1";
+      fig.style.borderColor = current.color || "#6366f1";
+      figSvg.innerHTML = getNinjaSvg(current.color, current.headwear, current.weapon);
+
+      // Update Header Active Emblem
+      const emblem = document.getElementById("activeEmblem");
+      emblem.style.borderColor = current.color || "#6366f1";
+      emblem.innerHTML = `<span style="font-size:0.9rem;">⚔️</span>`;
 
       renderRoster();
     }
@@ -1321,17 +1567,20 @@
         const card = document.createElement("div");
         card.className = `ninja-card ${unlocked ? "" : "locked"} ${isEquipped ? "equipped" : ""}`;
         card.innerHTML = `
-          <div class="ninja-img-wrap">${n.icon}</div>
+          <div class="rarity-pill rarity-${n.rarity}">${n.rarity}</div>
+          <div class="card-portrait-wrap" style="background: radial-gradient(circle, ${n.color}22 0%, #0b1120 75%); border: 2px solid ${n.color};">
+            ${getNinjaSvg(n.color, n.headwear, n.weapon)}
+          </div>
           <div class="ninja-title">${n.name}</div>
           <span class="rule-tag">${n.ruleLabel}</span>
-          <div style="font-size: 0.82rem; font-weight: 700; color: #38bdf8;">${n.title}</div>
-          <div style="font-size: 0.78rem; color: #94a3b8; margin: 0.2rem 0;">${n.desc}</div>
+          <div class="ninja-role">${n.title}</div>
+          <div style="font-size: 0.78rem; color: #94a3b8; margin: 0.15rem 0;">${n.desc}</div>
           <div class="ninja-xp-cost" style="color: ${unlocked ? '#10b981' : '#f59e0b'};">
             ${unlocked ? '✓ Unlocked' : `${currentScore} /${n.reqXP} XP in Rule`}
           </div>
           ${unlocked 
-            ? `<button class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; margin-top: 0.35rem;" onclick="equipNinja('${n.name}')">${isEquipped ? "Equipped" : "Equip"}</button>`
-            : `<button class="btn btn-secondary" disabled style="padding: 0.4rem 0.8rem; font-size: 0.85rem; margin-top: 0.35rem;">Locked</button>`
+            ? `<button class="btn" style="padding: 0.45rem 1rem; font-size: 0.85rem; margin-top: 0.35rem;" onclick="equipNinja('${n.name}')">${isEquipped ? "Equipped" : "Equip"}</button>`
+            : `<button class="btn btn-secondary" disabled style="padding: 0.45rem 1rem; font-size: 0.85rem; margin-top: 0.35rem;">Locked</button>`
           }
         `;
         container.appendChild(card);
