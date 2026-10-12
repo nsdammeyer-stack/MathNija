@@ -39,7 +39,7 @@
 
     header {
       width: 100%;
-      max-width: 960px;
+      max-width: 1000px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
@@ -166,7 +166,7 @@
 
     nav {
       width: 100%;
-      max-width: 960px;
+      max-width: 1000px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 0.5rem;
@@ -199,7 +199,7 @@
 
     main {
       width: 100%;
-      max-width: 960px;
+      max-width: 1000px;
     }
 
     .panel { display: none; }
@@ -378,23 +378,22 @@
 
     .hint-card.show { display: block; }
 
-    /* DOJO GRID */
     .roster-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.25rem;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 1.1rem;
     }
 
     .ninja-card {
       background: #0f172a;
       border: 2px solid var(--card-border);
       border-radius: 1rem;
-      padding: 1.25rem;
+      padding: 1.1rem;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.35rem;
       position: relative;
     }
 
@@ -404,14 +403,14 @@
     }
 
     .ninja-card.locked {
-      opacity: 0.5;
+      opacity: 0.45;
       filter: grayscale(0.85);
     }
 
-    .ninja-img-wrap { font-size: 3.2rem; }
+    .ninja-img-wrap { font-size: 2.9rem; }
     .ninja-title {
       font-family: 'Fredoka', cursive;
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       color: #fbbf24;
     }
 
@@ -445,7 +444,6 @@
       background: #10b981;
     }
 
-    /* MODAL */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -664,7 +662,7 @@
       <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; margin-bottom: 0.5rem;">
           <h2 style="font-family: 'Fredoka', cursive; color: #fbbf24;" id="dojoHeading">Grade Champions Dojo</h2>
-          <span style="font-size: 0.85rem; color: #38bdf8; font-weight: 800;" id="dojoSubheading">Tailored to Active Grade</span>
+          <span style="font-size: 0.85rem; color: #38bdf8; font-weight: 800;" id="dojoSubheading">25 Champions Available</span>
         </div>
         <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.25rem;">
           Earn experience in specific rules to unlock your grade's ninja warriors!
@@ -709,37 +707,104 @@
     let currentStreak = 0;
     let currentProblem = null;
 
-    // GRADE-SPECIFIC NINJA ROSTERS
+    // 25 NINJAS FOR EACH GRADE (75 UNIQUE NINJAS TOTAL)
     const GRADE_NINJAS = {
       preschool: [
-        { name: "Apple Sprout Ken", icon: "🌱", ruleKey: "overall", reqXP: 0, ruleLabel: "Preschool Starter", title: "Little Sprout", desc: "Embarking on the counting adventure." },
-        { name: "Finger Counter Pip", icon: "🖐️", ruleKey: "count", reqXP: 45, ruleLabel: "🍎 Counting", title: "Counter Prodigy", desc: "Counts items one-by-one with precision." },
-        { name: "Snack Nibbler Yoshi", icon: "🍓", ruleKey: "sub_5", reqXP: 60, ruleLabel: "➖ Take Away", title: "Berry Chomper", desc: "Takes snacks away to reveal what is left." },
-        { name: "Star Catcher Hoshi", icon: "⭐", ruleKey: "add_5", reqXP: 60, ruleLabel: "➕ Add to 5", title: "Star Weaver", desc: "Combines two hands together to make 5." },
-        { name: "Ten-Strike Titan", icon: "👑", ruleKey: "add_10", reqXP: 90, ruleLabel: "🔟 Add to 10", title: "Preschool Champion", desc: "Master of adding all ten fingers together!" }
+        { name: "Apple Sprout Ken", icon: "🌱", ruleKey: "overall", reqXP: 0, ruleLabel: "Starter", title: "Novice Sprout", desc: "Takes first steps in counting." },
+        { name: "Finger Counter Pip", icon: "🖐️", ruleKey: "count", reqXP: 30, ruleLabel: "🍎 Counting", title: "Finger Scout", desc: "Counts each finger carefully." },
+        { name: "Button Finder Bo", icon: "🔘", ruleKey: "count", reqXP: 60, ruleLabel: "🍎 Counting", title: "Item Spotter", desc: "Finds and counts hidden items." },
+        { name: "Acorn Collector Kiri", icon: "🌰", ruleKey: "count", reqXP: 90, ruleLabel: "🍎 Counting", title: "Grove Scout", desc: "Counts forest nuts accurately." },
+        { name: "Toy Box Sorter Jin", icon: "🧸", ruleKey: "count", reqXP: 135, ruleLabel: "🍎 Counting", title: "Toy Master", desc: "Counts up blocks and teddy bears." },
+        { name: "Starlight Teller Riku", icon: "✨", ruleKey: "count", reqXP: 180, ruleLabel: "🍎 Counting", title: "Sky Spotter", desc: "Counts shooting stars in the night." },
+        
+        { name: "Snack Nibbler Yoshi", icon: "🍓", ruleKey: "sub_5", reqXP: 30, ruleLabel: "➖ Take Away", title: "Berry Chomper", desc: "Takes berries away to find what's left." },
+        { name: "Cookie Cruncher Chip", icon: "🍪", ruleKey: "sub_5", reqXP: 60, ruleLabel: "➖ Take Away", title: "Snack Ninja", desc: "Quickly nibbles snacks down to 0." },
+        { name: "Leaf Dropper Fumi", icon: "🍂", ruleKey: "sub_5", reqXP: 90, ruleLabel: "➖ Take Away", title: "Breeze Runner", desc: "Counts how many leaves fell." },
+        { name: "Bubble Popper Poko", icon: "🫧", ruleKey: "sub_5", reqXP: 135, ruleLabel: "➖ Take Away", title: "Bubble Ninja", desc: "Pops bubbles one by one!" },
+        { name: "Shadow Sneak Shino", icon: "🐾", ruleKey: "sub_5", reqXP: 180, ruleLabel: "➖ Take Away", title: "Quiet Stepper", desc: "Leaves fewer tracks with every step." },
+
+        { name: "Star Catcher Hoshi", icon: "⭐", ruleKey: "add_5", reqXP: 30, ruleLabel: "➕ Add to 5", title: "Star Weaver", desc: "Combines two stars into one." },
+        { name: "Pair Maker Nami", icon: "🍒", ruleKey: "add_5", reqXP: 60, ruleLabel: "➕ Add to 5", title: "Pair Scout", desc: "Matches two groups together." },
+        { name: "Puppy Pal Paws", icon: "🐶", ruleKey: "add_5", reqXP: 90, ruleLabel: "➕ Add to 5", title: "Pack Leader", desc: "Adds playful puppies up to five." },
+        { name: "Flower Bloom Hana", icon: "🌸", ruleKey: "add_5", reqXP: 135, ruleLabel: "➕ Add to 5", title: "Petal Gatherer", desc: "Adds blossom petals up to five." },
+        { name: "Rainbow Arch Niji", icon: "🌈", ruleKey: "add_5", reqXP: 180, ruleLabel: "➕ Add to 5", title: "Prism Weaver", desc: "Builds a full arch of five colors." },
+
+        { name: "Ten-Strike Titan", icon: "🔟", ruleKey: "add_10", reqXP: 45, ruleLabel: "⭐ Add to 10", title: "Two-Hand Striker", desc: "Uses all 10 fingers together!" },
+        { name: "Golden Coin Zeni", icon: "🪙", ruleKey: "add_10", reqXP: 90, ruleLabel: "⭐ Add to 10", title: "Treasure Guard", desc: "Fills treasure chest up to ten." },
+        { name: "Bowling Pin Goro", icon: "🎳", ruleKey: "add_10", reqXP: 135, ruleLabel: "⭐ Add to 10", title: "Strike Roller", desc: "Counts all ten bowling pins." },
+        { name: "Rocket Booster Tora", icon: "🚀", ruleKey: "add_10", reqXP: 180, ruleLabel: "⭐ Add to 10", title: "Blastoff Scout", desc: "Counts up the ten second countdown." },
+        { name: "Solar Flare Suni", icon: "☀️", ruleKey: "add_10", reqXP: 225, ruleLabel: "⭐ Add to 10", title: "Sun Striker", desc: "Warms up complete sets of ten." },
+
+        { name: "Copper Belt Kento", icon: "🥉", ruleKey: "overall", reqXP: 150, ruleLabel: "Overall XP", title: "Playground Hero", desc: "Demonstrates consistent kindergarten readiness." },
+        { name: "Silver Belt Ginji", icon: "🥈", ruleKey: "overall", reqXP: 300, ruleLabel: "Overall XP", title: "Counting Champion", desc: "Quickly masters every basic count." },
+        { name: "Gold Belt Kin", icon: "🥇", ruleKey: "overall", reqXP: 500, ruleLabel: "Overall XP", title: "Kinder Dojo Sensei", desc: "Complete master of numbers to ten!" },
+        { name: "Supreme Dragon Ryu", icon: "🐉", ruleKey: "overall", reqXP: 750, ruleLabel: "Overall XP", title: "Preschool Legend", desc: "The ultimate little dragon of mathematics!" }
       ],
+
       grade2: [
-        { name: "White Belt Ken", icon: "🥋", ruleKey: "overall", reqXP: 0, ruleLabel: "2nd Grade Starter", title: "Novice", desc: "Mastering the foundation of addition and sets." },
-        { name: "Twin Strike Ren", icon: "👯", ruleKey: "doubles", reqXP: 60, ruleLabel: "👯 Doubles", title: "Mirror Twin", desc: "Instant speed on 6+6, 7+7, 8+8." },
-        { name: "Near-Twin Kage", icon: "⚡", ruleKey: "doubles", reqXP: 120, ruleLabel: "👯 Near Doubles", title: "Shadow Striker", desc: "Calculates 7+8 instantly using double 7 plus 1." },
-        { name: "Bridge Ten Jin", icon: "🎯", ruleKey: "make_ten", reqXP: 90, ruleLabel: "🎯 Make Ten", title: "Bridge Builder", desc: "Bridges numbers across 10 in his mind." },
-        { name: "Rabbit Hopper Usagi", icon: "🦘", ruleKey: "skip_count", reqXP: 90, ruleLabel: "🦘 Skip Count", title: "Speed Leaper", desc: "Hops across 2s, 5s, and 10s without stopping." },
-        { name: "Multiplier Ronin Raiden", icon: "⚔️", ruleKey: "mult_intro", reqXP: 120, ruleLabel: "✖️ Basic Sets", title: "Sets Samurai", desc: "Master of equal groups and arrays." },
-        { name: "Silver Guardian Gin", icon: "🛡️", ruleKey: "overall", reqXP: 350, ruleLabel: "Overall XP", title: "2nd Grade Grandmaster", desc: "Mastered all second grade addition and sets!" }
+        { name: "White Belt Ken", icon: "🥋", ruleKey: "overall", reqXP: 0, ruleLabel: "Starter", title: "Novice", desc: "Starting the path of mental addition." },
+        { name: "Twin Strike Ren", icon: "👯", ruleKey: "doubles", reqXP: 45, ruleLabel: "👯 Doubles", title: "Twin Striker", desc: "Fast on 6+6, 7+7, 8+8." },
+        { name: "Mirror Twin Kazu", icon: "🪞", ruleKey: "doubles", reqXP: 90, ruleLabel: "👯 Doubles", title: "Reflector", desc: "Sees identical numbers instantly." },
+        { name: "Double Dragon Ryuto", icon: "🐲", ruleKey: "doubles", reqXP: 150, ruleLabel: "👯 Doubles", title: "Twin Drake", desc: "Strikes twins like dual dragon claws." },
+        { name: "Near-Twin Kage", icon: "⚡", ruleKey: "doubles", reqXP: 210, ruleLabel: "👯 Near Doubles", title: "Shadow Striker", desc: "Solves 7+8 via 7+7+1 in a flash." },
+        { name: "Offset Blade Saya", icon: "🗡️", ruleKey: "doubles", reqXP: 270, ruleLabel: "👯 Near Doubles", title: "Split Edge", desc: "Master of doubles plus or minus one." },
+
+        { name: "Bridge Ten Jin", icon: "🎯", ruleKey: "make_ten", reqXP: 45, ruleLabel: "🎯 Make Ten", title: "Bridge Builder", desc: "Bridges numbers across 10 in his mind." },
+        { name: "Anchor Stone Toru", icon: "⚓", ruleKey: "make_ten", reqXP: 90, ruleLabel: "🎯 Make Ten", title: "Anchor Guard", desc: "Anchors difficult sums to ten." },
+        { name: "Deca Scout Tenro", icon: "🏯", ruleKey: "make_ten", reqXP: 150, ruleLabel: "🎯 Make Ten", title: "Castle Sentinel", desc: "Secures the base-ten foundation." },
+        { name: "Bridge Architect Maya", icon: "🌉", ruleKey: "make_ten", reqXP: 210, ruleLabel: "🎯 Make Ten", title: "Master Builder", desc: "Effortlessly spans from 8 into 15." },
+        { name: "Fortress Captain Gaku", icon: "🛡️", ruleKey: "make_ten", reqXP: 270, ruleLabel: "🎯 Make Ten", title: "Wall Commander", desc: "Impenetrable mental addition." },
+
+        { name: "Rabbit Hopper Usagi", icon: "🦘", ruleKey: "skip_count", reqXP: 45, ruleLabel: "🦘 Skip Count", title: "Speed Leaper", desc: "Hops across 2s without stopping." },
+        { name: "Five-Star Shuriken Go", icon: "⭐", ruleKey: "skip_count", reqXP: 90, ruleLabel: "🦘 Skip Count", title: "Star Tosser", desc: "Skips by 5s like clockwork." },
+        { name: "Ten-Pace Scout Deka", icon: "👟", ruleKey: "skip_count", reqXP: 150, ruleLabel: "🦘 Skip Count", title: "Deca Runner", desc: "Races by 10s into triple digits." },
+        { name: "Leaping Crane Tsuru", icon: "🦩", ruleKey: "skip_count", reqXP: 210, ruleLabel: "🦘 Skip Count", title: "Wind Hopper", desc: "Effortless cadence on all skip counts." },
+        { name: "Comet Dasher Hayate", icon: "☄️", ruleKey: "skip_count", reqXP: 270, ruleLabel: "🦘 Skip Count", title: "Flash Dasher", desc: "Fastest skip-counter in the realm." },
+
+        { name: "Array Apprentice Roku", icon: "🧱", ruleKey: "mult_intro", reqXP: 45, ruleLabel: "✖️ Basic Sets", title: "Block Stacker", desc: "Arranges rows and columns." },
+        { name: "Multiplier Ronin Raiden", icon: "⚔️", ruleKey: "mult_intro", reqXP: 90, ruleLabel: "✖️ Basic Sets", title: "Sets Samurai", desc: "Calculates equal groups instantly." },
+        { name: "Grid Master Koshi", icon: "🏁", ruleKey: "mult_intro", reqXP: 150, ruleLabel: "✖️ Basic Sets", title: "Tessellator", desc: "Sees products in 2D grids." },
+        { name: "Repeated Addition Ken", icon: "🔄", ruleKey: "mult_intro", reqXP: 210, ruleLabel: "✖️ Basic Sets", title: "Loop Striker", desc: "Turns repeated addition into multiplication." },
+        { name: "Set Tactician Daiki", icon: "📜", ruleKey: "mult_intro", reqXP: 270, ruleLabel: "✖️ Basic Sets", title: "Array Strategist", desc: "Master commander of grouping operations." },
+
+        { name: "Silver Guardian Gin", icon: "🥈", ruleKey: "overall", reqXP: 250, ruleLabel: "Overall XP", title: "2nd Grade Ace", desc: "Solid all-around mathematical speed." },
+        { name: "Golden Sensei Shin", icon: "🥇", ruleKey: "overall", reqXP: 450, ruleLabel: "Overall XP", title: "2nd Grade Master", desc: "Unmatched mastery of addition and sets." },
+        { name: "Imperial Shogun Nobu", icon: "👑", ruleKey: "overall", reqXP: 700, ruleLabel: "Overall XP", title: "Shogun Champion", desc: "Commands all 2nd grade mental math." },
+        { name: "Celestial Dragon Ryujin", icon: "🐉", ruleKey: "overall", reqXP: 1000, ruleLabel: "Overall XP", title: "Mythic Dragon", desc: "Supreme guardian of early elementary arithmetic!" }
       ],
+
       grade4: [
-        { name: "White Belt Ken", icon: "🥋", ruleKey: "overall", reqXP: 0, ruleLabel: "4th Grade Starter", title: "Novice", desc: "Beginning the path of mental multiplication tricks." },
-        { name: "Zero Hero Spark", icon: "⚡", ruleKey: "zeros", reqXP: 60, ruleLabel: "0️⃣ Zero Hero", title: "Zero Specialist", desc: "Multiplies front numbers and slaps zeros on the end." },
-        { name: "Thunder Raiden", icon: "🌩️", ruleKey: "zeros", reqXP: 180, ruleLabel: "0️⃣ Zero Hero", title: "Lightning Ronin", desc: "Instantly solves large multi-digit tens products." },
-        { name: "Mirror Fox Kitsune", icon: "🦊", ruleKey: "eleven", reqXP: 60, ruleLabel: "🪄 11s Magic", title: "Trickster Mage", desc: "Splits digits and places their sum in the center." },
-        { name: "Time Bender Chrono", icon: "⏳", ruleKey: "eleven", reqXP: 180, ruleLabel: "🪄 11s Magic", title: "Chronos Walker", desc: "Calculates carry-over 11s multiplication effortlessly." },
-        { name: "Timber Cleaver Cho", icon: "🪓", ruleKey: "split", reqXP: 60, ruleLabel: "🪓 Break & Split", title: "Woodland Chopper", desc: "Splits numbers into friendly tens and ones." },
-        { name: "Stone Sovereign Gou", icon: "🗿", ruleKey: "split", reqXP: 180, ruleLabel: "🪓 Break & Split", title: "Titan Crusher", desc: "Master tactician of the box distribution method." },
-        { name: "Yin-Yang Haku", icon: "☯️", ruleKey: "double_half", reqXP: 60, ruleLabel: "⚖️ Double & Halve", title: "Twin Balancer", desc: "Doubles the 5, halves the even." },
-        { name: "Flame Alchemist Kai", icon: "🔥", ruleKey: "double_half", reqXP: 180, ruleLabel: "⚖️ Double & Halve", title: "Fire Alchemist", desc: "Transforms difficult multiplication in a blaze." },
-        { name: "Glacier Yuki", icon: "❄️", ruleKey: "ending_five", reqXP: 60, ruleLabel: "⚡ Square 5s", title: "Frost Apprentice", desc: "Multiplies tens by n+1 and adds 25." },
-        { name: "Frost Wyrm Kuro", icon: "🌨️", ruleKey: "ending_five", reqXP: 180, ruleLabel: "⚡ Square 5s", title: "Blizzard Lord", desc: "Instant mental squares for any number ending in 5." },
-        { name: "Void Emperor Ryu", icon: "👑", ruleKey: "overall", reqXP: 600, ruleLabel: "Overall XP", title: "4th Grade Grandmaster", desc: "Supreme conqueror of all 2-digit mental multiplication!" }
+        { name: "White Belt Ken", icon: "🥋", ruleKey: "overall", reqXP: 0, ruleLabel: "Starter", title: "Novice", desc: "Stepping into 2-digit multiplication." },
+        
+        { name: "Zero Hero Spark", icon: "⚡", ruleKey: "zeros", reqXP: 45, ruleLabel: "0️⃣ Zero Hero", title: "Zero Specialist", desc: "Multiplies front numbers and tacks on zeros." },
+        { name: "Volt Raider Raiden", icon: "🌩️", ruleKey: "zeros", reqXP: 100, ruleLabel: "0️⃣ Zero Hero", title: "Thunder Ronin", desc: "Instantly solves tens by tens in a flash." },
+        { name: "Solar Emperor Sol", icon: "☀️", ruleKey: "zeros", reqXP: 180, ruleLabel: "0️⃣ Zero Hero", title: "Solar Guardian", desc: "Vanquishes zeroes with solar radiance." },
+        { name: "Nova Cannon Katsu", icon: "💥", ruleKey: "zeros", reqXP: 270, ruleLabel: "0️⃣ Zero Hero", title: "Nova Blaster", desc: "Launches zero-trick products instantly." },
+
+        { name: "Mirror Fox Kitsune", icon: "🦊", ruleKey: "eleven", reqXP: 45, ruleLabel: "🪄 11s Magic", title: "Trickster Mage", desc: "Splits digits and adds the center sum." },
+        { name: "Time Bender Chrono", icon: "⏳", ruleKey: "eleven", reqXP: 100, ruleLabel: "🪄 11s Magic", title: "Chronos Walker", desc: "Calculates carry-overs without blinking." },
+        { name: "Arcane Sage Ren", icon: "🔮", ruleKey: "eleven", reqXP: 180, ruleLabel: "🪄 11s Magic", title: "Arcane Master", desc: "Effortlessly commands 11-times equations." },
+        { name: "Illusionist Genki", icon: "🎭", ruleKey: "eleven", reqXP: 270, ruleLabel: "🪄 11s Magic", title: "Phantom Weaver", desc: "Bends two-digit sums into mental speed." },
+
+        { name: "Timber Cleaver Cho", icon: "🪓", ruleKey: "split", reqXP: 45, ruleLabel: "🪓 Break & Split", title: "Woodland Chopper", desc: "Splits numbers into tens and ones." },
+        { name: "Jade Viper Orochi", icon: "🐍", ruleKey: "split", reqXP: 100, ruleLabel: "🪓 Break & Split", title: "Forest Tactician", desc: "Box method strategist." },
+        { name: "Stone Sovereign Gou", icon: "🗿", ruleKey: "split", reqXP: 180, ruleLabel: "🪓 Break & Split", title: "Titan Crusher", desc: "Crushes multi-digit multiplication into easy sums." },
+        { name: "Mountain Slicer Iwao", icon: "⛰️", ruleKey: "split", reqXP: 270, ruleLabel: "🪓 Break & Split", title: "Earth Shaker", desc: "Splits complex factors with precision." },
+
+        { name: "Yin-Yang Haku", icon: "☯️", ruleKey: "double_half", reqXP: 45, ruleLabel: "⚖️ Double & Halve", title: "Twin Balancer", desc: "Doubles the 5, halves the even." },
+        { name: "Flame Alchemist Kai", icon: "🔥", ruleKey: "double_half", reqXP: 100, ruleLabel: "⚖️ Double & Halve", title: "Fire Alchemist", desc: "Transforms difficult multiplication in a blaze." },
+        { name: "Equinox Master Kiyo", icon: "🌙", ruleKey: "double_half", reqXP: 180, ruleLabel: "⚖️ Double & Halve", title: "Celestial Eclipse", desc: "Perfect harmony between even halves and double fives." },
+        { name: "Sun-Moon Ronin Nichi", icon: "🌅", ruleKey: "double_half", reqXP: 270, ruleLabel: "⚖️ Double & Halve", title: "Zen Duelist", desc: "Halves even factors instantly." },
+
+        { name: "Glacier Yuki", icon: "❄️", ruleKey: "ending_five", reqXP: 45, ruleLabel: "⚡ Square 5s", title: "Frost Apprentice", desc: "Multiplies tens by n+1 and adds 25." },
+        { name: "Frost Wyrm Kuro", icon: "🌨️", ruleKey: "ending_five", reqXP: 100, ruleLabel: "⚡ Square 5s", title: "Blizzard Lord", desc: "Instant mental squares for numbers ending in 5." },
+        { name: "Absolute Zero Hyou", icon: "🧊", ruleKey: "ending_five", reqXP: 180, ruleLabel: "⚡ Square 5s", title: "Glacial Sovereign", desc: "Freezes squares ending in 5 in under 2 seconds." },
+        { name: "Aurora Weaver Reika", icon: "🌌", ruleKey: "ending_five", reqXP: 270, ruleLabel: "⚡ Square 5s", title: "Polar Queen", desc: "Squares ending in 5 glow like the Northern Lights." },
+
+        { name: "Dragon Blade Ryu", icon: "🐉", ruleKey: "overall", reqXP: 400, ruleLabel: "Overall XP", title: "Dragon Knight", desc: "Proven mastery of all mental multiplication." },
+        { name: "Diamond Shogun Dai", icon: "💎", ruleKey: "overall", reqXP: 700, ruleLabel: "Overall XP", title: "Diamond Sensei", desc: "Crystal clear mental calculations." },
+        { name: "Void Emperor Ryu", icon: "👑", ruleKey: "overall", reqXP: 1000, ruleLabel: "Overall XP", title: "Grandmaster", desc: "Supreme conqueror of all 2-digit multiplication!" },
+        { name: "Infinity Deity Mugen", icon: "✨", ruleKey: "overall", reqXP: 1500, ruleLabel: "Overall XP", title: "Cosmic Sovereign", desc: "Transcended all limits of elementary mathematics!" }
       ]
     };
 
