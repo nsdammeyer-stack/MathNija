@@ -407,7 +407,7 @@
       align-items: center;
       gap: 0.5rem;
       width: 100%;
-      max-width: 440px;
+      max-width: 480px;
     }
 
     .problem-box {
@@ -430,6 +430,7 @@
       color: #38bdf8;
       font-family: 'Fredoka', cursive;
       letter-spacing: 0.5px;
+      min-height: 1.4rem;
     }
 
     .streak-badge {
@@ -757,7 +758,7 @@
     @media (max-width: 640px) {
       h1 { font-size: 1.3rem; }
       nav { grid-template-columns: repeat(2, 1fr); }
-      .problem-box { font-size: 2.5rem; padding: 0.75rem 1.25rem; }
+      .problem-box { font-size: 2.3rem; padding: 0.75rem 1rem; }
       .controls-row { flex-direction: column; align-items: stretch; }
       .combat-stage { flex-direction: column; gap: 0.75rem; }
       .speech-bubble::before { display: none; }
@@ -853,7 +854,7 @@
           <span class="streak-badge">Streak: <span id="streakCount">0</span> 🔥</span>
         </div>
 
-        <!-- SCAFFOLDED PROBLEM DISPLAY -->
+        <!-- PROBLEM DISPLAY -->
         <div class="problem-box-container">
           <div class="problem-box" id="problemDisplay">30 × 40</div>
           <div class="problem-leading-sub" id="problemSubDisplay"></div>
@@ -1024,7 +1025,6 @@
       `;
     }
 
-    // 25 NINJAS PER GRADE
     const GRADE_NINJAS = {
       preschool: [
         { name: "Apple Sprout Ken", color: "#10b981", headwear: "headband", weapon: "shuriken", rarity: "apprentice", ruleKey: "overall", reqXP: 0, ruleLabel: "Starter", title: "Novice Sprout", desc: "Takes first steps in counting.", shout: "“Let's count our snacks!”" },
@@ -1060,19 +1060,19 @@
 
       grade2: [
         { name: "White Belt Ken", color: "#6366f1", headwear: "headband", weapon: "shuriken", rarity: "apprentice", ruleKey: "overall", reqXP: 0, ruleLabel: "Starter", title: "Novice", desc: "Mental addition apprentice.", shout: "“Sharpening our arithmetic!”" },
-        { name: "Twin Strike Ren", color: "#06b6d4", headwear: "headband", weapon: "dual_swords", rarity: "rare", ruleKey: "doubles", reqXP: 45, ruleLabel: "👯 Doubles", title: "Twin Striker", desc: "Instant on 6+6, 7+7, 8+8.", shout: "“TWIN BLADES UNITE!”" },
-        { name: "Mirror Twin Kazu", color: "#38bdf8", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "doubles", reqXP: 90, ruleLabel: "👯 Doubles", title: "Reflector", desc: "Sees identical numbers instantly.", shout: "“Reflected across the mirror!”" },
-        { name: "Double Dragon Ryuto", color: "#8b5cf6", headwear: "horns", weapon: "dual_swords", rarity: "epic", ruleKey: "doubles", reqXP: 150, ruleLabel: "👯 Doubles", title: "Twin Drake", desc: "Strikes twins like dragon claws.", shout: "“DOUBLE DRAGON STRIKE!”" },
-        { name: "Near-Twin Kage", color: "#f59e0b", headwear: "horns", weapon: "shuriken", rarity: "epic", ruleKey: "doubles", reqXP: 210, ruleLabel: "👯 Near Doubles", title: "Shadow Striker", desc: "Solves 7+8 via 7+7+1.", shout: "“Double plus one... direct hit!”" },
-        { name: "Offset Blade Saya", color: "#ec4899", headwear: "headband", weapon: "dual_swords", rarity: "legendary", ruleKey: "doubles", reqXP: 270, ruleLabel: "👯 Near Doubles", title: "Split Edge", desc: "Master of doubles +/- 1.", shout: "“Offset strike landed!”" },
-
         { name: "Bridge Ten Jin", color: "#10b981", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "make_ten", reqXP: 45, ruleLabel: "🎯 Make Ten", title: "Bridge Builder", desc: "Bridges numbers across 10.", shout: "“Crossing ten in a heartbeat!”" },
         { name: "Anchor Stone Toru", color: "#475569", headwear: "headband", weapon: "axe", rarity: "rare", ruleKey: "make_ten", reqXP: 90, ruleLabel: "🎯 Make Ten", title: "Anchor Guard", desc: "Anchors difficult sums to ten.", shout: "“Ten is locked down!”" },
         { name: "Deca Scout Tenro", color: "#0ea5e9", headwear: "headband", weapon: "shuriken", rarity: "epic", ruleKey: "make_ten", reqXP: 150, ruleLabel: "🎯 Make Ten", title: "Castle Sentinel", desc: "Secures the base-ten foundation.", shout: "“Base ten fortress defended!”" },
         { name: "Bridge Architect Maya", color: "#d946ef", headwear: "crown", weapon: "shuriken", rarity: "epic", ruleKey: "make_ten", reqXP: 210, ruleLabel: "🎯 Make Ten", title: "Master Builder", desc: "Spans from 8 into 15.", shout: "“Bridging numbers effortlessly!”" },
         { name: "Fortress Captain Gaku", color: "#334155", headwear: "horns", weapon: "dual_swords", rarity: "legendary", ruleKey: "make_ten", reqXP: 270, ruleLabel: "🎯 Make Ten", title: "Wall Commander", desc: "Impenetrable addition.", shout: "“Unshakeable ten defense!”" },
 
-        { name: "Rabbit Hopper Usagi", color: "#22c55e", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "skip_count", reqXP: 45, ruleLabel: "🦘 Skip Count", title: "Speed Leaper", desc: "Hops across 2s without stopping.", shout: "“2, 4, 6, 8... jump!”" },
+        { name: "Twin Strike Ren", color: "#06b6d4", headwear: "headband", weapon: "dual_swords", rarity: "rare", ruleKey: "doubles", reqXP: 45, ruleLabel: "👯 Doubles", title: "Twin Striker", desc: "Instant on 6+6, 7+7, 8+8.", shout: "“TWIN BLADES UNITE!”" },
+        { name: "Mirror Twin Kazu", color: "#38bdf8", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "doubles", reqXP: 90, ruleLabel: "👯 Doubles", title: "Reflector", desc: "Sees identical numbers instantly.", shout: "“Reflected across the mirror!”" },
+        { name: "Double Dragon Ryuto", color: "#8b5cf6", headwear: "horns", weapon: "dual_swords", rarity: "epic", ruleKey: "doubles", reqXP: 150, ruleLabel: "👯 Doubles", title: "Twin Drake", desc: "Strikes twins like dragon claws.", shout: "“DOUBLE DRAGON STRIKE!”" },
+        { name: "Near-Twin Kage", color: "#f59e0b", headwear: "horns", weapon: "shuriken", rarity: "epic", ruleKey: "doubles", reqXP: 210, ruleLabel: "👯 Near Doubles", title: "Shadow Striker", desc: "Solves 7+8 via 7+7+1.", shout: "“Double plus one... direct hit!”" },
+        { name: "Offset Blade Saya", color: "#ec4899", headwear: "headband", weapon: "dual_swords", rarity: "legendary", ruleKey: "doubles", reqXP: 270, ruleLabel: "👯 Near Doubles", title: "Split Edge", desc: "Master of doubles +/- 1.", shout: "“Offset strike landed!”" },
+
+        { name: "Rabbit Hopper Usagi", color: "#22c55e", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "skip_count", reqXP: 45, ruleLabel: "🦘 Skip Count", title: "Speed Leaper", desc: "Hops across 2s without stopping.", shout: "“Hop to the next number!”" },
         { name: "Five-Star Shuriken Go", color: "#eab308", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "skip_count", reqXP: 90, ruleLabel: "🦘 Skip Count", title: "Star Tosser", desc: "Skips by 5s like clockwork.", shout: "“Five star pattern complete!”" },
         { name: "Ten-Pace Scout Deka", color: "#f97316", headwear: "headband", weapon: "shuriken", rarity: "epic", ruleKey: "skip_count", reqXP: 150, ruleLabel: "🦘 Skip Count", title: "Deca Runner", desc: "Races by 10s into 100.", shout: "“Pacing by tens!”" },
         { name: "Leaping Crane Tsuru", color: "#a855f7", headwear: "crown", weapon: "dual_swords", rarity: "epic", ruleKey: "skip_count", reqXP: 210, ruleLabel: "🦘 Skip Count", title: "Wind Hopper", desc: "Effortless skip counts.", shout: "“Rhythmic crane leaps!”" },
@@ -1146,16 +1146,16 @@
         title: "2nd Grade (Micah)",
         rules: [
           { id: "mixed", name: "Mixed 2nd Grade" },
+          { id: "skip_count", name: "🦘 Skip Counting (Find the Next Number)" },
           { id: "make_ten", name: "🎯 Make Ten (Bridge to 10)" },
           { id: "doubles", name: "👯 Doubles & Near-Doubles" },
-          { id: "skip_count", name: "🦘 Skip Count (2s, 5s, 10s)" },
-          { id: "mult_intro", name: "✖️ Basic Intro Multiples" }
+          { id: "mult_intro", name: "✖️ Basic Sets & Groups" }
         ],
         academy: [
-          { id: "make_ten", icon: "🎯", title: "Bridge to 10", desc: "Turn the bigger number into 10! Borrow 2 from 7 to turn 8 into 10, leaving 5. Then 10 + 5 = 15!", example: "8 + 7 → 8 + (2 + 5) → 10 + 5 = 15" },
+          { id: "skip_count", icon: "🦘", title: "Skip Counting Sequence", desc: "Keep the cadence going! Count up by 2s, 5s, or 10s to find the next missing number in line.", example: "5, 10, 15, 20, 25, ___ → 30!" },
+          { id: "make_ten", icon: "🎯", title: "Bridge to 10", desc: "Turn the bigger number into 10! Borrow from the other number to make 10, then add the leftovers.", example: "8 + 7 → 8 + (2 + 5) → 10 + 5 = 15" },
           { id: "doubles", icon: "👯", title: "Doubles Fast-Strike", desc: "Remember twins: 6+6=12, 7+7=14, 8+8=16. For 7+8, do 7+7 and add 1!", example: "7 + 8 → (7 + 7) + 1 = 15" },
-          { id: "skip_count", icon: "🦘", title: "Skip Count Ninja", desc: "Multiplying by 5 is just rhythm counting by 5s: 5, 10, 15, 20!", example: "4 × 5 → 5, 10, 15, 20" },
-          { id: "mult_intro", icon: "✖️", title: "Equal Groups & Arrays", desc: "Multiplication is repeated addition of equal sets: 3 groups of 4!", example: "3 × 4 = 4 + 4 + 4 = 12" }
+          { id: "mult_intro", icon: "✖️", title: "Equal Groups & Sets", desc: "Equal groups are just repeated addition: 3 groups of 4!", example: "3 groups of 4 = 4 + 4 + 4 = 12" }
         ]
       },
       grade4: {
@@ -1335,7 +1335,7 @@
       } catch (e) {}
     }
 
-    // LEADING PROBLEM GENERATOR (Prompts multi-step mental decomposition)
+    // TAILORED PROBLEM GENERATION FOR EACH GRADE
     function generateProblem() {
       const visualElem = document.getElementById("visualCounter");
       visualElem.textContent = "";
@@ -1352,7 +1352,7 @@
         if (chosen === "count") {
           const count = Math.floor(Math.random() * 7) + 1;
           visualElem.textContent = icon.repeat(count);
-          return { text: `Count the ${icon}!`, subText: `Point and count one by one!`, answer: count, hint: `Count out loud: 1, 2, 3...`, rule: "count" };
+          return { text: `Count the ${icon}!`, subText: `Point and count one by one!`, answer: count, hint: `Count out loud: 1, 2, 3... until you reach the end!`, rule: "count" };
         } else if (chosen === "add_5") {
           const a = Math.floor(Math.random() * 4) + 1;
           const b = Math.floor(Math.random() * (5 - a)) + 1;
@@ -1371,16 +1371,33 @@
         }
       }
 
-      // 2. 2ND GRADE (Micah) - EXPLICIT LEADING STEPS
+      // 2. 2ND GRADE (Micah)
       if (currentGrade === "grade2") {
         let chosen = selectedRule === "mixed" 
-          ? ["make_ten", "doubles", "skip_count", "mult_intro"][Math.floor(Math.random() * 4)] 
+          ? ["skip_count", "make_ten", "doubles", "mult_intro"][Math.floor(Math.random() * 4)] 
           : selectedRule;
 
-        if (chosen === "make_ten") {
-          // Bigger number (8 or 9) + smaller number (4 to 7)
+        // SKIP COUNTING: Pure sequence display, NO multiplication symbols
+        if (chosen === "skip_count") {
+          const step = [2, 5, 10][Math.floor(Math.random() * 3)];
+          const countLen = Math.floor(Math.random() * 4) + 3; // 3 to 6 numbers shown
+          let seq = [];
+          for (let i = 1; i <= countLen; i++) {
+            seq.push(i * step);
+          }
+          const nextVal = (countLen + 1) * step;
+
+          return {
+            text: `${seq.join(", ")}, ___`,
+            subText: `Counting by ${step}s! What comes next?`,
+            leadingPrompt: `“Keep the rhythm going! Count up by ${step}s: ${seq.slice(-2).join(", ")}... what's next?”`,
+            answer: nextVal,
+            hint: `We are counting by ${step}s. Take the last number (${seq[seq.length - 1]}) and add ${step} to it!`,
+            rule: "skip_count"
+          };
+        } else if (chosen === "make_ten") {
           const big = [8, 9, 7][Math.floor(Math.random() * 3)];
-          const small = Math.floor(Math.random() * 4) + 5; // 5 to 8
+          const small = Math.floor(Math.random() * 4) + 5;
           const [a, b] = big >= small ? [big, small] : [small, big];
           const needed = 10 - a;
           const leftover = b - needed;
@@ -1388,13 +1405,13 @@
           return {
             text: `${a} + ${b}`,
             subText: `${a} + (${needed} + ${leftover})  →  10 + ${leftover} = ?`,
-            leadingPrompt: `“${a} needs ${needed} to make 10! That leaves ${leftover}. What is 10 + ${leftover}?”`,
+            leadingPrompt: `“${a} needs ${needed} to make 10! 10 + ${leftover} = ?”`,
             answer: a + b,
             hint: `Bridge to 10: Turn ${a} into 10 by taking ${needed} from ${b}. Now add 10 + ${leftover} = ${a + b}!`,
             rule: "make_ten"
           };
         } else if (chosen === "doubles") {
-          const base = Math.floor(Math.random() * 5) + 5; // 5 to 9
+          const base = Math.floor(Math.random() * 5) + 5;
           const isNear = Math.random() > 0.4;
 
           if (isNear) {
@@ -1402,7 +1419,7 @@
             return {
               text: `${base} + ${b}`,
               subText: `(${base} + ${base}) + 1  →  ${base * 2} + 1 = ?`,
-              leadingPrompt: `“Use twins: double ${base} is ${base * 2}. Now add 1 more!”`,
+              leadingPrompt: `“Double ${base} is ${base * 2}. Now add 1 more!”`,
               answer: base + b,
               hint: `Near Doubles: Double ${base} is ${base * 2}, plus 1 more makes ${base + b}!`,
               rule: "doubles"
@@ -1411,34 +1428,20 @@
             return {
               text: `${base} + ${base}`,
               subText: `Double ${base} = ?`,
-              leadingPrompt: `“Identical twins! Strike with double ${base}!”`,
+              leadingPrompt: `“Twins strike! What is double ${base}?”`,
               answer: base * 2,
               hint: `Twins: Double ${base} is ${base * 2}!`,
               rule: "doubles"
             };
           }
-        } else if (chosen === "skip_count") {
-          const step = [2, 5, 10][Math.floor(Math.random() * 3)];
-          const times = Math.floor(Math.random() * 6) + 3;
-          let sequence = [];
-          for (let i = 1; i < times; i++) sequence.push(i * step);
-
-          return {
-            text: `${times} × ${step}`,
-            subText: `${sequence.join(", ")}, ___ ?`,
-            leadingPrompt: `“Skip count by ${step}s! What comes next after ${sequence[sequence.length - 1]}?”`,
-            answer: times * step,
-            hint: `Skip count by ${step}s ${times} times: ${sequence.join(", ")}, ${times * step}!`,
-            rule: "skip_count"
-          };
         } else {
-          // Intro Multiples
+          // Basic Sets
           const a = Math.floor(Math.random() * 4) + 2;
           const b = [3, 4, 5][Math.floor(Math.random() * 3)];
           return {
-            text: `${a} × ${b}`,
+            text: `${a} groups of ${b}`,
             subText: `${Array(a).fill(b).join(" + ")} = ?`,
-            leadingPrompt: `“${a} groups of ${b}! Add ${b} repeated ${a} times.”`,
+            leadingPrompt: `“Add ${b} repeated ${a} times!”`,
             answer: a * b,
             hint: `${a} groups of ${b}: That's ${Array(a).fill(b).join(" + ")} = ${a * b}!`,
             rule: "mult_intro"
@@ -1446,53 +1449,42 @@
         }
       }
 
-      // 3. 4TH GRADE (Aaron)
+      // 3. 4TH GRADE (Aaron) - NO SPOILER HINTS UNLESS PROMPTED
       let chosen = selectedRule === "mixed" 
         ? ["zeros", "eleven", "ending_five", "double_half", "split"][Math.floor(Math.random() * 5)] 
         : selectedRule;
 
-      let a, b, hint, subText, prompt;
+      let a, b, hint;
       if (chosen === "zeros") {
         a = (Math.floor(Math.random() * 8) + 2) * 10;
         b = (Math.floor(Math.random() * 8) + 2) * 10;
-        const front = (a / 10) * (b / 10);
-        subText = `(${a/10} × ${b/10}) & tack on 00  →  ${front} & 00 = ?`;
-        prompt = `“Multiply ${a/10} × ${b/10} = ${front}. Slap two 0s onto the end!”`;
-        hint = `Zero Hero: ${a / 10} × ${b / 10} = ${front}. Add two 0s to make ${a * b}!`;
+        hint = `Zero Hero: Multiply ${a/10} × ${b/10} = ${(a/10)*(b/10)}. Then add both zeros to make ${a * b}!`;
       } else if (chosen === "eleven") {
         a = Math.floor(Math.random() * 80) + 11;
         b = 11;
         const tens = Math.floor(a / 10);
         const ones = a % 10;
         const mid = tens + ones;
-        subText = `${tens} [${tens}+${ones}] ${ones}  →  middle sum is ${mid}`;
-        prompt = `“Pull ${tens} and ${ones} apart. Place their sum (${mid}) in the center!”`;
-        hint = `11s Trick: Pull ${tens} and ${ones} apart. Add ${tens} + ${ones} = ${mid}. Place in middle!`;
+        hint = `11s Trick: Pull ${tens} and ${ones} apart. Add ${tens} + ${ones} = ${mid}. Place ${mid} in the middle (carry if over 9)!`;
       } else if (chosen === "ending_five") {
         const t = Math.floor(Math.random() * 7) + 2;
         a = t * 10 + 5;
         b = a;
-        subText = `(${t} × ${t + 1}) & attach 25  →  ${t * (t + 1)} & 25 = ?`;
-        prompt = `“Multiply tens by next number: ${t} × ${t+1} = ${t*(t+1)}. Tack on 25!”`;
-        hint = `Square 5s: Multiply ${t} by ${t + 1} = ${t * (t + 1)}, then append 25 to get ${a * b}!`;
+        hint = `Square 5s: Multiply tens by next number (${t} × ${t + 1} = ${t * (t + 1)}), then attach 25 to get ${a * b}!`;
       } else if (chosen === "double_half") {
         a = [15, 25, 35, 45][Math.floor(Math.random() * 4)];
         b = (Math.floor(Math.random() * 6) + 2) * 2;
-        subText = `Double ${a} → ${a*2} | Halve ${b} → ${b/2}  →  ${a*2} × ${b/2} = ?`;
-        prompt = `“Double ${a} to ${a*2}, halve ${b} to ${b/2}. Multiply the easier pair!”`;
-        hint = `Double & Halve: Double ${a} to ${a * 2}, halve ${b} to ${b / 2}. Calculate ${a * 2} × ${b / 2}!`;
+        hint = `Double & Halve: Double ${a} into ${a * 2}, halve ${b} into ${b / 2}. Now calculate ${a * 2} × ${b / 2} = ${a * b}!`;
       } else {
         a = [21, 31, 41, 51][Math.floor(Math.random() * 4)];
         b = Math.floor(Math.random() * 30) + 12;
-        subText = `(${a-1} × ${b}) + (1 × ${b})  →  ${(a-1)*b} + ${b} = ?`;
-        prompt = `“Split into tens and ones: ${(a-1)*b} + ${b}!”`;
-        hint = `Break & Split: Split ${a} into ${a - 1} + 1. Calculate (${a - 1} × ${b}) + (1 × ${b})!`;
+        hint = `Break & Split: Split ${a} into ${a - 1} + 1. Calculate (${a - 1} × ${b}) + (1 × ${b}) = ${a * b}!`;
       }
 
       return {
         text: `${a} × ${b}`,
-        subText: subText,
-        leadingPrompt: prompt,
+        subText: "", // Left blank so Aaron solves it independently
+        leadingPrompt: null,
         answer: a * b,
         hint: hint,
         rule: chosen
@@ -1507,8 +1499,12 @@
       document.getElementById("hintCard").classList.remove("show");
       document.getElementById("hintBody").textContent = currentProblem.hint;
 
-      // Update avatar companion leading guidance
-      if (currentProblem.leadingPrompt) {
+      // For Aaron, companion gives battle encouragement, not mathematical answers
+      if (currentGrade === "grade4") {
+        const roster = GRADE_NINJAS[currentGrade] || GRADE_NINJAS.grade4;
+        const currentActive = roster.find(n => n.name === equippedNinja) || roster[0];
+        document.getElementById("companionSpeech").textContent = currentActive.shout || "“Strike with focus, ninja!”";
+      } else if (currentProblem.leadingPrompt) {
         document.getElementById("companionSpeech").textContent = currentProblem.leadingPrompt;
       }
     }
@@ -1567,7 +1563,7 @@
         void fig.offsetWidth;
         fig.classList.add("hit");
 
-        speech.textContent = `“Stay centered! ${currentProblem.text} was ${currentProblem.answer}.”`;
+        speech.textContent = `“Stay centered! Correct answer was ${currentProblem.answer}.”`;
         toggleHint();
       }
 
