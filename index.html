@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Math Ninja: 2-Digit Multiplication Master</title>
+  <title>Math Ninja: Kids Learning Dojo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
@@ -39,7 +39,7 @@
 
     header {
       width: 100%;
-      max-width: 900px;
+      max-width: 920px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
@@ -80,7 +80,6 @@
       flex-wrap: wrap;
     }
 
-    /* PROFILE SELECTOR STYLING */
     .profile-controls {
       display: flex;
       align-items: center;
@@ -122,9 +121,7 @@
       transition: background 0.15s;
     }
 
-    .add-profile-btn:hover {
-      background: #4f46e5;
-    }
+    .add-profile-btn:hover { background: #4f46e5; }
 
     .ninja-badge {
       display: flex;
@@ -169,7 +166,7 @@
 
     nav {
       width: 100%;
-      max-width: 900px;
+      max-width: 920px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 0.5rem;
@@ -202,7 +199,7 @@
 
     main {
       width: 100%;
-      max-width: 900px;
+      max-width: 920px;
     }
 
     .panel { display: none; }
@@ -217,41 +214,43 @@
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
     }
 
-    .rule-selector-wrap {
+    /* CONTROL TOOLBAR */
+    .controls-row {
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-wrap: wrap;
       gap: 0.75rem;
-      background: #0f172a;
-      padding: 0.6rem 1rem;
-      border-radius: 0.75rem;
-      border: 1px solid var(--card-border);
+      justify-content: center;
       width: 100%;
-      max-width: 420px;
+      max-width: 600px;
     }
 
-    .rule-selector-wrap label {
+    .selector-box {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #0f172a;
+      padding: 0.5rem 0.85rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--card-border);
+    }
+
+    .selector-box label {
       font-size: 0.85rem;
       font-weight: 800;
       color: #fbbf24;
       white-space: nowrap;
     }
 
-    .rule-select {
+    .custom-select {
       background: #1e293b;
       color: #fff;
       border: 1px solid var(--card-border);
-      padding: 0.45rem 0.75rem;
+      padding: 0.4rem 0.65rem;
       border-radius: 0.5rem;
       font-weight: 700;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       outline: none;
       cursor: pointer;
-      width: 100%;
-    }
-
-    .rule-select:focus {
-      border-color: #6366f1;
     }
 
     .game-arena {
@@ -274,6 +273,13 @@
 
     .companion-avatar { font-size: 1.8rem; }
 
+    .visual-counter {
+      font-size: 2.2rem;
+      letter-spacing: 4px;
+      min-height: 2.6rem;
+      user-select: none;
+    }
+
     .problem-box {
       font-family: 'Fredoka', cursive;
       font-size: 3.5rem;
@@ -281,7 +287,7 @@
       color: #f8fafc;
       background: #0f172a;
       border: 2px solid var(--card-border);
-      padding: 1.25rem 2.5rem;
+      padding: 1rem 2.25rem;
       border-radius: 1.25rem;
       min-width: 280px;
     }
@@ -467,13 +473,10 @@
       background: #10b981;
     }
 
-    /* MODAL STYLES */
+    /* MODAL */
     .modal-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0, 0, 0, 0.75);
       display: none;
       align-items: center;
@@ -482,9 +485,7 @@
       padding: 1rem;
     }
 
-    .modal-overlay.active {
-      display: flex;
-    }
+    .modal-overlay.active { display: flex; }
 
     .modal-box {
       background: var(--card-bg);
@@ -517,10 +518,6 @@
       outline: none;
     }
 
-    .modal-input:focus {
-      border-color: #6366f1;
-    }
-
     .modal-actions {
       display: flex;
       gap: 0.5rem;
@@ -530,7 +527,8 @@
     @media (max-width: 640px) {
       h1 { font-size: 1.3rem; }
       nav { grid-template-columns: repeat(2, 1fr); }
-      .problem-box { font-size: 2.8rem; padding: 1rem 1.5rem; }
+      .problem-box { font-size: 2.8rem; padding: 0.75rem 1.25rem; }
+      .controls-row { flex-direction: column; align-items: stretch; }
     }
   </style>
 </head>
@@ -541,17 +539,14 @@
       <div class="title-icon">🥷</div>
       <div>
         <h1>Math Ninja</h1>
-        <div class="subtitle">2-Digit Multiplication Master</div>
+        <div class="subtitle">Hero Math Academy</div>
       </div>
     </div>
 
     <div class="player-stats">
-      <!-- DYNAMIC PROFILE SELECTOR -->
       <div class="profile-controls">
         <span>👤</span>
-        <select id="profileSelect" class="profile-select" onchange="onProfileChange()">
-          <!-- Populated by JS -->
-        </select>
+        <select id="profileSelect" class="profile-select" onchange="onProfileChange()"></select>
         <button class="add-profile-btn" onclick="openNewProfileModal()" title="Add New Ninja">+</button>
       </div>
 
@@ -591,23 +586,30 @@
     <div id="practice" class="panel active">
       <div class="card game-arena">
         
-        <!-- TARGET RULE SELECTOR -->
-        <div class="rule-selector-wrap">
-          <label for="ruleSelect">🎯 Target Rule:</label>
-          <select id="ruleSelect" class="rule-select" onchange="onRuleChange()">
-            <option value="mixed">Mixed (All Rules)</option>
-            <option value="zeros">0️⃣ The Zero Hero (e.g. 30 × 40)</option>
-            <option value="eleven">🪄 The 11s Magic Trick (e.g. 35 × 11)</option>
-            <option value="split">🪓 The Break & Split (e.g. 31 × 35)</option>
-            <option value="double_half">⚖️ Double & Halve (e.g. 15 × 24)</option>
-            <option value="ending_five">⚡ Square Ending in 5 (e.g. 35 × 35)</option>
-          </select>
+        <!-- GRADE LEVEL & RULE CONTROLS -->
+        <div class="controls-row">
+          <div class="selector-box">
+            <label for="gradeSelect">🎓 Grade Level:</label>
+            <select id="gradeSelect" class="custom-select" onchange="onGradeChange()">
+              <option value="preschool">Preschool (Reid · Count & Add to 10)</option>
+              <option value="grade2">2nd Grade (Micah · Add/Sub & Basics)</option>
+              <option value="grade4" selected>4th Grade (Aaron · 2-Digit Shortcuts)</option>
+            </select>
+          </div>
+
+          <div class="selector-box" id="ruleSelectorBox">
+            <label for="ruleSelect">🎯 Target Rule:</label>
+            <select id="ruleSelect" class="custom-select" onchange="onRuleChange()"></select>
+          </div>
         </div>
 
         <div class="companion-box">
           <span class="companion-avatar" id="companionAvatar">🥋</span>
-          <span id="companionSpeech" style="font-size: 0.9rem; font-weight: 700;">"Pick a rule and strike true!"</span>
+          <span id="companionSpeech" style="font-size: 0.9rem; font-weight: 700;">"Focus your ninja mind!"</span>
         </div>
+
+        <!-- Optional Visual Counting Aid for Preschool -->
+        <div class="visual-counter" id="visualCounter"></div>
 
         <div style="display: flex; gap: 0.5rem; align-items: center;">
           <span class="streak-badge">Streak: <span id="streakCount">0</span> 🔥</span>
@@ -654,42 +656,11 @@
     <!-- TRICK ACADEMY PANEL -->
     <div id="academy" class="panel">
       <div class="card">
-        <h2 style="font-family: 'Fredoka', cursive; color: #fbbf24; margin-bottom: 1rem;">Ninja Multiplication Scrolls</h2>
-        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.25rem;">
-          Tap any secret scroll below to practice that rule immediately:
+        <h2 style="font-family: 'Fredoka', cursive; color: #fbbf24; margin-bottom: 0.5rem;">Ninja Multiplication & Math Scrolls</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.25rem;" id="academyDescription">
+          Shortcuts tailored to your active grade level:
         </p>
-
-        <div class="trick-grid">
-          <div class="trick-card" onclick="selectAndPractice('zeros')">
-            <h3><span>0️⃣</span> The Zero Hero</h3>
-            <p>For numbers ending in 0 (like <strong>30 × 40</strong>), multiply 3 × 4 = 12, then add both zeros back!</p>
-            <div class="trick-example">30 × 40 = 1,200</div>
-          </div>
-
-          <div class="trick-card" onclick="selectAndPractice('eleven')">
-            <h3><span>🪄</span> The 11s Magic Trick</h3>
-            <p>To multiply by 11 (like <strong>35 × 11</strong>), pull 3 and 5 apart, add them (3+5=8), and place 8 in the middle!</p>
-            <div class="trick-example">35 × 11 = 385</div>
-          </div>
-
-          <div class="trick-card" onclick="selectAndPractice('split')">
-            <h3><span>🪓</span> The Break & Split</h3>
-            <p>Split a number into tens and ones! For <strong>31 × 35</strong>: (30 × 35) + (1 × 35) = 1,050 + 35 = 1,085.</p>
-            <div class="trick-example">31 × 35 = 1,085</div>
-          </div>
-
-          <div class="trick-card" onclick="selectAndPractice('double_half')">
-            <h3><span>⚖️</span> Double & Halve</h3>
-            <p>If one number ends in 5 and the other is even (like <strong>15 × 24</strong>), double 15 to 30 and halve 24 to 12!</p>
-            <div class="trick-example">30 × 12 = 360</div>
-          </div>
-
-          <div class="trick-card" onclick="selectAndPractice('ending_five')">
-            <h3><span>⚡</span> Square Ending in 5</h3>
-            <p>For <strong>35 × 35</strong>: Multiply 3 by the next number (3 × 4 = 12), and tack on 25!</p>
-            <div class="trick-example">35 × 35 = 1,225</div>
-          </div>
-        </div>
+        <div class="trick-grid" id="academyScrolls"></div>
       </div>
     </div>
 
@@ -746,54 +717,114 @@
   <script>
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIQJ6mLKxhn_Ba-bLSFLc5I36hy5cQ7ae5iUyQNn0qlhf75LvERbDFmsJzEPXEAs6N/exec";
 
-    // Multi-profile state
+    // Grade defaults for profile initializations
+    const DEFAULT_GRADES = {
+      "Aaron": "grade4",
+      "Micah": "grade2",
+      "Reid": "preschool"
+    };
+
     let profilesList = JSON.parse(localStorage.getItem("math_ninja_profiles") || '["Aaron", "Micah", "Reid"]');
     let currentProfile = localStorage.getItem("math_ninja_current_profile") || profilesList[0] || "Aaron";
 
-    // Active profile stats
+    let currentGrade = "grade4";
+    let selectedRule = "mixed";
     let playerXP = 0;
     let equippedNinja = "White Belt Ken";
     let totalSolved = 0;
     let totalCorrect = 0;
     let currentStreak = 0;
     let currentProblem = null;
-    let selectedRule = "mixed";
+
+    const GRADE_CONFIG = {
+      preschool: {
+        title: "Preschool (Reid)",
+        rules: [
+          { id: "mixed", name: "Mixed Preschool" },
+          { id: "count", name: "🍎 Counting Objects" },
+          { id: "add_5", name: "➕ Add within 5" },
+          { id: "sub_5", name: "➖ Take Away within 5" },
+          { id: "add_10", name: "⭐ Add to 10" }
+        ],
+        academy: [
+          { id: "count", title: "Counting Apples", desc: "Count each item carefully with your finger!", example: "🍎🍎🍎 = 3" },
+          { id: "add_5", title: "Adding with Hands", desc: "Start with the bigger number, count up on your fingers!", example: "3 + 2 = 5" },
+          { id: "sub_5", title: "Eating the Snacks", desc: "If you have 4 berries and eat 1, how many are left?", example: "4 - 1 = 3" }
+        ]
+      },
+      grade2: {
+        title: "2nd Grade (Micah)",
+        rules: [
+          { id: "mixed", name: "Mixed 2nd Grade" },
+          { id: "doubles", name: "👯 Doubles & Near-Doubles" },
+          { id: "make_ten", name: "🎯 Make Ten (Add to 20)" },
+          { id: "skip_count", name: "🦘 Skip Count (2s, 5s, 10s)" },
+          { id: "mult_intro", name: "✖️ Basic Intro Multiples" }
+        ],
+        academy: [
+          { id: "doubles", title: "Doubles Fast-Strike", desc: "Remember twins: 6+6=12, 7+7=14. For 6+7, do 6+6 + 1!", example: "6 + 7 = 13" },
+          { id: "make_ten", title: "Bridge to 10", desc: "For 8 + 5: take 2 from 5 to make 10, then add the left over 3!", example: "8 + 5 = 10 + 3 = 13" },
+          { id: "skip_count", title: "Skip Count Ninja", desc: "Multiplying by 5 is just counting by 5s: 5, 10, 15, 20!", example: "4 × 5 = 20" }
+        ]
+      },
+      grade4: {
+        title: "4th Grade (Aaron)",
+        rules: [
+          { id: "mixed", name: "Mixed (All 4th Grade Rules)" },
+          { id: "zeros", name: "0️⃣ The Zero Hero (e.g. 30 × 40)" },
+          { id: "eleven", name: "🪄 The 11s Magic Trick (e.g. 35 × 11)" },
+          { id: "split", name: "🪓 The Break & Split (e.g. 31 × 35)" },
+          { id: "double_half", name: "⚖️ Double & Halve (e.g. 15 × 24)" },
+          { id: "ending_five", name: "⚡ Square Ending in 5 (e.g. 35 × 35)" }
+        ],
+        academy: [
+          { id: "zeros", title: "The Zero Hero", desc: "Multiply front numbers, then append total zeros!", example: "30 × 40 = 1,200" },
+          { id: "eleven", title: "The 11s Magic Trick", desc: "Pull 3 and 5 apart, add them (3+5=8), place 8 in middle!", example: "35 × 11 = 385" },
+          { id: "split", title: "The Break & Split", desc: "Split 31 into 30+1: (30 × 35) + (1 × 35) = 1,050 + 35!", example: "31 × 35 = 1,085" },
+          { id: "double_half", title: "Double & Halve", desc: "Double the 5-number, halve the even number!", example: "15 × 24 = 30 × 12 = 360" },
+          { id: "ending_five", title: "Square Ending in 5", desc: "Multiply tens digit by next number up (3×4=12) and add 25!", example: "35 × 35 = 1,225" }
+        ]
+      }
+    };
 
     const NINJAS = [
       { name: "White Belt Ken", icon: "🥋", reqXP: 0, title: "Novice Trainee", desc: "Just starting his mental journey." },
-      { name: "Shadow Kage", icon: "👤", reqXP: 150, title: "Speed Specialist", desc: "Master of The 11s Magic Trick." },
+      { name: "Shadow Kage", icon: "👤", reqXP: 150, title: "Speed Specialist", desc: "Master of speedy strikes." },
       { name: "Ember Blaze Kai", icon: "🔥", reqXP: 350, title: "Fire Element", desc: "Doubling and halving expert." },
-      { name: "Jade Viper Ren", icon: "🐍", reqXP: 650, title: "Forest Tactician", desc: "Break & Split box method strategist." },
-      { name: "Thunder Raiden", icon: "⚡", reqXP: 1000, title: "Lightning Ronin", desc: "Zero Hero master." },
-      { name: "Frost Phantom Yuki", icon: "❄️", reqXP: 1500, title: "Ice Grandmaster", desc: "Master of squares ending in 5." },
+      { name: "Jade Viper Ren", icon: "🐍", reqXP: 650, title: "Forest Tactician", desc: "Break & Split strategist." },
+      { name: "Thunder Raiden", icon: "⚡", reqXP: 1000, title: "Lightning Ronin", desc: "Strikes multiplication in a flash." },
+      { name: "Frost Phantom Yuki", icon: "❄️", reqXP: 1500, title: "Ice Grandmaster", desc: "Master of squaring and mental tricks." },
       { name: "Golden Sensei Shin", icon: "👑", reqXP: 2200, title: "Grand Champion", desc: "Legendary master of all numbers." }
     ];
 
-    // Load active profile data
     function loadActiveProfileData() {
       const data = JSON.parse(localStorage.getItem(`math_ninja_data_${currentProfile}`) || "{}");
       playerXP = data.xp || 0;
       equippedNinja = data.ninja || "White Belt Ken";
       totalSolved = data.totalSolved || 0;
       totalCorrect = data.totalCorrect || 0;
+      currentGrade = data.grade || DEFAULT_GRADES[currentProfile] || "grade4";
+      selectedRule = "mixed";
       currentStreak = 0;
       document.getElementById("streakCount").textContent = 0;
+      document.getElementById("gradeSelect").value = currentGrade;
+      populateRulesDropdown();
+      renderAcademyScrolls();
     }
 
-    // Save active profile data
     function saveActiveProfileData() {
       const data = {
         xp: playerXP,
         ninja: equippedNinja,
         totalSolved: totalSolved,
-        totalCorrect: totalCorrect
+        totalCorrect: totalCorrect,
+        grade: currentGrade
       };
       localStorage.setItem(`math_ninja_data_${currentProfile}`, JSON.stringify(data));
       localStorage.setItem("math_ninja_current_profile", currentProfile);
       localStorage.setItem("math_ninja_profiles", JSON.stringify(profilesList));
     }
 
-    // Initialize Profiles Dropdown
     function renderProfileSelector() {
       const select = document.getElementById("profileSelect");
       select.innerHTML = "";
@@ -814,6 +845,57 @@
       renderProblem();
     }
 
+    function onGradeChange() {
+      currentGrade = document.getElementById("gradeSelect").value;
+      selectedRule = "mixed";
+      populateRulesDropdown();
+      renderAcademyScrolls();
+      saveActiveProfileData();
+      renderProblem();
+    }
+
+    function populateRulesDropdown() {
+      const ruleSelect = document.getElementById("ruleSelect");
+      ruleSelect.innerHTML = "";
+      const rules = GRADE_CONFIG[currentGrade].rules;
+      rules.forEach(r => {
+        const opt = document.createElement("option");
+        opt.value = r.id;
+        opt.textContent = r.name;
+        if (r.id === selectedRule) opt.selected = true;
+        ruleSelect.appendChild(opt);
+      });
+    }
+
+    function renderAcademyScrolls() {
+      const container = document.getElementById("academyScrolls");
+      container.innerHTML = "";
+      const scrolls = GRADE_CONFIG[currentGrade].academy;
+      scrolls.forEach(s => {
+        const div = document.createElement("div");
+        div.className = "trick-card";
+        div.onclick = () => selectAndPractice(s.id);
+        div.innerHTML = `
+          <h3><span>📜</span> ${s.title}</h3>
+          <p>${s.desc}</p>
+          <div class="trick-example">${s.example}</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function onRuleChange() {
+      selectedRule = document.getElementById("ruleSelect").value;
+      renderProblem();
+    }
+
+    function selectAndPractice(ruleId) {
+      document.getElementById("ruleSelect").value = ruleId;
+      selectedRule = ruleId;
+      switchTab("practice");
+      renderProblem();
+    }
+
     function openNewProfileModal() {
       const modal = document.getElementById("newProfileModal");
       const input = document.getElementById("newProfileNameInput");
@@ -831,11 +913,11 @@
       const name = input.value.trim();
       if (!name) return;
 
-      // Add to profile list if new
       if (!profilesList.includes(name)) {
         profilesList.push(name);
       }
       currentProfile = name;
+      currentGrade = "grade4"; // default
       saveActiveProfileData();
       renderProfileSelector();
       loadActiveProfileData();
@@ -860,56 +942,156 @@
       } catch (e) {}
     }
 
-    function generateProblem(category = "mixed") {
-      const types = ["zeros", "eleven", "ending_five", "double_half", "split"];
-      const chosen = category === "mixed" ? types[Math.floor(Math.random() * types.length)] : category;
-      let a, b, hint;
+    // MULTI-GRADE PROBLEM GENERATOR
+    function generateProblem() {
+      const visualElem = document.getElementById("visualCounter");
+      visualElem.textContent = "";
 
+      // 1. PRESCHOOL (Reid)
+      if (currentGrade === "preschool") {
+        let chosen = selectedRule === "mixed" 
+          ? ["count", "add_5", "sub_5", "add_10"][Math.floor(Math.random() * 4)] 
+          : selectedRule;
+
+        const icons = ["🍎", "🚗", "⭐", "🐶", "🎈"];
+        const icon = icons[Math.floor(Math.random() * icons.length)];
+
+        if (chosen === "count") {
+          const count = Math.floor(Math.random() * 7) + 1;
+          visualElem.textContent = icon.repeat(count);
+          return {
+            text: `Count the ${icon}!`,
+            answer: count,
+            hint: `Count out loud one by one: 1, 2, 3... until you reach the end!`,
+            rule: "Counting"
+          };
+        } else if (chosen === "add_5") {
+          const a = Math.floor(Math.random() * 4) + 1;
+          const b = Math.floor(Math.random() * (5 - a)) + 1;
+          visualElem.textContent = `${icon.repeat(a)}  +  ${icon.repeat(b)}`;
+          return {
+            text: `${a} + ${b}`,
+            answer: a + b,
+            hint: `Start at ${a} and count forward ${b} more!`,
+            rule: "Add within 5"
+          };
+        } else if (chosen === "sub_5") {
+          const a = Math.floor(Math.random() * 4) + 2;
+          const b = Math.floor(Math.random() * (a - 1)) + 1;
+          visualElem.textContent = `${icon.repeat(a)}  (take away ${b})`;
+          return {
+            text: `${a} - ${b}`,
+            answer: a - b,
+            hint: `Hold up ${a} fingers and take away ${b}!`,
+            rule: "Take away within 5"
+          };
+        } else {
+          // Add within 10
+          const a = Math.floor(Math.random() * 6) + 2;
+          const b = Math.floor(Math.random() * (10 - a)) + 1;
+          visualElem.textContent = `${icon.repeat(a)}  +  ${icon.repeat(b)}`;
+          return {
+            text: `${a} + ${b}`,
+            answer: a + b,
+            hint: `Start at ${a} in your head, then count up ${b} fingers!`,
+            rule: "Add to 10"
+          };
+        }
+      }
+
+      // 2. 2ND GRADE (Micah)
+      if (currentGrade === "grade2") {
+        let chosen = selectedRule === "mixed" 
+          ? ["doubles", "make_ten", "skip_count", "mult_intro"][Math.floor(Math.random() * 4)] 
+          : selectedRule;
+
+        if (chosen === "doubles") {
+          const base = Math.floor(Math.random() * 6) + 4; // 4 to 9
+          const isNear = Math.random() > 0.5;
+          const b = isNear ? base + 1 : base;
+          return {
+            text: `${base} + ${b}`,
+            answer: base + b,
+            hint: isNear ? `Doubles trick: ${base} + ${base} = ${base * 2}, plus 1 more is ${base + b}!` : `Doubles trick: Double ${base} is ${base * 2}!`,
+            rule: "Doubles"
+          };
+        } else if (chosen === "make_ten") {
+          const a = Math.floor(Math.random() * 4) + 7; // 7, 8, 9
+          const b = Math.floor(Math.random() * 5) + 4; // 4 to 8
+          const need = 10 - a;
+          return {
+            text: `${a} + ${b}`,
+            answer: a + b,
+            hint: `Make Ten: Take ${need} from ${b} to turn ${a} into 10, then add the rest (${b - need})!`,
+            rule: "Make Ten"
+          };
+        } else if (chosen === "skip_count") {
+          const step = [2, 5, 10][Math.floor(Math.random() * 3)];
+          const times = Math.floor(Math.random() * 6) + 3;
+          return {
+            text: `${times} × ${step}`,
+            answer: times * step,
+            hint: `Skip count by ${step}s ${times} times!`,
+            rule: `Skip count ${step}s`
+          };
+        } else {
+          // Multiples intro
+          const a = Math.floor(Math.random() * 5) + 2;
+          const b = [2, 3, 5][Math.floor(Math.random() * 3)];
+          return {
+            text: `${a} × ${b}`,
+            answer: a * b,
+            hint: `${a} groups of ${b}: That's ${Array(a).fill(b).join(" + ")} = ${a * b}!`,
+            rule: "Intro Multiples"
+          };
+        }
+      }
+
+      // 3. 4TH GRADE (Aaron) - 2-Digit Multiplication Tricks
+      let chosen = selectedRule === "mixed" 
+        ? ["zeros", "eleven", "ending_five", "double_half", "split"][Math.floor(Math.random() * 5)] 
+        : selectedRule;
+
+      let a, b, hint;
       if (chosen === "zeros") {
         a = (Math.floor(Math.random() * 8) + 2) * 10;
         b = (Math.floor(Math.random() * 8) + 2) * 10;
-        hint = `Zero Hero: ${a / 10} × ${b / 10} = ${(a / 10) * (b / 10)}. Add two 0s to make ${a * b}!`;
+        hint = `Zero Hero: ${a / 10} × ${b / 10} = ${(a / 10) * (b / 10)}. Attach two zeros to get ${a * b}!`;
       } else if (chosen === "eleven") {
         a = Math.floor(Math.random() * 80) + 11;
         b = 11;
         const tens = Math.floor(a / 10);
         const ones = a % 10;
-        hint = `11s Trick: Pull ${tens} and ${ones} apart. Add ${tens} + ${ones} = ${tens + ones}. Put that in the middle!`;
+        hint = `11s Trick: Pull ${tens} and ${ones} apart. Add ${tens} + ${ones} = ${tens + ones}. Place in middle!`;
       } else if (chosen === "ending_five") {
         const t = Math.floor(Math.random() * 7) + 2;
         a = t * 10 + 5;
         b = a;
-        hint = `Square 5s: Multiply ${t} by ${t + 1} = ${t * (t + 1)}, then tack on 25 to get ${a * b}!`;
+        hint = `Square 5s: Multiply ${t} by ${t + 1} = ${t * (t + 1)}, then append 25 to get ${a * b}!`;
       } else if (chosen === "double_half") {
         a = [15, 25, 35, 45][Math.floor(Math.random() * 4)];
         b = (Math.floor(Math.random() * 6) + 2) * 2;
-        hint = `Double & Halve: Double ${a} to ${a * 2}, halve ${b} to ${b / 2}. Now do ${a * 2} × ${b / 2}!`;
+        hint = `Double & Halve: Double ${a} to ${a * 2}, halve ${b} to ${b / 2}. Calculate ${a * 2} × ${b / 2}!`;
       } else {
         a = [21, 31, 41, 51][Math.floor(Math.random() * 4)];
         b = Math.floor(Math.random() * 30) + 12;
         hint = `Break & Split: Split ${a} into ${a - 1} + 1. Calculate (${a - 1} × ${b}) + (1 × ${b})!`;
       }
-      return { a, b, answer: a * b, hint, rule: chosen };
+
+      return {
+        text: `${a} × ${b}`,
+        answer: a * b,
+        hint: hint,
+        rule: chosen
+      };
     }
 
     function renderProblem() {
-      currentProblem = generateProblem(selectedRule);
-      document.getElementById("problemDisplay").textContent = `${currentProblem.a} × ${currentProblem.b}`;
+      currentProblem = generateProblem();
+      document.getElementById("problemDisplay").textContent = currentProblem.text;
       document.getElementById("answerInput").value = "";
       document.getElementById("hintCard").classList.remove("show");
       document.getElementById("hintBody").textContent = currentProblem.hint;
-    }
-
-    function onRuleChange() {
-      selectedRule = document.getElementById("ruleSelect").value;
-      renderProblem();
-    }
-
-    function selectAndPractice(rule) {
-      document.getElementById("ruleSelect").value = rule;
-      selectedRule = rule;
-      switchTab("practice");
-      renderProblem();
     }
 
     function toggleHint() {
@@ -941,13 +1123,13 @@
         playerXP += gained;
         currentStreak++;
         document.getElementById("streakCount").textContent = currentStreak;
-        document.getElementById("companionSpeech").textContent = "“Direct hit! Your mental math strike landed!”";
+        document.getElementById("companionSpeech").textContent = "“Direct hit! Your math strike landed!”";
         renderProblem();
       } else {
         playBeep(220, 0.2);
         currentStreak = 0;
         document.getElementById("streakCount").textContent = 0;
-        document.getElementById("companionSpeech").textContent = `“Keep focus! ${currentProblem.a} × ${currentProblem.b} was ${currentProblem.answer}.”`;
+        document.getElementById("companionSpeech").textContent = `“Keep focus! ${currentProblem.text} was ${currentProblem.answer}.”`;
         toggleHint();
       }
 
@@ -1009,7 +1191,6 @@
       updateUI();
     }
 
-    // DIRECT SYNC TO GOOGLE SHEETS
     async function syncToGoogleSheets(prob, isCorrect, gainedXP) {
       if (!APPS_SCRIPT_URL) return;
 
@@ -1026,8 +1207,8 @@
         totalSolved: totalSolved,
         accuracy: accuracyPct,
         log: {
-          mode: "Practice Quest",
-          problem: `${prob.a} × ${prob.b}`,
+          mode: GRADE_CONFIG[currentGrade].title,
+          problem: prob.text,
           correct: isCorrect,
           xpGained: gainedXP,
           rule: prob.rule
@@ -1043,7 +1224,6 @@
         });
         syncLabel.textContent = "Saved to Google Sheets ✓";
       } catch (err) {
-        console.error("Sync error:", err);
         syncLabel.textContent = "Saved locally";
       }
     }
@@ -1076,8 +1256,8 @@
     }
 
     function nextSpeedProblem() {
-      currentSpeedProblem = generateProblem("zeros");
-      document.getElementById("speedProblemDisplay").textContent = `${currentSpeedProblem.a} × ${currentSpeedProblem.b}`;
+      currentSpeedProblem = generateProblem();
+      document.getElementById("speedProblemDisplay").textContent = currentSpeedProblem.text;
       document.getElementById("speedAnswerInput").value = "";
       document.getElementById("speedAnswerInput").focus();
     }
@@ -1108,7 +1288,6 @@
       }
     });
 
-    // Boot
     renderProfileSelector();
     loadActiveProfileData();
     renderProblem();
