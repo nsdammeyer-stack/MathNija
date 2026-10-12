@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Math Ninja: Kids Learning Dojo</title>
+  <title>Math Ninja: Elemental Masters Dojo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
@@ -39,7 +39,7 @@
 
     header {
       width: 100%;
-      max-width: 920px;
+      max-width: 960px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
@@ -139,7 +139,7 @@
       display: flex;
       flex-direction: column;
       gap: 0.25rem;
-      width: 130px;
+      width: 140px;
     }
 
     .xp-text {
@@ -166,7 +166,7 @@
 
     nav {
       width: 100%;
-      max-width: 920px;
+      max-width: 960px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 0.5rem;
@@ -199,7 +199,7 @@
 
     main {
       width: 100%;
-      max-width: 920px;
+      max-width: 960px;
     }
 
     .panel { display: none; }
@@ -214,14 +214,13 @@
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
     }
 
-    /* CONTROL TOOLBAR */
     .controls-row {
       display: flex;
       flex-wrap: wrap;
       gap: 0.75rem;
       justify-content: center;
       width: 100%;
-      max-width: 600px;
+      max-width: 650px;
     }
 
     .selector-box {
@@ -379,55 +378,37 @@
 
     .hint-card.show { display: block; }
 
-    .trick-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1rem;
+    /* DOJO ROSTER GRID */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+      justify-content: center;
     }
 
-    .trick-card {
+    .filter-pill {
       background: #0f172a;
       border: 1px solid var(--card-border);
-      border-radius: 0.8rem;
-      padding: 1.25rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .trick-card:hover {
-      border-color: #fbbf24;
-      transform: translateY(-3px);
-    }
-
-    .trick-card h3 {
-      font-size: 1.1rem;
-      margin-bottom: 0.5rem;
-      color: #fbbf24;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .trick-card p {
-      font-size: 0.85rem;
       color: var(--text-muted);
-      line-height: 1.4;
-      margin-bottom: 0.75rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
     }
 
-    .trick-example {
-      background: #1e293b;
-      padding: 0.5rem 0.75rem;
-      border-radius: 0.5rem;
-      font-weight: 700;
-      color: #38bdf8;
-      font-size: 0.9rem;
+    .filter-pill.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: #6366f1;
     }
 
     .roster-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.25rem;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 1.1rem;
     }
 
     .ninja-card {
@@ -439,24 +420,41 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
+      position: relative;
     }
 
     .ninja-card.equipped {
       border-color: #10b981;
-      box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
     }
 
     .ninja-card.locked {
-      opacity: 0.55;
-      filter: grayscale(0.8);
+      opacity: 0.5;
+      filter: grayscale(0.85);
     }
 
-    .ninja-img-wrap { font-size: 3.5rem; }
+    .ninja-img-wrap { font-size: 3.2rem; }
     .ninja-title {
       font-family: 'Fredoka', cursive;
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       color: #fbbf24;
+    }
+
+    .rule-tag {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.4rem;
+      background: #1e293b;
+      color: #38bdf8;
+    }
+
+    .ninja-xp-cost {
+      font-size: 0.78rem;
+      font-weight: 800;
+      margin-top: 0.25rem;
     }
 
     .sync-status {
@@ -539,7 +537,7 @@
       <div class="title-icon">🥷</div>
       <div>
         <h1>Math Ninja</h1>
-        <div class="subtitle">Hero Math Academy</div>
+        <div class="subtitle">Elemental Masters Dojo</div>
       </div>
     </div>
 
@@ -586,12 +584,11 @@
     <div id="practice" class="panel active">
       <div class="card game-arena">
         
-        <!-- GRADE LEVEL & RULE CONTROLS -->
         <div class="controls-row">
           <div class="selector-box">
             <label for="gradeSelect">🎓 Grade Level:</label>
             <select id="gradeSelect" class="custom-select" onchange="onGradeChange()">
-              <option value="preschool">Preschool (Reid · Count & Add to 10)</option>
+              <option value="preschool">Preschool (Reid · Count & Add)</option>
               <option value="grade2">2nd Grade (Micah · Add/Sub & Basics)</option>
               <option value="grade4" selected>4th Grade (Aaron · 2-Digit Shortcuts)</option>
             </select>
@@ -605,10 +602,9 @@
 
         <div class="companion-box">
           <span class="companion-avatar" id="companionAvatar">🥋</span>
-          <span id="companionSpeech" style="font-size: 0.9rem; font-weight: 700;">"Focus your ninja mind!"</span>
+          <span id="companionSpeech" style="font-size: 0.9rem; font-weight: 700;">"Focus your elemental powers!"</span>
         </div>
 
-        <!-- Optional Visual Counting Aid for Preschool -->
         <div class="visual-counter" id="visualCounter"></div>
 
         <div style="display: flex; gap: 0.5rem; align-items: center;">
@@ -657,8 +653,8 @@
     <div id="academy" class="panel">
       <div class="card">
         <h2 style="font-family: 'Fredoka', cursive; color: #fbbf24; margin-bottom: 0.5rem;">Ninja Multiplication & Math Scrolls</h2>
-        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.25rem;" id="academyDescription">
-          Shortcuts tailored to your active grade level:
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.25rem;">
+          Master these scrolls to unlock elemental rule ninjas:
         </p>
         <div class="trick-grid" id="academyScrolls"></div>
       </div>
@@ -692,10 +688,23 @@
     <!-- NINJA ROSTER -->
     <div id="roster" class="panel">
       <div class="card">
-        <h2 style="font-family: 'Fredoka', cursive; color: #fbbf24; margin-bottom: 0.5rem;">Ninja Character Dojo</h2>
-        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
-          Earn XP by solving problems to unlock new ninjas!
+        <h2 style="font-family: 'Fredoka', cursive; color: #fbbf24; margin-bottom: 0.5rem;">Elemental Ninja Dojo (18 Champions)</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">
+          Specialty ninjas are unlocked with specific rule XP! Practice target rules to recruit them.
         </p>
+
+        <!-- DOJO FILTER -->
+        <div class="filter-bar">
+          <button class="filter-pill active" onclick="filterDojo('all')">All Ninjas</button>
+          <button class="filter-pill" onclick="filterDojo('overall')">Overall XP</button>
+          <button class="filter-pill" onclick="filterDojo('zeros')">0️⃣ Zero Hero</button>
+          <button class="filter-pill" onclick="filterDojo('eleven')">🪄 11s Magic</button>
+          <button class="filter-pill" onclick="filterDojo('split')">🪓 Break & Split</button>
+          <button class="filter-pill" onclick="filterDojo('double_half')">⚖️ Double & Halve</button>
+          <button class="filter-pill" onclick="filterDojo('ending_five')">⚡ Square 5s</button>
+          <button class="filter-pill" onclick="filterDojo('foundations')">🌱 Foundations</button>
+        </div>
+
         <div class="roster-grid" id="rosterContainer"></div>
       </div>
     </div>
@@ -717,7 +726,6 @@
   <script>
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIQJ6mLKxhn_Ba-bLSFLc5I36hy5cQ7ae5iUyQNn0qlhf75LvERbDFmsJzEPXEAs6N/exec";
 
-    // Grade defaults for profile initializations
     const DEFAULT_GRADES = {
       "Aaron": "grade4",
       "Micah": "grade2",
@@ -730,11 +738,49 @@
     let currentGrade = "grade4";
     let selectedRule = "mixed";
     let playerXP = 0;
+    let ruleXP = {}; // Stores rule-specific XP: { zeros: 0, eleven: 0, split: 0, ... }
     let equippedNinja = "White Belt Ken";
     let totalSolved = 0;
     let totalCorrect = 0;
     let currentStreak = 0;
     let currentProblem = null;
+    let activeDojoFilter = "all";
+
+    // 18 EXPANDED ELEMENTAL NINJAS
+    const NINJAS = [
+      // 1. Overall XP Progression
+      { name: "White Belt Ken", icon: "🥋", category: "overall", ruleKey: "overall", reqXP: 0, title: "Novice Trainee", desc: "Just starting his mental martial arts journey." },
+      { name: "Shadow Kage", icon: "👤", category: "overall", ruleKey: "overall", reqXP: 150, title: "Speed Specialist", desc: "Strikes swift like lightning in dark corridors." },
+      { name: "Dragon Sensei Shin", icon: "🐉", category: "overall", ruleKey: "overall", reqXP: 800, title: "Dragon Grandmaster", desc: "Commands the elemental power of combined math." },
+      { name: "Void Deity Ryu", icon: "👑", category: "overall", ruleKey: "overall", reqXP: 2500, title: "Mythic Supreme", desc: "The ultimate legend across every realm of mathematics." },
+
+      // 2. Zero Hero Clan (e.g. 30x40)
+      { name: "Spark Zenta", icon: "⚡", category: "zeros", ruleKey: "zeros", reqXP: 60, title: "Zero Spark", desc: "Understands the instant speed of appending zeros." },
+      { name: "Volt Raider Raiden", icon: "🌩️", category: "zeros", ruleKey: "zeros", reqXP: 180, title: "Thunder Ronin", desc: "Strikes 10s and 100s multiples at blinding speed." },
+      { name: "Solar Emperor Sol", icon: "☀️", category: "zeros", ruleKey: "zeros", reqXP: 400, title: "Solar Guardian", desc: "Vanquishes zeroes with incandescent solar brilliance." },
+
+      // 3. 11s Magic Clan (e.g. 35x11)
+      { name: "Mirror Fox Kitsune", icon: "🦊", category: "eleven", ruleKey: "eleven", reqXP: 60, title: "Trickster Mage", desc: "Splits digits apart and sums their core with ease." },
+      { name: "Chronos Shifter", icon: "⏳", category: "eleven", ruleKey: "eleven", reqXP: 180, title: "Time Bender", desc: "Controls the seamless flow of 11s addition ripples." },
+      { name: "Mystic Sage Ren", icon: "🔮", category: "eleven", ruleKey: "eleven", reqXP: 400, title: "Arcane Master", desc: "Carries numbers across dimensions effortlessly." },
+
+      // 4. Break & Split Clan (e.g. 31x35)
+      { name: "Timber Cleaver Cho", icon: "🪓", category: "split", ruleKey: "split", reqXP: 60, title: "Woodland Chopper", desc: "Cleanly splits complex numbers into tens and ones." },
+      { name: "Jade Viper Orochi", icon: "🐍", category: "split", ruleKey: "split", reqXP: 180, title: "Forest Tactician", desc: "Weaves through the box method with tactical grace." },
+      { name: "Titan Crusher Gou", icon: "🗿", category: "split", ruleKey: "split", reqXP: 400, title: "Stone Sovereign", desc: "Crushes double-digit multiplication into simple pieces." },
+
+      // 5. Double & Halve Clan (e.g. 15x24)
+      { name: "Yin-Yang Twin Haku", icon: "☯️", category: "double_half", ruleKey: "double_half", reqXP: 60, title: "Twin Balancer", desc: "Doubles the 5 and halves the even in one motion." },
+      { name: "Ember Blaze Kai", icon: "🔥", category: "double_half", ruleKey: "double_half", reqXP: 180, title: "Flame Alchemist", desc: "Uses fiery heat to transform tricky equations." },
+      { name: "Equinox Master Kiyo", icon: "🌙", category: "double_half", ruleKey: "double_half", reqXP: 400, title: "Celestial Eclipse", desc: "Perfect harmony between even halves and double fives." },
+
+      // 6. Square Ending in 5 Clan (e.g. 35x35)
+      { name: "Glacier Yuki", icon: "❄️", category: "ending_five", ruleKey: "ending_five", reqXP: 60, title: "Frost Apprentice", desc: "Multiplies tens by their successor and freezes 25 at the end." },
+      { name: "Frost Wyrm Kuro", icon: "🌨️", category: "ending_five", ruleKey: "ending_five", reqXP: 180, title: "Blizzard Lord", desc: "Masters high-velocity squaring ending in 5." },
+
+      // 7. Foundations Clan (Preschool & 2nd Grade)
+      { name: "Bonsai Sprout Taro", icon: "🌱", category: "foundations", ruleKey: "foundations", reqXP: 50, title: "Seedling Ninja", desc: "Earned by counting, doubling, and mastering basics." }
+    ];
 
     const GRADE_CONFIG = {
       preschool: {
@@ -787,19 +833,10 @@
       }
     };
 
-    const NINJAS = [
-      { name: "White Belt Ken", icon: "🥋", reqXP: 0, title: "Novice Trainee", desc: "Just starting his mental journey." },
-      { name: "Shadow Kage", icon: "👤", reqXP: 150, title: "Speed Specialist", desc: "Master of speedy strikes." },
-      { name: "Ember Blaze Kai", icon: "🔥", reqXP: 350, title: "Fire Element", desc: "Doubling and halving expert." },
-      { name: "Jade Viper Ren", icon: "🐍", reqXP: 650, title: "Forest Tactician", desc: "Break & Split strategist." },
-      { name: "Thunder Raiden", icon: "⚡", reqXP: 1000, title: "Lightning Ronin", desc: "Strikes multiplication in a flash." },
-      { name: "Frost Phantom Yuki", icon: "❄️", reqXP: 1500, title: "Ice Grandmaster", desc: "Master of squaring and mental tricks." },
-      { name: "Golden Sensei Shin", icon: "👑", reqXP: 2200, title: "Grand Champion", desc: "Legendary master of all numbers." }
-    ];
-
     function loadActiveProfileData() {
       const data = JSON.parse(localStorage.getItem(`math_ninja_data_${currentProfile}`) || "{}");
       playerXP = data.xp || 0;
+      ruleXP = data.ruleXP || { zeros: 0, eleven: 0, split: 0, double_half: 0, ending_five: 0, foundations: 0 };
       equippedNinja = data.ninja || "White Belt Ken";
       totalSolved = data.totalSolved || 0;
       totalCorrect = data.totalCorrect || 0;
@@ -815,6 +852,7 @@
     function saveActiveProfileData() {
       const data = {
         xp: playerXP,
+        ruleXP: ruleXP,
         ninja: equippedNinja,
         totalSolved: totalSolved,
         totalCorrect: totalCorrect,
@@ -838,8 +876,7 @@
     }
 
     function onProfileChange() {
-      const select = document.getElementById("profileSelect");
-      currentProfile = select.value;
+      currentProfile = document.getElementById("profileSelect").value;
       loadActiveProfileData();
       updateUI();
       renderProblem();
@@ -917,7 +954,7 @@
         profilesList.push(name);
       }
       currentProfile = name;
-      currentGrade = "grade4"; // default
+      currentGrade = "grade4";
       saveActiveProfileData();
       renderProfileSelector();
       loadActiveProfileData();
@@ -942,7 +979,6 @@
       } catch (e) {}
     }
 
-    // MULTI-GRADE PROBLEM GENERATOR
     function generateProblem() {
       const visualElem = document.getElementById("visualCounter");
       visualElem.textContent = "";
@@ -959,43 +995,22 @@
         if (chosen === "count") {
           const count = Math.floor(Math.random() * 7) + 1;
           visualElem.textContent = icon.repeat(count);
-          return {
-            text: `Count the ${icon}!`,
-            answer: count,
-            hint: `Count out loud one by one: 1, 2, 3... until you reach the end!`,
-            rule: "Counting"
-          };
+          return { text: `Count the ${icon}!`, answer: count, hint: `Count out loud: 1, 2, 3...`, rule: "foundations" };
         } else if (chosen === "add_5") {
           const a = Math.floor(Math.random() * 4) + 1;
           const b = Math.floor(Math.random() * (5 - a)) + 1;
           visualElem.textContent = `${icon.repeat(a)}  +  ${icon.repeat(b)}`;
-          return {
-            text: `${a} + ${b}`,
-            answer: a + b,
-            hint: `Start at ${a} and count forward ${b} more!`,
-            rule: "Add within 5"
-          };
+          return { text: `${a} + ${b}`, answer: a + b, hint: `Start at ${a} and count forward ${b} more!`, rule: "foundations" };
         } else if (chosen === "sub_5") {
           const a = Math.floor(Math.random() * 4) + 2;
           const b = Math.floor(Math.random() * (a - 1)) + 1;
           visualElem.textContent = `${icon.repeat(a)}  (take away ${b})`;
-          return {
-            text: `${a} - ${b}`,
-            answer: a - b,
-            hint: `Hold up ${a} fingers and take away ${b}!`,
-            rule: "Take away within 5"
-          };
+          return { text: `${a} - ${b}`, answer: a - b, hint: `Hold up ${a} fingers and take away ${b}!`, rule: "foundations" };
         } else {
-          // Add within 10
           const a = Math.floor(Math.random() * 6) + 2;
           const b = Math.floor(Math.random() * (10 - a)) + 1;
           visualElem.textContent = `${icon.repeat(a)}  +  ${icon.repeat(b)}`;
-          return {
-            text: `${a} + ${b}`,
-            answer: a + b,
-            hint: `Start at ${a} in your head, then count up ${b} fingers!`,
-            rule: "Add to 10"
-          };
+          return { text: `${a} + ${b}`, answer: a + b, hint: `Count on starting from ${a}!`, rule: "foundations" };
         }
       }
 
@@ -1006,48 +1021,32 @@
           : selectedRule;
 
         if (chosen === "doubles") {
-          const base = Math.floor(Math.random() * 6) + 4; // 4 to 9
+          const base = Math.floor(Math.random() * 6) + 4;
           const isNear = Math.random() > 0.5;
           const b = isNear ? base + 1 : base;
           return {
             text: `${base} + ${b}`,
             answer: base + b,
-            hint: isNear ? `Doubles trick: ${base} + ${base} = ${base * 2}, plus 1 more is ${base + b}!` : `Doubles trick: Double ${base} is ${base * 2}!`,
-            rule: "Doubles"
+            hint: isNear ? `Doubles: ${base}+${base}=${base*2}, + 1 is ${base+b}!` : `Doubles: Double ${base} is ${base*2}!`,
+            rule: "foundations"
           };
         } else if (chosen === "make_ten") {
-          const a = Math.floor(Math.random() * 4) + 7; // 7, 8, 9
-          const b = Math.floor(Math.random() * 5) + 4; // 4 to 8
+          const a = Math.floor(Math.random() * 4) + 7;
+          const b = Math.floor(Math.random() * 5) + 4;
           const need = 10 - a;
-          return {
-            text: `${a} + ${b}`,
-            answer: a + b,
-            hint: `Make Ten: Take ${need} from ${b} to turn ${a} into 10, then add the rest (${b - need})!`,
-            rule: "Make Ten"
-          };
+          return { text: `${a} + ${b}`, answer: a + b, hint: `Make Ten: 10 + ${b - need} = ${a + b}!`, rule: "foundations" };
         } else if (chosen === "skip_count") {
           const step = [2, 5, 10][Math.floor(Math.random() * 3)];
           const times = Math.floor(Math.random() * 6) + 3;
-          return {
-            text: `${times} × ${step}`,
-            answer: times * step,
-            hint: `Skip count by ${step}s ${times} times!`,
-            rule: `Skip count ${step}s`
-          };
+          return { text: `${times} × ${step}`, answer: times * step, hint: `Skip count by ${step}s ${times} times!`, rule: "foundations" };
         } else {
-          // Multiples intro
           const a = Math.floor(Math.random() * 5) + 2;
           const b = [2, 3, 5][Math.floor(Math.random() * 3)];
-          return {
-            text: `${a} × ${b}`,
-            answer: a * b,
-            hint: `${a} groups of ${b}: That's ${Array(a).fill(b).join(" + ")} = ${a * b}!`,
-            rule: "Intro Multiples"
-          };
+          return { text: `${a} × ${b}`, answer: a * b, hint: `${a} groups of ${b}!`, rule: "foundations" };
         }
       }
 
-      // 3. 4TH GRADE (Aaron) - 2-Digit Multiplication Tricks
+      // 3. 4TH GRADE (Aaron)
       let chosen = selectedRule === "mixed" 
         ? ["zeros", "eleven", "ending_five", "double_half", "split"][Math.floor(Math.random() * 5)] 
         : selectedRule;
@@ -1056,7 +1055,7 @@
       if (chosen === "zeros") {
         a = (Math.floor(Math.random() * 8) + 2) * 10;
         b = (Math.floor(Math.random() * 8) + 2) * 10;
-        hint = `Zero Hero: ${a / 10} × ${b / 10} = ${(a / 10) * (b / 10)}. Attach two zeros to get ${a * b}!`;
+        hint = `Zero Hero: ${a / 10} × ${b / 10} = ${(a / 10) * (b / 10)}. Add two 0s to make ${a * b}!`;
       } else if (chosen === "eleven") {
         a = Math.floor(Math.random() * 80) + 11;
         b = 11;
@@ -1078,12 +1077,7 @@
         hint = `Break & Split: Split ${a} into ${a - 1} + 1. Calculate (${a - 1} × ${b}) + (1 × ${b})!`;
       }
 
-      return {
-        text: `${a} × ${b}`,
-        answer: a * b,
-        hint: hint,
-        rule: chosen
-      };
+      return { text: `${a} × ${b}`, answer: a * b, hint: hint, rule: chosen };
     }
 
     function renderProblem() {
@@ -1121,15 +1115,20 @@
         totalCorrect++;
         gained = 15;
         playerXP += gained;
+
+        // Grant Rule-Specific XP
+        const rKey = currentProblem.rule || "foundations";
+        ruleXP[rKey] = (ruleXP[rKey] || 0) + gained;
+
         currentStreak++;
         document.getElementById("streakCount").textContent = currentStreak;
-        document.getElementById("companionSpeech").textContent = "“Direct hit! Your math strike landed!”";
+        document.getElementById("companionSpeech").textContent = "“Direct strike! Your elemental power grows!”";
         renderProblem();
       } else {
         playBeep(220, 0.2);
         currentStreak = 0;
         document.getElementById("streakCount").textContent = 0;
-        document.getElementById("companionSpeech").textContent = `“Keep focus! ${currentProblem.text} was ${currentProblem.answer}.”`;
+        document.getElementById("companionSpeech").textContent = `“Stay centered! ${currentProblem.text} was ${currentProblem.answer}.”`;
         toggleHint();
       }
 
@@ -1147,8 +1146,11 @@
     }
 
     function updateUI() {
-      const nextNinja = NINJAS.find(n => n.reqXP > playerXP) || NINJAS[NINJAS.length - 1];
+      // Find overall next XP target
+      const overallNinjas = NINJAS.filter(n => n.ruleKey === "overall");
+      const nextNinja = overallNinjas.find(n => n.reqXP > playerXP) || overallNinjas[overallNinjas.length - 1];
       const pct = Math.min(100, Math.round((playerXP / (nextNinja.reqXP || 1)) * 100));
+
       document.getElementById("xpFill").style.width = `${pct}%`;
       document.getElementById("xpValue").textContent = `${playerXP} / ${nextNinja.reqXP} XP`;
 
@@ -1160,25 +1162,56 @@
       renderRoster();
     }
 
+    function isNinjaUnlocked(ninja) {
+      if (ninja.ruleKey === "overall") {
+        return playerXP >= ninja.reqXP;
+      }
+      const specificXP = ruleXP[ninja.ruleKey] || 0;
+      return specificXP >= ninja.reqXP;
+    }
+
+    function filterDojo(cat) {
+      activeDojoFilter = cat;
+      document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
+      event.currentTarget.classList.add("active");
+      renderRoster();
+    }
+
     function renderRoster() {
       const container = document.getElementById("rosterContainer");
       container.innerHTML = "";
 
-      NINJAS.forEach(n => {
-        const unlocked = playerXP >= n.reqXP;
+      const filtered = activeDojoFilter === "all" 
+        ? NINJAS 
+        : NINJAS.filter(n => n.category === activeDojoFilter);
+
+      filtered.forEach(n => {
+        const unlocked = isNinjaUnlocked(n);
         const isEquipped = n.name === equippedNinja;
+        const currentScore = n.ruleKey === "overall" ? playerXP : (ruleXP[n.ruleKey] || 0);
+
+        let ruleLabel = "General Rank";
+        if (n.category === "zeros") ruleLabel = "0️⃣ Zero Hero";
+        else if (n.category === "eleven") ruleLabel = "🪄 11s Magic";
+        else if (n.category === "split") ruleLabel = "🪓 Break & Split";
+        else if (n.category === "double_half") ruleLabel = "⚖️ Double & Halve";
+        else if (n.category === "ending_five") ruleLabel = "⚡ Square 5s";
+        else if (n.category === "foundations") ruleLabel = "🌱 Foundations";
 
         const card = document.createElement("div");
         card.className = `ninja-card ${unlocked ? "" : "locked"} ${isEquipped ? "equipped" : ""}`;
         card.innerHTML = `
           <div class="ninja-img-wrap">${n.icon}</div>
           <div class="ninja-title">${n.name}</div>
-          <div style="font-size: 0.85rem; font-weight: 700; color: #38bdf8;">${n.title}</div>
-          <div style="font-size: 0.8rem; color: #94a3b8; margin: 0.25rem 0;">${n.desc}</div>
-          <div style="font-size: 0.8rem; font-weight: 700; color: #94a3b8;">${unlocked ? "Unlocked" : "Needs " + n.reqXP + " XP"}</div>
+          <span class="rule-tag">${ruleLabel}</span>
+          <div style="font-size: 0.82rem; font-weight: 700; color: #38bdf8;">${n.title}</div>
+          <div style="font-size: 0.78rem; color: #94a3b8; margin: 0.2rem 0;">${n.desc}</div>
+          <div class="ninja-xp-cost" style="color: ${unlocked ? '#10b981' : '#f59e0b'};">
+            ${unlocked ? '✓ Unlocked' : `${currentScore} /${n.reqXP} XP in Rule`}
+          </div>
           ${unlocked 
-            ? `<button class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; margin-top: 0.5rem;" onclick="equipNinja('${n.name}')">${isEquipped ? "Equipped" : "Equip"}</button>`
-            : `<button class="btn btn-secondary" disabled style="padding: 0.4rem 0.8rem; font-size: 0.85rem; margin-top: 0.5rem;">Locked</button>`
+            ? `<button class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; margin-top: 0.35rem;" onclick="equipNinja('${n.name}')">${isEquipped ? "Equipped" : "Equip"}</button>`
+            : `<button class="btn btn-secondary" disabled style="padding: 0.4rem 0.8rem; font-size: 0.85rem; margin-top: 0.35rem;">Locked</button>`
           }
         `;
         container.appendChild(card);
@@ -1268,6 +1301,8 @@
         playBeep(587.33, 0.1);
         speedScoreVal++;
         playerXP += 20;
+        const rKey = currentSpeedProblem.rule || "foundations";
+        ruleXP[rKey] = (ruleXP[rKey] || 0) + 20;
         document.getElementById("speedScore").textContent = speedScoreVal;
       }
       saveActiveProfileData();
