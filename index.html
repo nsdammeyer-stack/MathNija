@@ -170,49 +170,41 @@
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
     }
 
-    .trick-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1rem;
-    }
-
-    .trick-card {
-      background: #0f172a;
-      border: 1px solid var(--card-border);
-      border-radius: 0.8rem;
-      padding: 1.25rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .trick-card:hover {
-      border-color: #fbbf24;
-      transform: translateY(-3px);
-    }
-
-    .trick-card h3 {
-      font-size: 1.1rem;
-      margin-bottom: 0.5rem;
-      color: #fbbf24;
+    .rule-selector-wrap {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      justify-content: center;
+      gap: 0.75rem;
+      background: #0f172a;
+      padding: 0.6rem 1rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--card-border);
+      width: 100%;
+      max-width: 420px;
     }
 
-    .trick-card p {
+    .rule-selector-wrap label {
       font-size: 0.85rem;
-      color: var(--text-muted);
-      line-height: 1.4;
-      margin-bottom: 0.75rem;
+      font-weight: 800;
+      color: #fbbf24;
+      white-space: nowrap;
     }
 
-    .trick-example {
+    .rule-select {
       background: #1e293b;
-      padding: 0.5rem 0.75rem;
+      color: #fff;
+      border: 1px solid var(--card-border);
+      padding: 0.45rem 0.75rem;
       border-radius: 0.5rem;
       font-weight: 700;
-      color: #38bdf8;
       font-size: 0.9rem;
+      outline: none;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .rule-select:focus {
+      border-color: #6366f1;
     }
 
     .game-arena {
@@ -220,7 +212,7 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 1.25rem;
+      gap: 1.1rem;
     }
 
     .companion-box {
@@ -242,7 +234,7 @@
       color: #f8fafc;
       background: #0f172a;
       border: 2px solid var(--card-border);
-      padding: 1.5rem 3rem;
+      padding: 1.25rem 2.5rem;
       border-radius: 1.25rem;
       min-width: 280px;
     }
@@ -334,6 +326,51 @@
 
     .hint-card.show { display: block; }
 
+    .trick-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .trick-card {
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      border-radius: 0.8rem;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .trick-card:hover {
+      border-color: #fbbf24;
+      transform: translateY(-3px);
+    }
+
+    .trick-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: #fbbf24;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .trick-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-bottom: 0.75rem;
+    }
+
+    .trick-example {
+      background: #1e293b;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      font-weight: 700;
+      color: #38bdf8;
+      font-size: 0.9rem;
+    }
+
     .roster-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -367,6 +404,20 @@
       font-family: 'Fredoka', cursive;
       font-size: 1.15rem;
       color: #fbbf24;
+    }
+
+    .sync-status {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .sync-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
     }
 
     @media (max-width: 640px) {
@@ -420,11 +471,26 @@
   </nav>
 
   <main>
+    <!-- PRACTICE QUEST PANEL -->
     <div id="practice" class="panel active">
       <div class="card game-arena">
+        
+        <!-- TARGET RULE SELECTOR -->
+        <div class="rule-selector-wrap">
+          <label for="ruleSelect">🎯 Target Rule:</label>
+          <select id="ruleSelect" class="rule-select" onchange="onRuleChange()">
+            <option value="mixed">Mixed (All Rules)</option>
+            <option value="zeros">0️⃣ The Zero Hero (e.g. 30 × 40)</option>
+            <option value="eleven">🪄 The 11s Magic Trick (e.g. 35 × 11)</option>
+            <option value="split">🪓 The Break & Split (e.g. 31 × 35)</option>
+            <option value="double_half">⚖️ Double & Halve (e.g. 15 × 24)</option>
+            <option value="ending_five">⚡ Square Ending in 5 (e.g. 35 × 35)</option>
+          </select>
+        </div>
+
         <div class="companion-box">
           <span class="companion-avatar" id="companionAvatar">🥋</span>
-          <span id="companionSpeech" style="font-size: 0.9rem; font-weight: 700;">"Let's master our ninja math shortcuts!"</span>
+          <span id="companionSpeech" style="font-size: 0.9rem; font-weight: 700;">"Pick a rule and strike true!"</span>
         </div>
 
         <div style="display: flex; gap: 0.5rem; align-items: center;">
@@ -461,42 +527,48 @@
           <strong>Secret Ninja Technique:</strong>
           <div id="hintBody" style="margin-top: 0.35rem;"></div>
         </div>
+
+        <div class="sync-status">
+          <div class="sync-dot"></div>
+          <span id="syncText">Google Sheets Ready</span>
+        </div>
       </div>
     </div>
 
+    <!-- TRICK ACADEMY PANEL -->
     <div id="academy" class="panel">
       <div class="card">
         <h2 style="font-family: 'Fredoka', cursive; color: #fbbf24; margin-bottom: 1rem;">Ninja Multiplication Scrolls</h2>
         <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.25rem;">
-          Tap any secret scroll below to jump directly to those problems:
+          Tap any secret scroll below to practice that rule immediately:
         </p>
 
         <div class="trick-grid">
-          <div class="trick-card" onclick="loadPracticeCategory('zeros')">
+          <div class="trick-card" onclick="selectAndPractice('zeros')">
             <h3><span>0️⃣</span> The Zero Hero</h3>
-            <p>For numbers ending in 0 (like <strong>30 × 40</strong>), multiply 3 × 4 = 12, then put both zeros back!</p>
+            <p>For numbers ending in 0 (like <strong>30 × 40</strong>), multiply 3 × 4 = 12, then add both zeros back!</p>
             <div class="trick-example">30 × 40 = 1,200</div>
           </div>
 
-          <div class="trick-card" onclick="loadPracticeCategory('eleven')">
+          <div class="trick-card" onclick="selectAndPractice('eleven')">
             <h3><span>🪄</span> The 11s Magic Trick</h3>
             <p>To multiply by 11 (like <strong>35 × 11</strong>), pull 3 and 5 apart, add them (3+5=8), and place 8 in the middle!</p>
             <div class="trick-example">35 × 11 = 385</div>
           </div>
 
-          <div class="trick-card" onclick="loadPracticeCategory('split')">
+          <div class="trick-card" onclick="selectAndPractice('split')">
             <h3><span>🪓</span> The Break & Split</h3>
             <p>Split a number into tens and ones! For <strong>31 × 35</strong>: (30 × 35) + (1 × 35) = 1,050 + 35 = 1,085.</p>
             <div class="trick-example">31 × 35 = 1,085</div>
           </div>
 
-          <div class="trick-card" onclick="loadPracticeCategory('double_half')">
+          <div class="trick-card" onclick="selectAndPractice('double_half')">
             <h3><span>⚖️</span> Double & Halve</h3>
             <p>If one number ends in 5 and the other is even (like <strong>15 × 24</strong>), double 15 to 30 and halve 24 to 12!</p>
             <div class="trick-example">30 × 12 = 360</div>
           </div>
 
-          <div class="trick-card" onclick="loadPracticeCategory('ending_five')">
+          <div class="trick-card" onclick="selectAndPractice('ending_five')">
             <h3><span>⚡</span> Square Ending in 5</h3>
             <p>For <strong>35 × 35</strong>: Multiply 3 by the next number (3 × 4 = 12), and tack on 25!</p>
             <div class="trick-example">35 × 35 = 1,225</div>
@@ -505,6 +577,7 @@
       </div>
     </div>
 
+    <!-- 60s SPEED RUN -->
     <div id="speed" class="panel">
       <div class="card game-arena">
         <h2 style="font-family: 'Fredoka', cursive; color: #f59e0b;">60-Second Ninja Strike</h2>
@@ -529,6 +602,7 @@
       </div>
     </div>
 
+    <!-- NINJA ROSTER -->
     <div id="roster" class="panel">
       <div class="card">
         <h2 style="font-family: 'Fredoka', cursive; color: #fbbf24; margin-bottom: 0.5rem;">Ninja Character Dojo</h2>
@@ -543,10 +617,14 @@
   <script>
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIQJ6mLKxhn_Ba-bLSFLc5I36hy5cQ7ae5iUyQNn0qlhf75LvERbDFmsJzEPXEAs6N/exec";
     const PLAYER_NAME = "Aaron";
+
     let playerXP = parseInt(localStorage.getItem("math_ninja_xp") || "0");
     let equippedNinja = localStorage.getItem("math_ninja_char") || "White Belt Ken";
+    let totalSolved = parseInt(localStorage.getItem("math_ninja_solved") || "0");
+    let totalCorrect = parseInt(localStorage.getItem("math_ninja_correct") || "0");
     let currentStreak = 0;
     let currentProblem = null;
+    let selectedRule = "mixed";
 
     const NINJAS = [
       { name: "White Belt Ken", icon: "🥋", reqXP: 0, title: "Novice Trainee", desc: "Just starting his mental journey." },
@@ -563,6 +641,7 @@
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
+        osc.type = "sine";
         osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
         gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
@@ -602,15 +681,27 @@
         b = Math.floor(Math.random() * 30) + 12;
         hint = `Break & Split: Split ${a} into ${a - 1} + 1. Calculate (${a - 1} × ${b}) + (1 × ${b})!`;
       }
-      return { a, b, answer: a * b, hint };
+      return { a, b, answer: a * b, hint, rule: chosen };
     }
 
     function renderProblem() {
-      currentProblem = generateProblem();
+      currentProblem = generateProblem(selectedRule);
       document.getElementById("problemDisplay").textContent = `${currentProblem.a} × ${currentProblem.b}`;
       document.getElementById("answerInput").value = "";
       document.getElementById("hintCard").classList.remove("show");
       document.getElementById("hintBody").textContent = currentProblem.hint;
+    }
+
+    function onRuleChange() {
+      selectedRule = document.getElementById("ruleSelect").value;
+      renderProblem();
+    }
+
+    function selectAndPractice(rule) {
+      document.getElementById("ruleSelect").value = rule;
+      selectedRule = rule;
+      switchTab("practice");
+      renderProblem();
     }
 
     function toggleHint() {
@@ -630,9 +721,16 @@
       const val = parseInt(input.value);
       if (isNaN(val)) return;
 
+      totalSolved++;
+      let gained = 0;
+      let isCorrect = false;
+
       if (val === currentProblem.answer) {
         playBeep(587.33, 0.15);
-        playerXP += 15;
+        isCorrect = true;
+        totalCorrect++;
+        gained = 15;
+        playerXP += gained;
         currentStreak++;
         document.getElementById("streakCount").textContent = currentStreak;
         document.getElementById("companionSpeech").textContent = "“Direct hit! Your mental math strike landed!”";
@@ -644,16 +742,9 @@
         document.getElementById("companionSpeech").textContent = `“Keep focus! ${currentProblem.a} × ${currentProblem.b} was ${currentProblem.answer}.”`;
         toggleHint();
       }
-      updateUI();
-    }
 
-    function loadPracticeCategory(cat) {
-      switchTab("practice");
-      currentProblem = generateProblem(cat);
-      document.getElementById("problemDisplay").textContent = `${currentProblem.a} × ${currentProblem.b}`;
-      document.getElementById("answerInput").value = "";
-      document.getElementById("hintCard").classList.remove("show");
-      document.getElementById("hintBody").textContent = currentProblem.hint;
+      updateUI();
+      syncToGoogleSheets(currentProblem, isCorrect, gained);
     }
 
     function switchTab(tabId) {
@@ -667,6 +758,8 @@
     function updateUI() {
       localStorage.setItem("math_ninja_xp", playerXP);
       localStorage.setItem("math_ninja_char", equippedNinja);
+      localStorage.setItem("math_ninja_solved", totalSolved);
+      localStorage.setItem("math_ninja_correct", totalCorrect);
 
       const nextNinja = NINJAS.find(n => n.reqXP > playerXP) || NINJAS[NINJAS.length - 1];
       const pct = Math.min(100, Math.round((playerXP / (nextNinja.reqXP || 1)) * 100));
@@ -709,6 +802,45 @@
     function equipNinja(name) {
       equippedNinja = name;
       updateUI();
+    }
+
+    // DIRECT SYNC TO GOOGLE SHEETS
+    async function syncToGoogleSheets(prob, isCorrect, gainedXP) {
+      if (!APPS_SCRIPT_URL) return;
+
+      const syncLabel = document.getElementById("syncText");
+      syncLabel.textContent = "Syncing to cloud...";
+
+      const accuracyPct = totalSolved > 0 ? Math.round((totalCorrect / totalSolved) * 100) + "%" : "100%";
+
+      const payload = {
+        name: PLAYER_NAME,
+        xp: playerXP,
+        equippedNinja: equippedNinja,
+        level: Math.floor(playerXP / 200) + 1,
+        totalSolved: totalSolved,
+        accuracy: accuracyPct,
+        log: {
+          mode: "Practice Quest",
+          problem: `${prob.a} × ${prob.b}`,
+          correct: isCorrect,
+          xpGained: gainedXP,
+          rule: prob.rule
+        }
+      };
+
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+        syncLabel.textContent = "Saved to Google Sheets ✓";
+      } catch (err) {
+        console.error("Sync error:", err);
+        syncLabel.textContent = "Saved locally";
+      }
     }
 
     let speedTimerVal = 60;
