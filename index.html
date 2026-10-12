@@ -280,9 +280,6 @@
       cursor: pointer;
     }
 
-    /* ========================================================
-       HERO COMBAT ARENA & ANIMATED NINJA CHARACTER
-       ======================================================== */
     .game-arena {
       display: flex;
       flex-direction: column;
@@ -347,9 +344,7 @@
       50% { transform: translateY(-6px); }
     }
 
-    .ninja-figure.attack {
-      animation: strikeAnim 0.35s ease-out;
-    }
+    .ninja-figure.attack { animation: strikeAnim 0.35s ease-out; }
 
     @keyframes strikeAnim {
       0% { transform: scale(1) translateX(0); }
@@ -357,9 +352,7 @@
       100% { transform: scale(1) translateX(0) rotate(0); }
     }
 
-    .ninja-figure.hit {
-      animation: stumbleAnim 0.4s ease-out;
-    }
+    .ninja-figure.hit { animation: stumbleAnim 0.4s ease-out; }
 
     @keyframes stumbleAnim {
       0%, 100% { transform: translateX(0); }
@@ -381,12 +374,13 @@
       border: 2px solid #334155;
       padding: 0.75rem 1.25rem;
       border-radius: 1rem;
-      max-width: 320px;
+      max-width: 340px;
       text-align: left;
       font-size: 0.95rem;
       font-weight: 800;
       color: #f8fafc;
       box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      line-height: 1.4;
     }
 
     .speech-bubble::before {
@@ -407,17 +401,35 @@
       user-select: none;
     }
 
+    .problem-box-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      max-width: 440px;
+    }
+
     .problem-box {
       font-family: 'Fredoka', cursive;
-      font-size: 3.6rem;
-      letter-spacing: 2px;
+      font-size: 3.2rem;
+      letter-spacing: 1.5px;
       color: #f8fafc;
       background: #0b1120;
       border: 2px solid #1e293b;
-      padding: 1.1rem 2.5rem;
+      padding: 0.85rem 1.8rem;
       border-radius: 1.5rem;
-      min-width: 290px;
+      width: 100%;
       box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0,0,0,0.3);
+      line-height: 1.2;
+    }
+
+    .problem-leading-sub {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #38bdf8;
+      font-family: 'Fredoka', cursive;
+      letter-spacing: 0.5px;
     }
 
     .streak-badge {
@@ -526,9 +538,6 @@
 
     .hint-card.show { display: block; }
 
-    /* ========================================================
-       TRICK ACADEMY VISUAL CARDS
-       ======================================================== */
     .trick-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -587,9 +596,6 @@
       justify-content: space-between;
     }
 
-    /* ========================================================
-       COLLECTIBLE CCG NINJA CARDS (DOJO)
-       ======================================================== */
     .roster-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -751,7 +757,7 @@
     @media (max-width: 640px) {
       h1 { font-size: 1.3rem; }
       nav { grid-template-columns: repeat(2, 1fr); }
-      .problem-box { font-size: 2.8rem; padding: 0.75rem 1.25rem; }
+      .problem-box { font-size: 2.5rem; padding: 0.75rem 1.25rem; }
       .controls-row { flex-direction: column; align-items: stretch; }
       .combat-stage { flex-direction: column; gap: 0.75rem; }
       .speech-bubble::before { display: none; }
@@ -847,7 +853,11 @@
           <span class="streak-badge">Streak: <span id="streakCount">0</span> 🔥</span>
         </div>
 
-        <div class="problem-box" id="problemDisplay">30 × 40</div>
+        <!-- SCAFFOLDED PROBLEM DISPLAY -->
+        <div class="problem-box-container">
+          <div class="problem-box" id="problemDisplay">30 × 40</div>
+          <div class="problem-leading-sub" id="problemSubDisplay"></div>
+        </div>
 
         <div class="input-row">
           <input type="number" id="answerInput" placeholder="?" autocomplete="off">
@@ -971,12 +981,10 @@
     let currentStreak = 0;
     let currentProblem = null;
 
-    // PROCEDURAL SVG NINJA GENERATOR (Rich, distinctive character visuals)
     function getNinjaSvg(color = "#6366f1", headwear = "headband", weapon = "shuriken") {
       let maskColor = "#0f172a";
       let eyeColor = "#38bdf8";
 
-      // Headwear element
       let headwearSvg = `<path d="M12 28 Q32 20 52 28 L50 33 Q32 25 14 33 Z" fill="${color}"/>`;
       if (headwear === "horns") {
         headwearSvg += `<path d="M16 24 L10 10 L22 20 Z M48 24 L54 10 L42 20 Z" fill="${color}"/>`;
@@ -988,7 +996,6 @@
         headwearSvg += `<polygon points="32,8 36,22 28,22" fill="#bae6fd"/>`;
       }
 
-      // Weapon / Accessory
       let weaponSvg = '';
       if (weapon === "dual_swords") {
         weaponSvg = `<line x1="6" y1="6" x2="22" y2="22" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round"/>
@@ -1003,17 +1010,13 @@
       return `
         <svg class="ninja-avatar-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
           ${weaponSvg}
-          <!-- Hood / Body -->
           <circle cx="32" cy="32" r="22" fill="${maskColor}"/>
           <path d="M16 48 Q32 58 48 48 L52 62 L12 62 Z" fill="${color}"/>
-          <!-- Face Slot -->
           <ellipse cx="32" cy="31" rx="15" ry="9" fill="#1e293b"/>
-          <!-- Eyes -->
           <ellipse cx="26" cy="30" rx="3" ry="1.8" fill="${eyeColor}"/>
           <circle cx="27" cy="29.5" r="0.8" fill="#fff"/>
           <ellipse cx="38" cy="30" rx="3" ry="1.8" fill="${eyeColor}"/>
           <circle cx="39" cy="29.5" r="0.8" fill="#fff"/>
-          <!-- Brow Focus -->
           <line x1="23" y1="27" x2="29" y2="29" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>
           <line x1="41" y1="27" x2="35" y2="29" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>
           ${headwearSvg}
@@ -1021,10 +1024,10 @@
       `;
     }
 
-    // 25 NINJAS PER GRADE WITH THEMED COLORS, WEAPONS & COMBAT SHOUTS
+    // 25 NINJAS PER GRADE
     const GRADE_NINJAS = {
       preschool: [
-        { name: "Apple Sprout Ken", color: "#10b981", headwear: "headband", weapon: "shuriken", rarity: "apprentice", ruleKey: "overall", reqXP: 0, ruleLabel: "Starter", title: "Novice Sprout", desc: "First steps in counting.", shout: "“Let's count our snacks!”" },
+        { name: "Apple Sprout Ken", color: "#10b981", headwear: "headband", weapon: "shuriken", rarity: "apprentice", ruleKey: "overall", reqXP: 0, ruleLabel: "Starter", title: "Novice Sprout", desc: "Takes first steps in counting.", shout: "“Let's count our snacks!”" },
         { name: "Finger Counter Pip", color: "#06b6d4", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "count", reqXP: 30, ruleLabel: "🍎 Counting", title: "Finger Scout", desc: "Counts fingers carefully.", shout: "“One, two, three... strike!”" },
         { name: "Button Finder Bo", color: "#3b82f6", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "count", reqXP: 60, ruleLabel: "🍎 Counting", title: "Item Spotter", desc: "Finds and counts hidden items.", shout: "“I spotted every single one!”" },
         { name: "Acorn Collector Kiri", color: "#d97706", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "count", reqXP: 90, ruleLabel: "🍎 Counting", title: "Grove Scout", desc: "Counts forest acorns.", shout: "“Gathering the forest numbers!”" },
@@ -1143,15 +1146,15 @@
         title: "2nd Grade (Micah)",
         rules: [
           { id: "mixed", name: "Mixed 2nd Grade" },
+          { id: "make_ten", name: "🎯 Make Ten (Bridge to 10)" },
           { id: "doubles", name: "👯 Doubles & Near-Doubles" },
-          { id: "make_ten", name: "🎯 Make Ten (Add to 20)" },
           { id: "skip_count", name: "🦘 Skip Count (2s, 5s, 10s)" },
           { id: "mult_intro", name: "✖️ Basic Intro Multiples" }
         ],
         academy: [
-          { id: "doubles", icon: "👯", title: "Doubles Fast-Strike", desc: "Remember twins: 6+6=12, 7+7=14, 8+8=16. For 7+8, do 7+7 and add 1!", example: "7 + 8 = 14 + 1 = 15" },
-          { id: "make_ten", icon: "🎯", title: "Bridge to 10", desc: "For 8 + 5: take 2 from the 5 to turn 8 into 10, then add the remaining 3!", example: "8 + 5 = (8 + 2) + 3 = 13" },
-          { id: "skip_count", icon: "🦘", title: "Skip Count Ninja", desc: "Multiplying by 5 is just rhythm counting by 5s: 5, 10, 15, 20!", example: "4 × 5 = 5, 10, 15, 20" },
+          { id: "make_ten", icon: "🎯", title: "Bridge to 10", desc: "Turn the bigger number into 10! Borrow 2 from 7 to turn 8 into 10, leaving 5. Then 10 + 5 = 15!", example: "8 + 7 → 8 + (2 + 5) → 10 + 5 = 15" },
+          { id: "doubles", icon: "👯", title: "Doubles Fast-Strike", desc: "Remember twins: 6+6=12, 7+7=14, 8+8=16. For 7+8, do 7+7 and add 1!", example: "7 + 8 → (7 + 7) + 1 = 15" },
+          { id: "skip_count", icon: "🦘", title: "Skip Count Ninja", desc: "Multiplying by 5 is just rhythm counting by 5s: 5, 10, 15, 20!", example: "4 × 5 → 5, 10, 15, 20" },
           { id: "mult_intro", icon: "✖️", title: "Equal Groups & Arrays", desc: "Multiplication is repeated addition of equal sets: 3 groups of 4!", example: "3 × 4 = 4 + 4 + 4 = 12" }
         ]
       },
@@ -1332,6 +1335,7 @@
       } catch (e) {}
     }
 
+    // LEADING PROBLEM GENERATOR (Prompts multi-step mental decomposition)
     function generateProblem() {
       const visualElem = document.getElementById("visualCounter");
       visualElem.textContent = "";
@@ -1348,54 +1352,97 @@
         if (chosen === "count") {
           const count = Math.floor(Math.random() * 7) + 1;
           visualElem.textContent = icon.repeat(count);
-          return { text: `Count the ${icon}!`, answer: count, hint: `Count out loud: 1, 2, 3...`, rule: "count" };
+          return { text: `Count the ${icon}!`, subText: `Point and count one by one!`, answer: count, hint: `Count out loud: 1, 2, 3...`, rule: "count" };
         } else if (chosen === "add_5") {
           const a = Math.floor(Math.random() * 4) + 1;
           const b = Math.floor(Math.random() * (5 - a)) + 1;
           visualElem.textContent = `${icon.repeat(a)}  +  ${icon.repeat(b)}`;
-          return { text: `${a} + ${b}`, answer: a + b, hint: `Start at ${a} and count forward ${b} more!`, rule: "add_5" };
+          return { text: `${a} + ${b}`, subText: `Hold up ${a} fingers, add ${b} more!`, answer: a + b, hint: `Start at ${a} and count forward ${b} more!`, rule: "add_5" };
         } else if (chosen === "sub_5") {
           const a = Math.floor(Math.random() * 4) + 2;
           const b = Math.floor(Math.random() * (a - 1)) + 1;
           visualElem.textContent = `${icon.repeat(a)}  (take away ${b})`;
-          return { text: `${a} - ${b}`, answer: a - b, hint: `Hold up ${a} fingers and take away ${b}!`, rule: "sub_5" };
+          return { text: `${a} - ${b}`, subText: `Start with ${a}, take away ${b}!`, answer: a - b, hint: `Hold up ${a} fingers and take away ${b}!`, rule: "sub_5" };
         } else {
           const a = Math.floor(Math.random() * 6) + 2;
           const b = Math.floor(Math.random() * (10 - a)) + 1;
           visualElem.textContent = `${icon.repeat(a)}  +  ${icon.repeat(b)}`;
-          return { text: `${a} + ${b}`, answer: a + b, hint: `Count on starting from ${a}!`, rule: "add_10" };
+          return { text: `${a} + ${b}`, subText: `How many to make ten?`, answer: a + b, hint: `Count on starting from ${a}!`, rule: "add_10" };
         }
       }
 
-      // 2. 2ND GRADE (Micah)
+      // 2. 2ND GRADE (Micah) - EXPLICIT LEADING STEPS
       if (currentGrade === "grade2") {
         let chosen = selectedRule === "mixed" 
-          ? ["doubles", "make_ten", "skip_count", "mult_intro"][Math.floor(Math.random() * 4)] 
+          ? ["make_ten", "doubles", "skip_count", "mult_intro"][Math.floor(Math.random() * 4)] 
           : selectedRule;
 
-        if (chosen === "doubles") {
-          const base = Math.floor(Math.random() * 6) + 4;
-          const isNear = Math.random() > 0.5;
-          const b = isNear ? base + 1 : base;
+        if (chosen === "make_ten") {
+          // Bigger number (8 or 9) + smaller number (4 to 7)
+          const big = [8, 9, 7][Math.floor(Math.random() * 3)];
+          const small = Math.floor(Math.random() * 4) + 5; // 5 to 8
+          const [a, b] = big >= small ? [big, small] : [small, big];
+          const needed = 10 - a;
+          const leftover = b - needed;
+
           return {
-            text: `${base} + ${b}`,
-            answer: base + b,
-            hint: isNear ? `Doubles: ${base}+${base}=${base*2}, + 1 is ${base+b}!` : `Doubles: Double ${base} is ${base*2}!`,
-            rule: "doubles"
+            text: `${a} + ${b}`,
+            subText: `${a} + (${needed} + ${leftover})  →  10 + ${leftover} = ?`,
+            leadingPrompt: `“${a} needs ${needed} to make 10! That leaves ${leftover}. What is 10 + ${leftover}?”`,
+            answer: a + b,
+            hint: `Bridge to 10: Turn ${a} into 10 by taking ${needed} from ${b}. Now add 10 + ${leftover} = ${a + b}!`,
+            rule: "make_ten"
           };
-        } else if (chosen === "make_ten") {
-          const a = Math.floor(Math.random() * 4) + 7;
-          const b = Math.floor(Math.random() * 5) + 4;
-          const need = 10 - a;
-          return { text: `${a} + ${b}`, answer: a + b, hint: `Make Ten: 10 + ${b - need} = ${a + b}!`, rule: "make_ten" };
+        } else if (chosen === "doubles") {
+          const base = Math.floor(Math.random() * 5) + 5; // 5 to 9
+          const isNear = Math.random() > 0.4;
+
+          if (isNear) {
+            const b = base + 1;
+            return {
+              text: `${base} + ${b}`,
+              subText: `(${base} + ${base}) + 1  →  ${base * 2} + 1 = ?`,
+              leadingPrompt: `“Use twins: double ${base} is ${base * 2}. Now add 1 more!”`,
+              answer: base + b,
+              hint: `Near Doubles: Double ${base} is ${base * 2}, plus 1 more makes ${base + b}!`,
+              rule: "doubles"
+            };
+          } else {
+            return {
+              text: `${base} + ${base}`,
+              subText: `Double ${base} = ?`,
+              leadingPrompt: `“Identical twins! Strike with double ${base}!”`,
+              answer: base * 2,
+              hint: `Twins: Double ${base} is ${base * 2}!`,
+              rule: "doubles"
+            };
+          }
         } else if (chosen === "skip_count") {
           const step = [2, 5, 10][Math.floor(Math.random() * 3)];
           const times = Math.floor(Math.random() * 6) + 3;
-          return { text: `${times} × ${step}`, answer: times * step, hint: `Skip count by ${step}s ${times} times!`, rule: "skip_count" };
+          let sequence = [];
+          for (let i = 1; i < times; i++) sequence.push(i * step);
+
+          return {
+            text: `${times} × ${step}`,
+            subText: `${sequence.join(", ")}, ___ ?`,
+            leadingPrompt: `“Skip count by ${step}s! What comes next after ${sequence[sequence.length - 1]}?”`,
+            answer: times * step,
+            hint: `Skip count by ${step}s ${times} times: ${sequence.join(", ")}, ${times * step}!`,
+            rule: "skip_count"
+          };
         } else {
-          const a = Math.floor(Math.random() * 5) + 2;
-          const b = [2, 3, 5][Math.floor(Math.random() * 3)];
-          return { text: `${a} × ${b}`, answer: a * b, hint: `${a} groups of ${b}!`, rule: "mult_intro" };
+          // Intro Multiples
+          const a = Math.floor(Math.random() * 4) + 2;
+          const b = [3, 4, 5][Math.floor(Math.random() * 3)];
+          return {
+            text: `${a} × ${b}`,
+            subText: `${Array(a).fill(b).join(" + ")} = ?`,
+            leadingPrompt: `“${a} groups of ${b}! Add ${b} repeated ${a} times.”`,
+            answer: a * b,
+            hint: `${a} groups of ${b}: That's ${Array(a).fill(b).join(" + ")} = ${a * b}!`,
+            rule: "mult_intro"
+          };
         }
       }
 
@@ -1404,41 +1451,66 @@
         ? ["zeros", "eleven", "ending_five", "double_half", "split"][Math.floor(Math.random() * 5)] 
         : selectedRule;
 
-      let a, b, hint;
+      let a, b, hint, subText, prompt;
       if (chosen === "zeros") {
         a = (Math.floor(Math.random() * 8) + 2) * 10;
         b = (Math.floor(Math.random() * 8) + 2) * 10;
-        hint = `Zero Hero: ${a / 10} × ${b / 10} = ${(a / 10) * (b / 10)}. Add two 0s to make ${a * b}!`;
+        const front = (a / 10) * (b / 10);
+        subText = `(${a/10} × ${b/10}) & tack on 00  →  ${front} & 00 = ?`;
+        prompt = `“Multiply ${a/10} × ${b/10} = ${front}. Slap two 0s onto the end!”`;
+        hint = `Zero Hero: ${a / 10} × ${b / 10} = ${front}. Add two 0s to make ${a * b}!`;
       } else if (chosen === "eleven") {
         a = Math.floor(Math.random() * 80) + 11;
         b = 11;
         const tens = Math.floor(a / 10);
         const ones = a % 10;
-        hint = `11s Trick: Pull ${tens} and ${ones} apart. Add ${tens} + ${ones} = ${tens + ones}. Place in middle!`;
+        const mid = tens + ones;
+        subText = `${tens} [${tens}+${ones}] ${ones}  →  middle sum is ${mid}`;
+        prompt = `“Pull ${tens} and ${ones} apart. Place their sum (${mid}) in the center!”`;
+        hint = `11s Trick: Pull ${tens} and ${ones} apart. Add ${tens} + ${ones} = ${mid}. Place in middle!`;
       } else if (chosen === "ending_five") {
         const t = Math.floor(Math.random() * 7) + 2;
         a = t * 10 + 5;
         b = a;
+        subText = `(${t} × ${t + 1}) & attach 25  →  ${t * (t + 1)} & 25 = ?`;
+        prompt = `“Multiply tens by next number: ${t} × ${t+1} = ${t*(t+1)}. Tack on 25!”`;
         hint = `Square 5s: Multiply ${t} by ${t + 1} = ${t * (t + 1)}, then append 25 to get ${a * b}!`;
       } else if (chosen === "double_half") {
         a = [15, 25, 35, 45][Math.floor(Math.random() * 4)];
         b = (Math.floor(Math.random() * 6) + 2) * 2;
+        subText = `Double ${a} → ${a*2} | Halve ${b} → ${b/2}  →  ${a*2} × ${b/2} = ?`;
+        prompt = `“Double ${a} to ${a*2}, halve ${b} to ${b/2}. Multiply the easier pair!”`;
         hint = `Double & Halve: Double ${a} to ${a * 2}, halve ${b} to ${b / 2}. Calculate ${a * 2} × ${b / 2}!`;
       } else {
         a = [21, 31, 41, 51][Math.floor(Math.random() * 4)];
         b = Math.floor(Math.random() * 30) + 12;
+        subText = `(${a-1} × ${b}) + (1 × ${b})  →  ${(a-1)*b} + ${b} = ?`;
+        prompt = `“Split into tens and ones: ${(a-1)*b} + ${b}!”`;
         hint = `Break & Split: Split ${a} into ${a - 1} + 1. Calculate (${a - 1} × ${b}) + (1 × ${b})!`;
       }
 
-      return { text: `${a} × ${b}`, answer: a * b, hint: hint, rule: chosen };
+      return {
+        text: `${a} × ${b}`,
+        subText: subText,
+        leadingPrompt: prompt,
+        answer: a * b,
+        hint: hint,
+        rule: chosen
+      };
     }
 
     function renderProblem() {
       currentProblem = generateProblem();
       document.getElementById("problemDisplay").textContent = currentProblem.text;
+      document.getElementById("problemSubDisplay").textContent = currentProblem.subText || "";
       document.getElementById("answerInput").value = "";
       document.getElementById("hintCard").classList.remove("show");
       document.getElementById("hintBody").textContent = currentProblem.hint;
+
+      // Update avatar companion leading guidance
+      if (currentProblem.leadingPrompt) {
+        document.getElementById("companionSpeech").textContent = currentProblem.leadingPrompt;
+      }
     }
 
     function toggleHint() {
@@ -1480,7 +1552,6 @@
         currentStreak++;
         document.getElementById("streakCount").textContent = currentStreak;
         
-        // Attack Animation & Battle Shout
         fig.classList.remove("attack", "hit");
         void fig.offsetWidth;
         fig.classList.add("attack");
@@ -1492,7 +1563,6 @@
         currentStreak = 0;
         document.getElementById("streakCount").textContent = 0;
 
-        // Hit Wobble Animation & Recovery Shout
         fig.classList.remove("attack", "hit");
         void fig.offsetWidth;
         fig.classList.add("hit");
@@ -1534,7 +1604,6 @@
       const current = roster.find(n => n.name === equippedNinja) || roster[0];
       document.getElementById("activeNinjaName").textContent = current.name;
 
-      // Update Arena Animated Portrait
       const aura = document.getElementById("ninjaAura");
       const fig = document.getElementById("ninjaFigure");
       const figSvg = document.getElementById("ninjaFigureSvg");
@@ -1543,7 +1612,6 @@
       fig.style.borderColor = current.color || "#6366f1";
       figSvg.innerHTML = getNinjaSvg(current.color, current.headwear, current.weapon);
 
-      // Update Header Active Emblem
       const emblem = document.getElementById("activeEmblem");
       emblem.style.borderColor = current.color || "#6366f1";
       emblem.innerHTML = `<span style="font-size:0.9rem;">⚔️</span>`;
