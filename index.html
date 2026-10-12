@@ -76,7 +76,54 @@
     .player-stats {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    /* PROFILE SELECTOR STYLING */
+    .profile-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: #0f172a;
+      padding: 0.35rem 0.6rem;
+      border-radius: 9999px;
+      border: 1px solid var(--card-border);
+    }
+
+    .profile-select {
+      background: transparent;
+      color: #38bdf8;
+      font-weight: 800;
+      font-size: 0.9rem;
+      border: none;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .profile-select option {
+      background: #1e293b;
+      color: #fff;
+    }
+
+    .add-profile-btn {
+      background: #334155;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      font-weight: 900;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+
+    .add-profile-btn:hover {
+      background: #4f46e5;
     }
 
     .ninja-badge {
@@ -95,7 +142,7 @@
       display: flex;
       flex-direction: column;
       gap: 0.25rem;
-      width: 140px;
+      width: 130px;
     }
 
     .xp-text {
@@ -420,6 +467,66 @@
       background: #10b981;
     }
 
+    /* MODAL STYLES */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      max-width: 360px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-box h3 {
+      font-family: 'Fredoka', cursive;
+      color: #fbbf24;
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      color: #fff;
+      font-size: 1.1rem;
+      text-align: center;
+      margin: 1rem 0;
+      outline: none;
+    }
+
+    .modal-input:focus {
+      border-color: #6366f1;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
     @media (max-width: 640px) {
       h1 { font-size: 1.3rem; }
       nav { grid-template-columns: repeat(2, 1fr); }
@@ -439,6 +546,15 @@
     </div>
 
     <div class="player-stats">
+      <!-- DYNAMIC PROFILE SELECTOR -->
+      <div class="profile-controls">
+        <span>👤</span>
+        <select id="profileSelect" class="profile-select" onchange="onProfileChange()">
+          <!-- Populated by JS -->
+        </select>
+        <button class="add-profile-btn" onclick="openNewProfileModal()" title="Add New Ninja">+</button>
+      </div>
+
       <div class="ninja-badge">
         <span id="activeNinjaIcon">🥋</span>
         <span id="activeNinjaName">White Belt Ken</span>
@@ -614,14 +730,31 @@
     </div>
   </main>
 
+  <!-- MODAL: ADD NEW NINJA PROFILE -->
+  <div class="modal-overlay" id="newProfileModal">
+    <div class="modal-box">
+      <h3>Enter Ninja Name</h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">Create a training profile for a new challenger:</p>
+      <input type="text" id="newProfileNameInput" class="modal-input" placeholder="Ninja Name" maxlength="15" autocomplete="off">
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeNewProfileModal()">Cancel</button>
+        <button class="btn" onclick="createNewProfile()">Join Dojo</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIQJ6mLKxhn_Ba-bLSFLc5I36hy5cQ7ae5iUyQNn0qlhf75LvERbDFmsJzEPXEAs6N/exec";
-    const PLAYER_NAME = "Aaron";
 
-    let playerXP = parseInt(localStorage.getItem("math_ninja_xp") || "0");
-    let equippedNinja = localStorage.getItem("math_ninja_char") || "White Belt Ken";
-    let totalSolved = parseInt(localStorage.getItem("math_ninja_solved") || "0");
-    let totalCorrect = parseInt(localStorage.getItem("math_ninja_correct") || "0");
+    // Multi-profile state
+    let profilesList = JSON.parse(localStorage.getItem("math_ninja_profiles") || '["Aaron", "Micah", "Reid"]');
+    let currentProfile = localStorage.getItem("math_ninja_current_profile") || profilesList[0] || "Aaron";
+
+    // Active profile stats
+    let playerXP = 0;
+    let equippedNinja = "White Belt Ken";
+    let totalSolved = 0;
+    let totalCorrect = 0;
     let currentStreak = 0;
     let currentProblem = null;
     let selectedRule = "mixed";
@@ -635,6 +768,81 @@
       { name: "Frost Phantom Yuki", icon: "❄️", reqXP: 1500, title: "Ice Grandmaster", desc: "Master of squares ending in 5." },
       { name: "Golden Sensei Shin", icon: "👑", reqXP: 2200, title: "Grand Champion", desc: "Legendary master of all numbers." }
     ];
+
+    // Load active profile data
+    function loadActiveProfileData() {
+      const data = JSON.parse(localStorage.getItem(`math_ninja_data_${currentProfile}`) || "{}");
+      playerXP = data.xp || 0;
+      equippedNinja = data.ninja || "White Belt Ken";
+      totalSolved = data.totalSolved || 0;
+      totalCorrect = data.totalCorrect || 0;
+      currentStreak = 0;
+      document.getElementById("streakCount").textContent = 0;
+    }
+
+    // Save active profile data
+    function saveActiveProfileData() {
+      const data = {
+        xp: playerXP,
+        ninja: equippedNinja,
+        totalSolved: totalSolved,
+        totalCorrect: totalCorrect
+      };
+      localStorage.setItem(`math_ninja_data_${currentProfile}`, JSON.stringify(data));
+      localStorage.setItem("math_ninja_current_profile", currentProfile);
+      localStorage.setItem("math_ninja_profiles", JSON.stringify(profilesList));
+    }
+
+    // Initialize Profiles Dropdown
+    function renderProfileSelector() {
+      const select = document.getElementById("profileSelect");
+      select.innerHTML = "";
+      profilesList.forEach(name => {
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        if (name === currentProfile) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    function onProfileChange() {
+      const select = document.getElementById("profileSelect");
+      currentProfile = select.value;
+      loadActiveProfileData();
+      updateUI();
+      renderProblem();
+    }
+
+    function openNewProfileModal() {
+      const modal = document.getElementById("newProfileModal");
+      const input = document.getElementById("newProfileNameInput");
+      modal.classList.add("active");
+      input.value = "";
+      input.focus();
+    }
+
+    function closeNewProfileModal() {
+      document.getElementById("newProfileModal").classList.remove("active");
+    }
+
+    function createNewProfile() {
+      const input = document.getElementById("newProfileNameInput");
+      const name = input.value.trim();
+      if (!name) return;
+
+      // Add to profile list if new
+      if (!profilesList.includes(name)) {
+        profilesList.push(name);
+      }
+      currentProfile = name;
+      saveActiveProfileData();
+      renderProfileSelector();
+      loadActiveProfileData();
+      updateUI();
+      closeNewProfileModal();
+      renderProblem();
+    }
 
     function playBeep(freq = 440, duration = 0.1) {
       try {
@@ -743,6 +951,7 @@
         toggleHint();
       }
 
+      saveActiveProfileData();
       updateUI();
       syncToGoogleSheets(currentProblem, isCorrect, gained);
     }
@@ -756,11 +965,6 @@
     }
 
     function updateUI() {
-      localStorage.setItem("math_ninja_xp", playerXP);
-      localStorage.setItem("math_ninja_char", equippedNinja);
-      localStorage.setItem("math_ninja_solved", totalSolved);
-      localStorage.setItem("math_ninja_correct", totalCorrect);
-
       const nextNinja = NINJAS.find(n => n.reqXP > playerXP) || NINJAS[NINJAS.length - 1];
       const pct = Math.min(100, Math.round((playerXP / (nextNinja.reqXP || 1)) * 100));
       document.getElementById("xpFill").style.width = `${pct}%`;
@@ -801,6 +1005,7 @@
 
     function equipNinja(name) {
       equippedNinja = name;
+      saveActiveProfileData();
       updateUI();
     }
 
@@ -814,7 +1019,7 @@
       const accuracyPct = totalSolved > 0 ? Math.round((totalCorrect / totalSolved) * 100) + "%" : "100%";
 
       const payload = {
-        name: PLAYER_NAME,
+        name: currentProfile,
         xp: playerXP,
         equippedNinja: equippedNinja,
         level: Math.floor(playerXP / 200) + 1,
@@ -885,17 +1090,27 @@
         playerXP += 20;
         document.getElementById("speedScore").textContent = speedScoreVal;
       }
+      saveActiveProfileData();
       updateUI();
       nextSpeedProblem();
     }
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
-        if (document.getElementById("practice").classList.contains("active")) submitAnswer();
-        else if (document.getElementById("speed").classList.contains("active")) submitSpeedAnswer();
+        const modal = document.getElementById("newProfileModal");
+        if (modal.classList.contains("active")) {
+          createNewProfile();
+        } else if (document.getElementById("practice").classList.contains("active")) {
+          submitAnswer();
+        } else if (document.getElementById("speed").classList.contains("active")) {
+          submitSpeedAnswer();
+        }
       }
     });
 
+    // Boot
+    renderProfileSelector();
+    loadActiveProfileData();
     renderProblem();
     updateUI();
   </script>
