@@ -378,6 +378,100 @@
 
     .hint-card.show { display: block; }
 
+    /* ========================================================
+       TRICK ACADEMY VISUAL CARDS
+       ======================================================== */
+    .trick-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .trick-card {
+      background: #0f172a;
+      border: 2px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 1.35rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .trick-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #6366f1, #fbbf24);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .trick-card:hover {
+      border-color: #fbbf24;
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.45);
+    }
+
+    .trick-card:hover::before {
+      opacity: 1;
+    }
+
+    .trick-card h3 {
+      font-family: 'Fredoka', cursive;
+      font-size: 1.25rem;
+      margin-bottom: 0.65rem;
+      color: #fbbf24;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .trick-card h3 span {
+      font-size: 1.5rem;
+    }
+
+    .trick-card p {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+      flex-grow: 1;
+    }
+
+    .trick-example {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-left: 4px solid #38bdf8;
+      padding: 0.65rem 0.9rem;
+      border-radius: 0.5rem;
+      font-weight: 800;
+      color: #38bdf8;
+      font-size: 0.95rem;
+      font-family: 'Fredoka', cursive;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .trick-example::after {
+      content: 'Practice ⚔️';
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #fbbf24;
+      background: #0f172a;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.35rem;
+      border: 1px solid #334155;
+    }
+
+    /* DOJO GRID */
     .roster-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
@@ -499,6 +593,7 @@
       nav { grid-template-columns: repeat(2, 1fr); }
       .problem-box { font-size: 2.8rem; padding: 0.75rem 1.25rem; }
       .controls-row { flex-direction: column; align-items: stretch; }
+      .trick-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -624,9 +719,9 @@
     <!-- TRICK ACADEMY PANEL -->
     <div id="academy" class="panel">
       <div class="card">
-        <h2 style="font-family: 'Fredoka', cursive; color: #fbbf24; margin-bottom: 0.5rem;">Ninja Strategy Scrolls</h2>
-        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.25rem;">
-          Master these scrolls to unlock your grade-specific ninja champions:
+        <h2 style="font-family: 'Fredoka', cursive; color: #fbbf24; margin-bottom: 0.4rem;">Ninja Strategy Scrolls</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 0.5rem;">
+          Tap any secret scroll below to practice that mental math shortcut immediately:
         </p>
         <div class="trick-grid" id="academyScrolls"></div>
       </div>
@@ -707,7 +802,7 @@
     let currentStreak = 0;
     let currentProblem = null;
 
-    // 25 NINJAS FOR EACH GRADE (75 UNIQUE NINJAS TOTAL)
+    // 25 NINJAS PER GRADE
     const GRADE_NINJAS = {
       preschool: [
         { name: "Apple Sprout Ken", icon: "🌱", ruleKey: "overall", reqXP: 0, ruleLabel: "Starter", title: "Novice Sprout", desc: "Takes first steps in counting." },
@@ -808,6 +903,7 @@
       ]
     };
 
+    // GRADE SCROLLS CONFIGURATION
     const GRADE_CONFIG = {
       preschool: {
         title: "Preschool (Reid)",
@@ -819,9 +915,10 @@
           { id: "add_10", name: "⭐ Add to 10" }
         ],
         academy: [
-          { id: "count", title: "Counting Apples", desc: "Count each item carefully with your finger!", example: "🍎🍎🍎 = 3" },
-          { id: "add_5", title: "Adding with Hands", desc: "Start with the bigger number, count up on your fingers!", example: "3 + 2 = 5" },
-          { id: "sub_5", title: "Eating the Snacks", desc: "If you have 4 berries and eat 1, how many are left?", example: "4 - 1 = 3" }
+          { id: "count", icon: "🍎", title: "Counting Apples", desc: "Count each item carefully one-by-one with your finger!", example: "🍎 🍎 🍎 = 3" },
+          { id: "add_5", icon: "➕", title: "Adding with Hands", desc: "Hold up fingers on both hands and count them all together!", example: "3 + 2 = 5" },
+          { id: "sub_5", icon: "➖", title: "Eating the Snacks", desc: "If you have 4 berries and eat 1, how many are still left?", example: "4 - 1 = 3" },
+          { id: "add_10", icon: "⭐", title: "Two-Hand Ten", desc: "Put all ten fingers up! 5 on one hand, 5 on the other makes 10!", example: "6 + 4 = 10" }
         ]
       },
       grade2: {
@@ -834,9 +931,10 @@
           { id: "mult_intro", name: "✖️ Basic Intro Multiples" }
         ],
         academy: [
-          { id: "doubles", title: "Doubles Fast-Strike", desc: "Remember twins: 6+6=12, 7+7=14. For 6+7, do 6+6 + 1!", example: "6 + 7 = 13" },
-          { id: "make_ten", title: "Bridge to 10", desc: "For 8 + 5: take 2 from 5 to make 10, then add the left over 3!", example: "8 + 5 = 10 + 3 = 13" },
-          { id: "skip_count", title: "Skip Count Ninja", desc: "Multiplying by 5 is just counting by 5s: 5, 10, 15, 20!", example: "4 × 5 = 20" }
+          { id: "doubles", icon: "👯", title: "Doubles Fast-Strike", desc: "Remember twins: 6+6=12, 7+7=14, 8+8=16. For 7+8, do 7+7 and add 1!", example: "7 + 8 = 14 + 1 = 15" },
+          { id: "make_ten", icon: "🎯", title: "Bridge to 10", desc: "For 8 + 5: take 2 from the 5 to turn 8 into 10, then add the remaining 3!", example: "8 + 5 = (8 + 2) + 3 = 13" },
+          { id: "skip_count", icon: "🦘", title: "Skip Count Ninja", desc: "Multiplying by 5 is just rhythm counting by 5s: 5, 10, 15, 20!", example: "4 × 5 = 5, 10, 15, 20" },
+          { id: "mult_intro", icon: "✖️", title: "Equal Groups & Arrays", desc: "Multiplication is repeated addition of equal sets: 3 groups of 4!", example: "3 × 4 = 4 + 4 + 4 = 12" }
         ]
       },
       grade4: {
@@ -850,11 +948,11 @@
           { id: "ending_five", name: "⚡ Square Ending in 5 (e.g. 35 × 35)" }
         ],
         academy: [
-          { id: "zeros", title: "The Zero Hero", desc: "Multiply front numbers, then append total zeros!", example: "30 × 40 = 1,200" },
-          { id: "eleven", title: "The 11s Magic Trick", desc: "Pull 3 and 5 apart, add them (3+5=8), place 8 in middle!", example: "35 × 11 = 385" },
-          { id: "split", title: "The Break & Split", desc: "Split 31 into 30+1: (30 × 35) + (1 × 35) = 1,050 + 35!", example: "31 × 35 = 1,085" },
-          { id: "double_half", title: "Double & Halve", desc: "Double the 5-number, halve the even number!", example: "15 × 24 = 30 × 12 = 360" },
-          { id: "ending_five", title: "Square Ending in 5", desc: "Multiply tens digit by next number up (3×4=12) and add 25!", example: "35 × 35 = 1,225" }
+          { id: "zeros", icon: "0️⃣", title: "The Zero Hero", desc: "Multiply the non-zero front digits first, then count and attach all the zeros!", example: "30 × 40 → (3 × 4) & 00 = 1,200" },
+          { id: "eleven", icon: "🪄", title: "The 11s Magic Trick", desc: "Pull the two digits apart, sum them (3 + 5 = 8), and place that sum in the middle!", example: "35 × 11 → 3 [3+5] 5 = 385" },
+          { id: "split", icon: "🪓", title: "The Break & Split", desc: "Split a tricky factor into friendly tens and ones to make mental addition easy!", example: "31 × 35 → (30 × 35) + (1 × 35) = 1,085" },
+          { id: "double_half", icon: "⚖️", title: "Double & Halve", desc: "Double the number ending in 5 and halve the even number to make simple products!", example: "15 × 24 → 30 × 12 = 360" },
+          { id: "ending_five", icon: "⚡", title: "Square Ending in 5", desc: "Multiply the tens digit by the next integer (3 × 4 = 12), then append 25 to the end!", example: "35 × 35 → (3 × 4) & 25 = 1,225" }
         ]
       }
     };
@@ -939,20 +1037,23 @@
       });
     }
 
+    // RENDER VISUALLY PLEASING ACADEMY SCROLL CARDS
     function renderAcademyScrolls() {
       const container = document.getElementById("academyScrolls");
       container.innerHTML = "";
       const scrolls = GRADE_CONFIG[currentGrade].academy;
       scrolls.forEach(s => {
-        const div = document.createElement("div");
-        div.className = "trick-card";
-        div.onclick = () => selectAndPractice(s.id);
-        div.innerHTML = `
-          <h3><span>📜</span> ${s.title}</h3>
-          <p>${s.desc}</p>
+        const card = document.createElement("div");
+        card.className = "trick-card";
+        card.onclick = () => selectAndPractice(s.id);
+        card.innerHTML = `
+          <div>
+            <h3><span>${s.icon || '📜'}</span> ${s.title}</h3>
+            <p>${s.desc}</p>
+          </div>
           <div class="trick-example">${s.example}</div>
         `;
-        container.appendChild(div);
+        container.appendChild(card);
       });
     }
 
