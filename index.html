@@ -248,7 +248,7 @@
       gap: 0.75rem;
       justify-content: center;
       width: 100%;
-      max-width: 650px;
+      max-width: 680px;
     }
 
     .selector-box {
@@ -823,9 +823,12 @@
           <div class="selector-box">
             <label for="gradeSelect">🎓 Grade Level:</label>
             <select id="gradeSelect" class="custom-select" onchange="onGradeChange()">
-              <option value="preschool">Preschool (Reid · Counting & Early Math)</option>
-              <option value="grade2">2nd Grade (Micah · Add/Sub & Basics)</option>
-              <option value="grade4">4th Grade (Aaron · 2-Digit Shortcuts)</option>
+              <option value="preschool">Preschool (Counting & Early Math)</option>
+              <option value="grade1">1st Grade (Add/Sub to 20 & Missing Addends)</option>
+              <option value="grade2">2nd Grade (Skip Count & Make Ten)</option>
+              <option value="grade3">3rd Grade (Times Tables & Inverse Division)</option>
+              <option value="grade4" selected>4th Grade (2-Digit Multiplication Tricks)</option>
+              <option value="grade5">5th Grade (Decimals & Advanced Operations)</option>
             </select>
           </div>
 
@@ -861,7 +864,7 @@
         </div>
 
         <div class="input-row">
-          <input type="number" id="answerInput" placeholder="?" autocomplete="off">
+          <input type="number" id="answerInput" placeholder="?" autocomplete="off" step="any">
           <button class="btn" onclick="submitAnswer()">Strike!</button>
         </div>
 
@@ -1025,104 +1028,88 @@
       `;
     }
 
+    // BASE 25 NINJAS TEMPLATE PER GRADE
+    const BASE_GRADE_NINJAS = [
+      { name: "White Belt Ken", color: "#6366f1", headwear: "headband", weapon: "shuriken", rarity: "apprentice", ruleKey: "overall", reqXP: 0, ruleLabel: "Starter", title: "Novice", desc: "Begins the grade training.", shout: "“Let's master the ninja steps!”" },
+      { name: "Striker Bo", color: "#06b6d4", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "rule_1", reqXP: 30, ruleLabel: "Rank 1", title: "Apprentice", desc: "First rule techniques.", shout: "“Clean precision strike!”" },
+      { name: "Swift Claw Ren", color: "#38bdf8", headwear: "headband", weapon: "dual_swords", rarity: "rare", ruleKey: "rule_1", reqXP: 60, ruleLabel: "Rank 1", title: "Dual Edge", desc: "Quick mental calculations.", shout: "“Twin edge strike!”" },
+      { name: "Silent Gale Kage", color: "#0ea5e9", headwear: "horns", weapon: "dual_swords", rarity: "epic", ruleKey: "rule_1", reqXP: 100, ruleLabel: "Rank 1", title: "Wind Striker", desc: "Commands fundamental math.", shout: "“Gale force impact!”" },
+      { name: "Storm Hunter Raiden", color: "#f59e0b", headwear: "flame", weapon: "dual_swords", rarity: "legendary", ruleKey: "rule_1", reqXP: 160, ruleLabel: "Rank 1", title: "Storm Lord", desc: "Strikes like sudden thunder.", shout: "“THUNDER ACCURACY!”" },
+      
+      { name: "Ember Scout Kai", color: "#f97316", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "rule_2", reqXP: 30, ruleLabel: "Rank 2", title: "Fire Scout", desc: "Quick reaction timing.", shout: "“Igniting the calculations!”" },
+      { name: "Flame Cleaver Taro", color: "#ef4444", headwear: "horns", weapon: "axe", rarity: "rare", ruleKey: "rule_2", reqXP: 60, ruleLabel: "Rank 2", title: "Cleaver", desc: "Cuts down complex problems.", shout: "“Cleaving through numbers!”" },
+      { name: "Blaze Alchemist Jin", color: "#dc2626", headwear: "flame", weapon: "dual_swords", rarity: "epic", ruleKey: "rule_2", reqXP: 100, ruleLabel: "Rank 2", title: "Alchemist", desc: "Transforms arithmetic equations.", shout: "“Blaze transformation!”" },
+      { name: "Solar Champion Sol", color: "#fbbf24", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "rule_2", reqXP: 160, ruleLabel: "Rank 2", title: "Solar Guardian", desc: "Radiant mental agility.", shout: "“SOLAR PROMINENCE!”" },
+
+      { name: "Grove Runner Fumi", color: "#10b981", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "rule_3", reqXP: 30, ruleLabel: "Rank 3", title: "Grove Scout", desc: "Agile pattern recognition.", shout: "“Pattern identified!”" },
+      { name: "Jade Viper Orochi", color: "#059669", headwear: "horns", weapon: "dual_swords", rarity: "rare", ruleKey: "rule_3", reqXP: 60, ruleLabel: "Rank 3", title: "Tactician", desc: "Tactical decomposition master.", shout: "“Viper venom accuracy!”" },
+      { name: "Timber Cleaver Cho", color: "#047857", headwear: "headband", weapon: "axe", rarity: "epic", ruleKey: "rule_3", reqXP: 100, ruleLabel: "Rank 3", title: "Woodland Chopper", desc: "Splits equations cleanly.", shout: "“Clean tactical split!”" },
+      { name: "Forest Titan Gou", color: "#065f46", headwear: "horns", weapon: "axe", rarity: "legendary", ruleKey: "rule_3", reqXP: 160, ruleLabel: "Rank 3", title: "Titan Crusher", desc: "Impenetrable arithmetic focus.", shout: "“TITAN STRENGTH!”" },
+
+      { name: "Frost Seeker Yuki", color: "#38bdf8", headwear: "ice", weapon: "shuriken", rarity: "rare", ruleKey: "rule_4", reqXP: 30, ruleLabel: "Rank 4", title: "Frost Apprentice", desc: "Freezes arithmetic errors.", shout: "“Frost cold clarity!”" },
+      { name: "Blizzard Ronin Kuro", color: "#0284c7", headwear: "ice", weapon: "dual_swords", rarity: "rare", ruleKey: "rule_4", reqXP: 60, ruleLabel: "Rank 4", title: "Blizzard Lord", desc: "Calculates at blizzard velocity.", shout: "“Blizzard strike!”" },
+      { name: "Glacial Sovereign Hyou", color: "#bae6fd", headwear: "crown", weapon: "dual_swords", rarity: "epic", ruleKey: "rule_4", reqXP: 100, ruleLabel: "Rank 4", title: "Ice Sovereign", desc: "Cold, collected calculation.", shout: "“Absolute zero focus!”" },
+      { name: "Aurora Weaver Reika", color: "#06b6d4", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "rule_4", reqXP: 160, ruleLabel: "Rank 4", title: "Polar Queen", desc: "Equations align like aurora lights.", shout: "“AURORA BOREALIS!”" },
+
+      { name: "Mystic Fox Kitsune", color: "#ec4899", headwear: "horns", weapon: "shuriken", rarity: "rare", ruleKey: "overall", reqXP: 100, ruleLabel: "Overall", title: "Mage", desc: "Unravels number puzzles.", shout: "“Mystery decoded!”" },
+      { name: "Time Bender Chrono", color: "#8b5cf6", headwear: "headband", weapon: "dual_swords", rarity: "epic", ruleKey: "overall", reqXP: 220, ruleLabel: "Overall", title: "Time Walker", desc: "Controls mathematical speed.", shout: "“Time on our side!”" },
+      { name: "Silver Guardian Gin", color: "#94a3b8", headwear: "horns", weapon: "dual_swords", rarity: "epic", ruleKey: "overall", reqXP: 360, ruleLabel: "Overall", title: "Grade Veteran", desc: "Steady mastery across topics.", shout: "“Silver barrier up!”" },
+      { name: "Golden Sensei Shin", color: "#fbbf24", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "overall", reqXP: 550, ruleLabel: "Overall", title: "Grade Master", desc: "Command over full curriculum.", shout: "“Golden mastery achieved!”" },
+      { name: "Imperial Shogun Nobu", color: "#dc2626", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "overall", reqXP: 750, ruleLabel: "Overall", title: "Shogun", desc: "Leader of elementary martial math.", shout: "“Imperial order delivered!”" },
+      { name: "Void Emperor Ryu", color: "#a855f7", headwear: "crown", weapon: "dual_swords", rarity: "mythic", ruleKey: "overall", reqXP: 1000, ruleLabel: "Overall", title: "Grand Champion", desc: "Supreme master of the grade level.", shout: "“VOID SUPREMACY!”" },
+      { name: "Celestial Dragon Ryujin", color: "#d946ef", headwear: "crown", weapon: "dual_swords", rarity: "mythic", ruleKey: "overall", reqXP: 1300, ruleLabel: "Overall", title: "Mythic Drake", desc: "Ancient mathematical dragon.", shout: "“CELESTIAL DRAGON ROAR!”" },
+      { name: "Infinity Deity Mugen", color: "#f59e0b", headwear: "crown", weapon: "dual_swords", rarity: "mythic", ruleKey: "overall", reqXP: 1600, ruleLabel: "Overall", title: "Cosmic Sovereign", desc: "Transcended this grade to the next!", shout: "“INFINITY COSMOS OMNIPRESENCE!”" }
+    ];
+
+    // GENERATE 25 NINJAS TAILORED FOR EACH OF THE 6 GRADES
+    function buildGradeNinjas(gradeId) {
+      return BASE_GRADE_NINJAS.map((ninja, idx) => {
+        let ruleKey = ninja.ruleKey;
+        let ruleLabel = ninja.ruleLabel;
+
+        if (gradeId === "preschool") {
+          if (ruleKey === "rule_1") { ruleKey = "count"; ruleLabel = "🍎 Counting"; }
+          else if (ruleKey === "rule_2") { ruleKey = "sub_5"; ruleLabel = "➖ Take Away"; }
+          else if (ruleKey === "rule_3") { ruleKey = "add_5"; ruleLabel = "➕ Add to 5"; }
+          else if (ruleKey === "rule_4") { ruleKey = "add_10"; ruleLabel = "⭐ Add to 10"; }
+        } else if (gradeId === "grade1") {
+          if (ruleKey === "rule_1") { ruleKey = "add_sub_20"; ruleLabel = "➕ Add/Sub 20"; }
+          else if (ruleKey === "rule_2") { ruleKey = "missing_addend"; ruleLabel = "❓ Missing Addend"; }
+          else if (ruleKey === "rule_3") { ruleKey = "tens_ones"; ruleLabel = "🔟 Tens & Ones"; }
+          else if (ruleKey === "rule_4") { ruleKey = "comp_20"; ruleLabel = "⚖️ Compare to 20"; }
+        } else if (gradeId === "grade2") {
+          if (ruleKey === "rule_1") { ruleKey = "skip_count"; ruleLabel = "🦘 Skip Count"; }
+          else if (ruleKey === "rule_2") { ruleKey = "make_ten"; ruleLabel = "🎯 Make Ten"; }
+          else if (ruleKey === "rule_3") { ruleKey = "doubles"; ruleLabel = "👯 Doubles"; }
+          else if (ruleKey === "rule_4") { ruleKey = "mult_intro"; ruleLabel = "✖️ Basic Sets"; }
+        } else if (gradeId === "grade3") {
+          if (ruleKey === "rule_1") { ruleKey = "facts_12"; ruleLabel = "✖️ Times Tables"; }
+          else if (ruleKey === "rule_2") { ruleKey = "div_inverse"; ruleLabel = "➗ Inverse Division"; }
+          else if (ruleKey === "rule_3") { ruleKey = "distrib_intro"; ruleLabel = "🪓 Breakup Method"; }
+          else if (ruleKey === "rule_4") { ruleKey = "multi_steps"; ruleLabel = "🧩 Multi-Steps"; }
+        } else if (gradeId === "grade4") {
+          if (ruleKey === "rule_1") { ruleKey = "zeros"; ruleLabel = "0️⃣ Zero Hero"; }
+          else if (ruleKey === "rule_2") { ruleKey = "eleven"; ruleLabel = "🪄 11s Magic"; }
+          else if (ruleKey === "rule_3") { ruleKey = "split"; ruleLabel = "🪓 Break & Split"; }
+          else if (ruleKey === "rule_4") { ruleKey = "ending_five"; ruleLabel = "⚡ Square 5s"; }
+        } else if (gradeId === "grade5") {
+          if (ruleKey === "rule_1") { ruleKey = "powers_ten"; ruleLabel = "🚀 Powers of 10"; }
+          else if (ruleKey === "rule_2") { ruleKey = "multi_digit"; ruleLabel = "⚔️ 3-Digit × 1-Digit"; }
+          else if (ruleKey === "rule_3") { ruleKey = "pemdas"; ruleLabel = "📐 Order Operations"; }
+          else if (ruleKey === "rule_4") { ruleKey = "decimals"; ruleLabel = "💎 Decimals"; }
+        }
+
+        return { ...ninja, ruleKey, ruleLabel };
+      });
+    }
+
     const GRADE_NINJAS = {
-      preschool: [
-        { name: "Apple Sprout Ken", color: "#10b981", headwear: "headband", weapon: "shuriken", rarity: "apprentice", ruleKey: "overall", reqXP: 0, ruleLabel: "Starter", title: "Novice Sprout", desc: "Takes first steps in counting.", shout: "“Let's count our snacks!”" },
-        { name: "Finger Counter Pip", color: "#06b6d4", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "count", reqXP: 30, ruleLabel: "🍎 Counting", title: "Finger Scout", desc: "Counts fingers carefully.", shout: "“One, two, three... strike!”" },
-        { name: "Button Finder Bo", color: "#3b82f6", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "count", reqXP: 60, ruleLabel: "🍎 Counting", title: "Item Spotter", desc: "Finds and counts hidden items.", shout: "“I spotted every single one!”" },
-        { name: "Acorn Collector Kiri", color: "#d97706", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "count", reqXP: 90, ruleLabel: "🍎 Counting", title: "Grove Scout", desc: "Counts forest acorns.", shout: "“Gathering the forest numbers!”" },
-        { name: "Toy Box Sorter Jin", color: "#8b5cf6", headwear: "headband", weapon: "shuriken", rarity: "epic", ruleKey: "count", reqXP: 135, ruleLabel: "🍎 Counting", title: "Toy Master", desc: "Sorts blocks and toys.", shout: "“Blocks stacked and counted!”" },
-        { name: "Starlight Teller Riku", color: "#ec4899", headwear: "crown", weapon: "shuriken", rarity: "epic", ruleKey: "count", reqXP: 180, ruleLabel: "🍎 Counting", title: "Sky Spotter", desc: "Counts shooting stars.", shout: "“Starlight numbers shine!”" },
-        
-        { name: "Snack Nibbler Yoshi", color: "#ef4444", headwear: "headband", weapon: "shuriken", rarity: "apprentice", ruleKey: "sub_5", reqXP: 30, ruleLabel: "➖ Take Away", title: "Berry Chomper", desc: "Takes snacks away to count leftovers.", shout: "“Crunch! One snack taken away!”" },
-        { name: "Cookie Cruncher Chip", color: "#f59e0b", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "sub_5", reqXP: 60, ruleLabel: "➖ Take Away", title: "Snack Ninja", desc: "Nibbles numbers down fast.", shout: "“Cookie subtracted!”" },
-        { name: "Leaf Dropper Fumi", color: "#84cc16", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "sub_5", reqXP: 90, ruleLabel: "➖ Take Away", title: "Breeze Runner", desc: "Counts fallen leaves.", shout: "“Falling leaves minus count!”" },
-        { name: "Bubble Popper Poko", color: "#06b6d4", headwear: "headband", weapon: "shuriken", rarity: "epic", ruleKey: "sub_5", reqXP: 135, ruleLabel: "➖ Take Away", title: "Bubble Ninja", desc: "Pops bubbles one by one.", shout: "“POP! Fewer bubbles remain!”" },
-        { name: "Shadow Sneak Shino", color: "#64748b", headwear: "horns", weapon: "dual_swords", rarity: "epic", ruleKey: "sub_5", reqXP: 180, ruleLabel: "➖ Take Away", title: "Quiet Stepper", desc: "Leaves fewer tracks.", shout: "“Vanishing footprints!”" },
-
-        { name: "Star Catcher Hoshi", color: "#eab308", headwear: "crown", weapon: "shuriken", rarity: "apprentice", ruleKey: "add_5", reqXP: 30, ruleLabel: "➕ Add to 5", title: "Star Weaver", desc: "Combines two stars into one.", shout: "“Stars added together!”" },
-        { name: "Pair Maker Nami", color: "#f43f5e", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "add_5", reqXP: 60, ruleLabel: "➕ Add to 5", title: "Pair Scout", desc: "Matches groups together.", shout: "“Double cherry combo!”" },
-        { name: "Puppy Pal Paws", color: "#14b8a6", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "add_5", reqXP: 90, ruleLabel: "➕ Add to 5", title: "Pack Leader", desc: "Adds puppies up to five.", shout: "“Pack formed up!”" },
-        { name: "Flower Bloom Hana", color: "#ec4899", headwear: "headband", weapon: "shuriken", rarity: "epic", ruleKey: "add_5", reqXP: 135, ruleLabel: "➕ Add to 5", title: "Petal Gatherer", desc: "Adds blossom petals.", shout: "“Petals joined in full bloom!”" },
-        { name: "Rainbow Arch Niji", color: "#a855f7", headwear: "crown", weapon: "dual_swords", rarity: "epic", ruleKey: "add_5", reqXP: 180, ruleLabel: "➕ Add to 5", title: "Prism Weaver", desc: "Builds rainbow arches.", shout: "“Rainbow bridge strike!”" },
-
-        { name: "Ten-Strike Titan", color: "#3b82f6", headwear: "horns", weapon: "dual_swords", rarity: "rare", ruleKey: "add_10", reqXP: 45, ruleLabel: "⭐ Add to 10", title: "Two-Hand Striker", desc: "Uses all 10 fingers together.", shout: "“Ten fingers assembled!”" },
-        { name: "Golden Coin Zeni", color: "#eab308", headwear: "crown", weapon: "shuriken", rarity: "rare", ruleKey: "add_10", reqXP: 90, ruleLabel: "⭐ Add to 10", title: "Treasure Guard", desc: "Fills chests up to ten.", shout: "“Ten golden coins secured!”" },
-        { name: "Bowling Pin Goro", color: "#ef4444", headwear: "headband", weapon: "shuriken", rarity: "epic", ruleKey: "add_10", reqXP: 135, ruleLabel: "⭐ Add to 10", title: "Strike Roller", desc: "Knocks down all ten pins.", shout: "“STRIKE! Ten out of ten!”" },
-        { name: "Rocket Booster Tora", color: "#f97316", headwear: "flame", weapon: "dual_swords", rarity: "epic", ruleKey: "add_10", reqXP: 180, ruleLabel: "⭐ Add to 10", title: "Blastoff Scout", desc: "Ten second rocket launch.", shout: "“Blastoff sequence ready!”" },
-        { name: "Solar Flare Suni", color: "#fbbf24", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "add_10", reqXP: 225, ruleLabel: "⭐ Add to 10", title: "Sun Striker", desc: "Warms up complete sets of ten.", shout: "“Full ten solar blast!”" },
-
-        { name: "Copper Belt Kento", color: "#b45309", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "overall", reqXP: 150, ruleLabel: "Overall XP", title: "Playground Hero", desc: "Kindergarten ready.", shout: "“Copper belt power!”" },
-        { name: "Silver Belt Ginji", color: "#94a3b8", headwear: "headband", weapon: "dual_swords", rarity: "epic", ruleKey: "overall", reqXP: 300, ruleLabel: "Overall XP", title: "Counting Champion", desc: "Fast on every count.", shout: "“Silver blade precision!”" },
-        { name: "Gold Belt Kin", color: "#f59e0b", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "overall", reqXP: 500, ruleLabel: "Overall XP", title: "Kinder Dojo Sensei", desc: "Master of numbers to ten.", shout: "“Golden sensei wisdom!”" },
-        { name: "Supreme Dragon Ryu", color: "#ec4899", headwear: "crown", weapon: "dual_swords", rarity: "mythic", ruleKey: "overall", reqXP: 750, ruleLabel: "Overall XP", title: "Preschool Legend", desc: "Ultimate little dragon.", shout: "“LITTLE DRAGON ROAR!”" }
-      ],
-
-      grade2: [
-        { name: "White Belt Ken", color: "#6366f1", headwear: "headband", weapon: "shuriken", rarity: "apprentice", ruleKey: "overall", reqXP: 0, ruleLabel: "Starter", title: "Novice", desc: "Mental addition apprentice.", shout: "“Sharpening our arithmetic!”" },
-        { name: "Bridge Ten Jin", color: "#10b981", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "make_ten", reqXP: 45, ruleLabel: "🎯 Make Ten", title: "Bridge Builder", desc: "Bridges numbers across 10.", shout: "“Crossing ten in a heartbeat!”" },
-        { name: "Anchor Stone Toru", color: "#475569", headwear: "headband", weapon: "axe", rarity: "rare", ruleKey: "make_ten", reqXP: 90, ruleLabel: "🎯 Make Ten", title: "Anchor Guard", desc: "Anchors difficult sums to ten.", shout: "“Ten is locked down!”" },
-        { name: "Deca Scout Tenro", color: "#0ea5e9", headwear: "headband", weapon: "shuriken", rarity: "epic", ruleKey: "make_ten", reqXP: 150, ruleLabel: "🎯 Make Ten", title: "Castle Sentinel", desc: "Secures the base-ten foundation.", shout: "“Base ten fortress defended!”" },
-        { name: "Bridge Architect Maya", color: "#d946ef", headwear: "crown", weapon: "shuriken", rarity: "epic", ruleKey: "make_ten", reqXP: 210, ruleLabel: "🎯 Make Ten", title: "Master Builder", desc: "Spans from 8 into 15.", shout: "“Bridging numbers effortlessly!”" },
-        { name: "Fortress Captain Gaku", color: "#334155", headwear: "horns", weapon: "dual_swords", rarity: "legendary", ruleKey: "make_ten", reqXP: 270, ruleLabel: "🎯 Make Ten", title: "Wall Commander", desc: "Impenetrable addition.", shout: "“Unshakeable ten defense!”" },
-
-        { name: "Twin Strike Ren", color: "#06b6d4", headwear: "headband", weapon: "dual_swords", rarity: "rare", ruleKey: "doubles", reqXP: 45, ruleLabel: "👯 Doubles", title: "Twin Striker", desc: "Instant on 6+6, 7+7, 8+8.", shout: "“TWIN BLADES UNITE!”" },
-        { name: "Mirror Twin Kazu", color: "#38bdf8", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "doubles", reqXP: 90, ruleLabel: "👯 Doubles", title: "Reflector", desc: "Sees identical numbers instantly.", shout: "“Reflected across the mirror!”" },
-        { name: "Double Dragon Ryuto", color: "#8b5cf6", headwear: "horns", weapon: "dual_swords", rarity: "epic", ruleKey: "doubles", reqXP: 150, ruleLabel: "👯 Doubles", title: "Twin Drake", desc: "Strikes twins like dragon claws.", shout: "“DOUBLE DRAGON STRIKE!”" },
-        { name: "Near-Twin Kage", color: "#f59e0b", headwear: "horns", weapon: "shuriken", rarity: "epic", ruleKey: "doubles", reqXP: 210, ruleLabel: "👯 Near Doubles", title: "Shadow Striker", desc: "Solves 7+8 via 7+7+1.", shout: "“Double plus one... direct hit!”" },
-        { name: "Offset Blade Saya", color: "#ec4899", headwear: "headband", weapon: "dual_swords", rarity: "legendary", ruleKey: "doubles", reqXP: 270, ruleLabel: "👯 Near Doubles", title: "Split Edge", desc: "Master of doubles +/- 1.", shout: "“Offset strike landed!”" },
-
-        { name: "Rabbit Hopper Usagi", color: "#22c55e", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "skip_count", reqXP: 45, ruleLabel: "🦘 Skip Count", title: "Speed Leaper", desc: "Hops across 2s without stopping.", shout: "“Hop to the next number!”" },
-        { name: "Five-Star Shuriken Go", color: "#eab308", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "skip_count", reqXP: 90, ruleLabel: "🦘 Skip Count", title: "Star Tosser", desc: "Skips by 5s like clockwork.", shout: "“Five star pattern complete!”" },
-        { name: "Ten-Pace Scout Deka", color: "#f97316", headwear: "headband", weapon: "shuriken", rarity: "epic", ruleKey: "skip_count", reqXP: 150, ruleLabel: "🦘 Skip Count", title: "Deca Runner", desc: "Races by 10s into 100.", shout: "“Pacing by tens!”" },
-        { name: "Leaping Crane Tsuru", color: "#a855f7", headwear: "crown", weapon: "dual_swords", rarity: "epic", ruleKey: "skip_count", reqXP: 210, ruleLabel: "🦘 Skip Count", title: "Wind Hopper", desc: "Effortless skip counts.", shout: "“Rhythmic crane leaps!”" },
-        { name: "Comet Dasher Hayate", color: "#06b6d4", headwear: "flame", weapon: "dual_swords", rarity: "legendary", ruleKey: "skip_count", reqXP: 270, ruleLabel: "🦘 Skip Count", title: "Flash Dasher", desc: "Fastest skip-counter in the realm.", shout: "“Speed of light skip count!”" },
-
-        { name: "Array Apprentice Roku", color: "#64748b", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "mult_intro", reqXP: 45, ruleLabel: "✖️ Basic Sets", title: "Block Stacker", desc: "Arranges rows and columns.", shout: "“Grid arranged!”" },
-        { name: "Multiplier Ronin Raiden", color: "#eab308", headwear: "headband", weapon: "dual_swords", rarity: "rare", ruleKey: "mult_intro", reqXP: 90, ruleLabel: "✖️ Basic Sets", title: "Sets Samurai", desc: "Calculates equal groups.", shout: "“Equal sets multiplied!”" },
-        { name: "Grid Master Koshi", color: "#0284c7", headwear: "horns", weapon: "shuriken", rarity: "epic", ruleKey: "mult_intro", reqXP: 150, ruleLabel: "✖️ Basic Sets", title: "Tessellator", desc: "Sees products in 2D grids.", shout: "“Grid locked!”" },
-        { name: "Repeated Addition Ken", color: "#8b5cf6", headwear: "headband", weapon: "dual_swords", rarity: "epic", ruleKey: "mult_intro", reqXP: 210, ruleLabel: "✖️ Basic Sets", title: "Loop Striker", desc: "Turns addition into multiplication.", shout: "“Loops condensed into one strike!”" },
-        { name: "Set Tactician Daiki", color: "#f43f5e", headwear: "crown", weapon: "axe", rarity: "legendary", ruleKey: "mult_intro", reqXP: 270, ruleLabel: "✖️ Basic Sets", title: "Array Strategist", desc: "Commander of grouping.", shout: "“Tactical product formed!”" },
-
-        { name: "Silver Guardian Gin", color: "#cbd5e1", headwear: "horns", weapon: "dual_swords", rarity: "rare", ruleKey: "overall", reqXP: 250, ruleLabel: "Overall XP", title: "2nd Grade Ace", desc: "Solid all-around mathematical speed.", shout: "“Silver shield defense!”" },
-        { name: "Golden Sensei Shin", color: "#fbbf24", headwear: "crown", weapon: "dual_swords", rarity: "epic", ruleKey: "overall", reqXP: 450, ruleLabel: "Overall XP", title: "2nd Grade Master", desc: "Master of addition and sets.", shout: "“Mastery of the grade!”" },
-        { name: "Imperial Shogun Nobu", color: "#dc2626", headwear: "horns", weapon: "dual_swords", rarity: "legendary", ruleKey: "overall", reqXP: 700, ruleLabel: "Overall XP", title: "Shogun Champion", desc: "Commands 2nd grade mental math.", shout: "“Imperial command issued!”" },
-        { name: "Celestial Dragon Ryujin", color: "#c084fc", headwear: "crown", weapon: "dual_swords", rarity: "mythic", ruleKey: "overall", reqXP: 1000, ruleLabel: "Overall XP", title: "Mythic Dragon", desc: "Supreme guardian of early arithmetic.", shout: "“CELESTIAL DRAGON ASCENT!”" }
-      ],
-
-      grade4: [
-        { name: "White Belt Ken", color: "#6366f1", headwear: "headband", weapon: "shuriken", rarity: "apprentice", ruleKey: "overall", reqXP: 0, ruleLabel: "Starter", title: "Novice", desc: "Stepping into 2-digit multiplication.", shout: "“Let's master the ninja tricks!”" },
-        
-        { name: "Zero Hero Spark", color: "#eab308", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "zeros", reqXP: 45, ruleLabel: "0️⃣ Zero Hero", title: "Zero Specialist", desc: "Front numbers × zeros.", shout: "“ZERO POWER CHARGED!”" },
-        { name: "Volt Raider Raiden", color: "#facc15", headwear: "horns", weapon: "dual_swords", rarity: "epic", ruleKey: "zeros", reqXP: 100, ruleLabel: "0️⃣ Zero Hero", title: "Thunder Ronin", desc: "Solves tens products instantly.", shout: "“LIGHTNING ZERO STRIKE!”" },
-        { name: "Solar Emperor Sol", color: "#f97316", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "zeros", reqXP: 180, ruleLabel: "0️⃣ Zero Hero", title: "Solar Guardian", desc: "Solar radiance zero math.", shout: "“SOLAR FLARE MULTIPLICATION!”" },
-        { name: "Nova Cannon Katsu", color: "#ef4444", headwear: "flame", weapon: "dual_swords", rarity: "mythic", ruleKey: "zeros", reqXP: 270, ruleLabel: "0️⃣ Zero Hero", title: "Nova Blaster", desc: "Launches zero-trick products.", shout: "“SUPERNOVA ZERO IMPACT!”" },
-
-        { name: "Mirror Fox Kitsune", color: "#ec4899", headwear: "horns", weapon: "shuriken", rarity: "rare", ruleKey: "eleven", reqXP: 45, ruleLabel: "🪄 11s Magic", title: "Trickster Mage", desc: "Splits digits and sums center.", shout: "“Split... sum... snap!”" },
-        { name: "Time Bender Chrono", color: "#8b5cf6", headwear: "headband", weapon: "shuriken", rarity: "epic", ruleKey: "eleven", reqXP: 100, ruleLabel: "🪄 11s Magic", title: "Chronos Walker", desc: "Calculates carry-overs without blinking.", shout: "“Time bends around 11!”" },
-        { name: "Arcane Sage Ren", color: "#3b82f6", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "eleven", reqXP: 180, ruleLabel: "🪄 11s Magic", title: "Arcane Master", desc: "Commands 11-times equations.", shout: "“Arcane eleven alignment!”" },
-        { name: "Illusionist Genki", color: "#a855f7", headwear: "crown", weapon: "dual_swords", rarity: "mythic", ruleKey: "eleven", reqXP: 270, ruleLabel: "🪄 11s Magic", title: "Phantom Weaver", desc: "Bends two-digit sums.", shout: "“PHANTOM 11 MIRAGE!”" },
-
-        { name: "Timber Cleaver Cho", color: "#16a34a", headwear: "headband", weapon: "axe", rarity: "rare", ruleKey: "split", reqXP: 45, ruleLabel: "🪓 Break & Split", title: "Woodland Chopper", desc: "Splits into tens and ones.", shout: "“TIMBER! Cleanly split!”" },
-        { name: "Jade Viper Orochi", color: "#10b981", headwear: "horns", weapon: "dual_swords", rarity: "epic", ruleKey: "split", reqXP: 100, ruleLabel: "🪓 Break & Split", title: "Forest Tactician", desc: "Box method strategist.", shout: "“Viper venom box strike!”" },
-        { name: "Stone Sovereign Gou", color: "#475569", headwear: "horns", weapon: "axe", rarity: "legendary", ruleKey: "split", reqXP: 180, ruleLabel: "🪓 Break & Split", title: "Titan Crusher", desc: "Crushes multi-digit into easy sums.", shout: "“Titan stone division!”" },
-        { name: "Mountain Slicer Iwao", color: "#334155", headwear: "horns", weapon: "axe", rarity: "mythic", ruleKey: "split", reqXP: 270, ruleLabel: "🪓 Break & Split", title: "Earth Shaker", desc: "Splits complex factors with precision.", shout: "“MOUNTAIN SLICER CLEAVE!”" },
-
-        { name: "Yin-Yang Haku", color: "#06b6d4", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "double_half", reqXP: 45, ruleLabel: "⚖️ Double & Halve", title: "Twin Balancer", desc: "Doubles the 5, halves the even.", shout: "“Double up, halve down!”" },
-        { name: "Flame Alchemist Kai", color: "#ea580c", headwear: "flame", weapon: "dual_swords", rarity: "epic", ruleKey: "double_half", reqXP: 100, ruleLabel: "⚖️ Double & Halve", title: "Fire Alchemist", desc: "Transforms tricky equations in a blaze.", shout: "“FLAME ALCHEMY IGNITION!”" },
-        { name: "Equinox Master Kiyo", color: "#6366f1", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "double_half", reqXP: 180, ruleLabel: "⚖️ Double & Halve", title: "Celestial Eclipse", desc: "Perfect harmony of halves and doubles.", shout: "“Equinox balance restored!”" },
-        { name: "Sun-Moon Ronin Nichi", color: "#d946ef", headwear: "horns", weapon: "dual_swords", rarity: "mythic", ruleKey: "double_half", reqXP: 270, ruleLabel: "⚖️ Double & Halve", title: "Zen Duelist", desc: "Halves even factors instantly.", shout: "“CELESTIAL ECLIPSE STRIKE!”" },
-
-        { name: "Glacier Yuki", color: "#38bdf8", headwear: "ice", weapon: "shuriken", rarity: "rare", ruleKey: "ending_five", reqXP: 45, ruleLabel: "⚡ Square 5s", title: "Frost Apprentice", desc: "Tens × (n+1) & attach 25.", shout: "“Frozen 25 attached!”" },
-        { name: "Frost Wyrm Kuro", color: "#0284c7", headwear: "ice", weapon: "dual_swords", rarity: "epic", ruleKey: "ending_five", reqXP: 100, ruleLabel: "⚡ Square 5s", title: "Blizzard Lord", desc: "Instant squares ending in 5.", shout: "“BLIZZARD SQUARE FROZEN!”" },
-        { name: "Absolute Zero Hyou", color: "#bae6fd", headwear: "ice", weapon: "dual_swords", rarity: "legendary", ruleKey: "ending_five", reqXP: 180, ruleLabel: "⚡ Square 5s", title: "Glacial Sovereign", desc: "Freezes squares in under 2 seconds.", shout: "“Absolute zero execution!”" },
-        { name: "Aurora Weaver Reika", color: "#06b6d4", headwear: "crown", weapon: "dual_swords", rarity: "mythic", ruleKey: "ending_five", reqXP: 270, ruleLabel: "⚡ Square 5s", title: "Polar Queen", desc: "Squares glow like Northern Lights.", shout: "“AURORA POLAR BOREALIS!”" },
-
-        { name: "Dragon Blade Ryu", color: "#dc2626", headwear: "horns", weapon: "dual_swords", rarity: "rare", ruleKey: "overall", reqXP: 400, ruleLabel: "Overall XP", title: "Dragon Knight", desc: "Master of mental multiplication.", shout: "“DRAGON BLADE SLASH!”" },
-        { name: "Diamond Shogun Dai", color: "#38bdf8", headwear: "crown", weapon: "dual_swords", rarity: "epic", ruleKey: "overall", reqXP: 700, ruleLabel: "Overall XP", title: "Diamond Sensei", desc: "Crystal clear mental calculations.", shout: "“Diamond sharp mind!”" },
-        { name: "Void Emperor Ryu", color: "#a855f7", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "overall", reqXP: 1000, ruleLabel: "Overall XP", title: "Grandmaster", desc: "Conqueror of all 2-digit math.", shout: "“VOID SUPREMACY COMMAND!”" },
-        { name: "Infinity Deity Mugen", color: "#f59e0b", headwear: "crown", weapon: "dual_swords", rarity: "mythic", ruleKey: "overall", reqXP: 1500, ruleLabel: "Overall XP", title: "Cosmic Sovereign", desc: "Transcended all mathematical limits.", shout: "“INFINITY COSMOS OMNIPRESENCE!”" }
-      ]
+      preschool: buildGradeNinjas("preschool"),
+      grade1: buildGradeNinjas("grade1"),
+      grade2: buildGradeNinjas("grade2"),
+      grade3: buildGradeNinjas("grade3"),
+      grade4: buildGradeNinjas("grade4"),
+      grade5: buildGradeNinjas("grade5")
     };
 
     const GRADE_CONFIG = {
@@ -1142,6 +1129,21 @@
           { id: "add_10", icon: "⭐", title: "Two-Hand Ten", desc: "Put all ten fingers up! 5 on one hand, 5 on the other makes 10!", example: "6 + 4 = 10" }
         ]
       },
+      grade1: {
+        title: "1st Grade Academy",
+        rules: [
+          { id: "mixed", name: "Mixed 1st Grade" },
+          { id: "add_sub_20", name: "➕ Facts within 20" },
+          { id: "missing_addend", name: "❓ Missing Addends (? + 6 = 14)" },
+          { id: "tens_ones", name: "🔟 Place Value (10 + 7)" },
+          { id: "comp_20", name: "⚖️ Balance within 20" }
+        ],
+        academy: [
+          { id: "missing_addend", icon: "❓", title: "The Missing Addend", desc: "To find what's missing in 8 + ? = 14, count up from 8 to 14!", example: "8 + [6] = 14" },
+          { id: "tens_ones", icon: "🔟", title: "Tens & Ones Power", desc: "A bundle of 10 plus single ones makes numbers in the teens in a snap!", example: "10 + 7 = 17" },
+          { id: "add_sub_20", icon: "➕", title: "Count On from the Big Number", desc: "Always start at the bigger number in your mind, then count on the smaller one!", example: "12 + 5 = 17" }
+        ]
+      },
       grade2: {
         title: "2nd Grade (Micah)",
         rules: [
@@ -1156,6 +1158,21 @@
           { id: "make_ten", icon: "🎯", title: "Bridge to 10", desc: "Turn the bigger number into 10! Borrow from the other number to make 10, then add the leftovers.", example: "8 + 7 → 8 + (2 + 5) → 10 + 5 = 15" },
           { id: "doubles", icon: "👯", title: "Doubles Fast-Strike", desc: "Remember twins: 6+6=12, 7+7=14, 8+8=16. For 7+8, do 7+7 and add 1!", example: "7 + 8 → (7 + 7) + 1 = 15" },
           { id: "mult_intro", icon: "✖️", title: "Equal Groups & Sets", desc: "Equal groups are just repeated addition: 3 groups of 4!", example: "3 groups of 4 = 4 + 4 + 4 = 12" }
+        ]
+      },
+      grade3: {
+        title: "3rd Grade Mastery",
+        rules: [
+          { id: "mixed", name: "Mixed 3rd Grade" },
+          { id: "facts_12", name: "✖️ Core Times Tables (0–12)" },
+          { id: "div_inverse", name: "➗ Inverse Division (48 ÷ 6)" },
+          { id: "distrib_intro", name: "🪓 Factor Breakup (7 × 8)" },
+          { id: "multi_steps", name: "🧩 Multi-Step Basics" }
+        ],
+        academy: [
+          { id: "div_inverse", icon: "➗", title: "Division as Reverse Multiplication", desc: "Ask: 'What times 6 equals 48?' That's 8!", example: "48 ÷ 6 = 8 (since 8 × 6 = 48)" },
+          { id: "distrib_intro", icon: "🪓", title: "Break Tricky Multipliers into 5 + 2", desc: "To multiply by 7: multiply by 5, multiply by 2, and add them together!", example: "7 × 8 = (5 × 8) + (2 × 8) = 40 + 16 = 56" },
+          { id: "facts_12", icon: "✖️", title: "The 9s Finger / Subtraction Trick", desc: "To multiply 9 × 7: do 10 × 7 = 70, then subtract 7 to get 63!", example: "9 × 7 = 70 - 7 = 63" }
         ]
       },
       grade4: {
@@ -1174,6 +1191,21 @@
           { id: "split", icon: "🪓", title: "The Break & Split", desc: "Split a tricky factor into friendly tens and ones to make mental addition easy!", example: "31 × 35 → (30 × 35) + (1 × 35) = 1,085" },
           { id: "double_half", icon: "⚖️", title: "Double & Halve", desc: "Double the number ending in 5 and halve the even number to make simple products!", example: "15 × 24 → 30 × 12 = 360" },
           { id: "ending_five", icon: "⚡", title: "Square Ending in 5", desc: "Multiply the tens digit by the next integer (3 × 4 = 12), then append 25 to the end!", example: "35 × 35 → (3 × 4) & 25 = 1,225" }
+        ]
+      },
+      grade5: {
+        title: "5th Grade Champions",
+        rules: [
+          { id: "mixed", name: "Mixed 5th Grade" },
+          { id: "powers_ten", name: "🚀 Shift by Powers of 10 (4.5 × 10)" },
+          { id: "multi_digit", name: "⚔️ 3-Digit × 1-Digit (315 × 3)" },
+          { id: "pemdas", name: "📐 Order of Operations (PEMDAS)" },
+          { id: "decimals", name: "💎 Decimal Arithmetic" }
+        ],
+        academy: [
+          { id: "powers_ten", icon: "🚀", title: "Powers of 10 Decimal Shifts", desc: "Multiplying by 10 moves the decimal one space right. Dividing moves it left!", example: "4.5 × 10 = 45 | 12.8 × 100 = 1,280" },
+          { id: "pemdas", icon: "📐", title: "Order of Operations Priority", desc: "Multiplication and Division always strike before Addition and Subtraction!", example: "5 + (4 × 6) = 5 + 24 = 29" },
+          { id: "multi_digit", icon: "⚔️", title: "Triple-Digit Mental Decomposition", desc: "Break 315 × 3 into (300 × 3) + (10 × 3) + (5 × 3) = 900 + 30 + 15 = 945!", example: "315 × 3 = 900 + 30 + 15 = 945" }
         ]
       }
     };
@@ -1268,7 +1300,7 @@
         card.onclick = () => selectAndPractice(s.id);
         card.innerHTML = `
           <div>
-            <h3><span>${s.icon || '📜'}</span> ${s.title}</h3>
+            <h3><span>${s.icon \vert{}\vert{} '📜'}</span> ${s.title}</h3>
             <p>${s.desc}</p>
           </div>
           <div class="trick-example">${s.example}</div>
@@ -1335,12 +1367,14 @@
       } catch (e) {}
     }
 
-    // TAILORED PROBLEM GENERATION FOR EACH GRADE
+    // FULL MULTI-GRADE ENGINE (PRESCHOOL THROUGH 5TH GRADE)
     function generateProblem() {
       const visualElem = document.getElementById("visualCounter");
       visualElem.textContent = "";
 
+      // ====================================================
       // 1. PRESCHOOL (Reid)
+      // ====================================================
       if (currentGrade === "preschool") {
         let chosen = selectedRule === "mixed" 
           ? ["count", "add_5", "sub_5", "add_10"][Math.floor(Math.random() * 4)] 
@@ -1356,43 +1390,100 @@
         } else if (chosen === "add_5") {
           const a = Math.floor(Math.random() * 4) + 1;
           const b = Math.floor(Math.random() * (5 - a)) + 1;
-          visualElem.textContent = `${icon.repeat(a)}  +  ${icon.repeat(b)}`;
-          return { text: `${a} + ${b}`, subText: `Hold up ${a} fingers, add ${b} more!`, answer: a + b, hint: `Start at ${a} and count forward ${b} more!`, rule: "add_5" };
+          visualElem.textContent = `${icon.repeat(a)}  +${icon.repeat(b)}`;
+          return { text: `${a} +${b}`, subText: `Hold up ${a} fingers, add${b} more!`, answer: a + b, hint: `Start at ${a} and count forward${b} more!`, rule: "add_5" };
         } else if (chosen === "sub_5") {
           const a = Math.floor(Math.random() * 4) + 2;
           const b = Math.floor(Math.random() * (a - 1)) + 1;
-          visualElem.textContent = `${icon.repeat(a)}  (take away ${b})`;
-          return { text: `${a} - ${b}`, subText: `Start with ${a}, take away ${b}!`, answer: a - b, hint: `Hold up ${a} fingers and take away ${b}!`, rule: "sub_5" };
+          visualElem.textContent = `${icon.repeat(a)}  (take away${b})`;
+          return { text: `${a} -${b}`, subText: `Start with ${a}, take away${b}!`, answer: a - b, hint: `Hold up ${a} fingers and take away${b}!`, rule: "sub_5" };
         } else {
           const a = Math.floor(Math.random() * 6) + 2;
           const b = Math.floor(Math.random() * (10 - a)) + 1;
-          visualElem.textContent = `${icon.repeat(a)}  +  ${icon.repeat(b)}`;
-          return { text: `${a} + ${b}`, subText: `How many to make ten?`, answer: a + b, hint: `Count on starting from ${a}!`, rule: "add_10" };
+          visualElem.textContent = `${icon.repeat(a)}  +${icon.repeat(b)}`;
+          return { text: `${a} +${b}`, subText: `How many to make ten?`, answer: a + b, hint: `Count on starting from ${a}!`, rule: "add_10" };
         }
       }
 
-      // 2. 2ND GRADE (Micah)
+      // ====================================================
+      // 2. 1ST GRADE
+      // ====================================================
+      if (currentGrade === "grade1") {
+        let chosen = selectedRule === "mixed" 
+          ? ["add_sub_20", "missing_addend", "tens_ones", "comp_20"][Math.floor(Math.random() * 4)] 
+          : selectedRule;
+
+        if (chosen === "missing_addend") {
+          const a = Math.floor(Math.random() * 7) + 5; // 5 to 11
+          const missing = Math.floor(Math.random() * 6) + 3; // 3 to 8
+          const total = a + missing;
+          const isLeft = Math.random() > 0.5;
+
+          return {
+            text: isLeft ? `? + ${a} =${total}` : `${a} + ? =${total}`,
+            subText: `Count up from ${a} until you reach${total}!`,
+            leadingPrompt: `“What number completes the sum?”`,
+            answer: missing,
+            hint: `Start at ${a} and count up to${total}. You added ${missing}!`,
+            rule: "missing_addend"
+          };
+        } else if (chosen === "tens_ones") {
+          const ones = Math.floor(Math.random() * 9) + 1;
+          return {
+            text: `10 + ${ones}`,
+            subText: `1 Ten and ${ones} Ones = ?`,
+            leadingPrompt: `“10 plus single units gives the teen number!”`,
+            answer: 10 + ones,
+            hint: `10 + ${ones} puts ${ones} in the ones place:${10 + ones}!`,
+            rule: "tens_ones"
+          };
+        } else if (chosen === "comp_20") {
+          const a = Math.floor(Math.random() * 8) + 11;
+          const sub = Math.floor(Math.random() * 5) + 2;
+          return {
+            text: `${a} -${sub}`,
+            subText: `Count back ${sub} steps from${a}!`,
+            leadingPrompt: `“Take away ${sub}!”`,
+            answer: a - sub,
+            hint: `Count backwards: ${a - 1},${a - 2}...`,
+            rule: "comp_20"
+          };
+        } else {
+          // Facts within 20
+          const a = Math.floor(Math.random() * 8) + 7;
+          const b = Math.floor(Math.random() * 5) + 3;
+          return {
+            text: `${a} +${b}`,
+            subText: ``,
+            leadingPrompt: `“Add the numbers!”`,
+            answer: a + b,
+            hint: `Start at ${a} and count on ${b} more:${a + b}!`,
+            rule: "add_sub_20"
+          };
+        }
+      }
+
+      // ====================================================
+      // 3. 2ND GRADE (Micah)
+      // ====================================================
       if (currentGrade === "grade2") {
         let chosen = selectedRule === "mixed" 
           ? ["skip_count", "make_ten", "doubles", "mult_intro"][Math.floor(Math.random() * 4)] 
           : selectedRule;
 
-        // SKIP COUNTING: Pure sequence display, NO multiplication symbols
         if (chosen === "skip_count") {
           const step = [2, 5, 10][Math.floor(Math.random() * 3)];
-          const countLen = Math.floor(Math.random() * 4) + 3; // 3 to 6 numbers shown
+          const countLen = Math.floor(Math.random() * 4) + 3;
           let seq = [];
-          for (let i = 1; i <= countLen; i++) {
-            seq.push(i * step);
-          }
+          for (let i = 1; i <= countLen; i++) seq.push(i * step);
           const nextVal = (countLen + 1) * step;
 
           return {
             text: `${seq.join(", ")}, ___`,
             subText: `Counting by ${step}s! What comes next?`,
-            leadingPrompt: `“Keep the rhythm going! Count up by ${step}s: ${seq.slice(-2).join(", ")}... what's next?”`,
+            leadingPrompt: `“Keep the rhythm going! Count up by ${step}s:${seq.slice(-2).join(", ")}... what's next?”`,
             answer: nextVal,
-            hint: `We are counting by ${step}s. Take the last number (${seq[seq.length - 1]}) and add ${step} to it!`,
+            hint: `We are counting by ${step}s. Take ${seq[seq.length - 1]} and add${step}!`,
             rule: "skip_count"
           };
         } else if (chosen === "make_ten") {
@@ -1403,11 +1494,11 @@
           const leftover = b - needed;
 
           return {
-            text: `${a} + ${b}`,
-            subText: `${a} + (${needed} + ${leftover})  →  10 + ${leftover} = ?`,
-            leadingPrompt: `“${a} needs ${needed} to make 10! 10 + ${leftover} = ?”`,
+            text: `${a} +${b}`,
+            subText: `${a} + (${needed} + ${leftover})  →  10 +${leftover} = ?`,
+            leadingPrompt: `“${a} needs ${needed} to make 10! 10 +${leftover} = ?”`,
             answer: a + b,
-            hint: `Bridge to 10: Turn ${a} into 10 by taking ${needed} from ${b}. Now add 10 + ${leftover} = ${a + b}!`,
+            hint: `Bridge to 10: Turn ${a} into 10 by taking ${needed} from${b}. Now add 10 + ${leftover} =${a + b}!`,
             rule: "make_ten"
           };
         } else if (chosen === "doubles") {
@@ -1417,78 +1508,210 @@
           if (isNear) {
             const b = base + 1;
             return {
-              text: `${base} + ${b}`,
-              subText: `(${base} + ${base}) + 1  →  ${base * 2} + 1 = ?`,
-              leadingPrompt: `“Double ${base} is ${base * 2}. Now add 1 more!”`,
+              text: `${base} +${b}`,
+              subText: `(${base} + ${base}) + 1  →${base * 2} + 1 = ?`,
+              leadingPrompt: `“Double ${base} is${base * 2}. Now add 1 more!”`,
               answer: base + b,
-              hint: `Near Doubles: Double ${base} is ${base * 2}, plus 1 more makes ${base + b}!`,
+              hint: `Near Doubles: Double ${base} is ${base * 2}, plus 1 more makes${base + b}!`,
               rule: "doubles"
             };
           } else {
             return {
-              text: `${base} + ${base}`,
+              text: `${base} +${base}`,
               subText: `Double ${base} = ?`,
               leadingPrompt: `“Twins strike! What is double ${base}?”`,
               answer: base * 2,
-              hint: `Twins: Double ${base} is ${base * 2}!`,
+              hint: `Twins: Double ${base} is${base * 2}!`,
               rule: "doubles"
             };
           }
         } else {
-          // Basic Sets
           const a = Math.floor(Math.random() * 4) + 2;
           const b = [3, 4, 5][Math.floor(Math.random() * 3)];
           return {
-            text: `${a} groups of ${b}`,
+            text: `${a} groups of${b}`,
             subText: `${Array(a).fill(b).join(" + ")} = ?`,
-            leadingPrompt: `“Add ${b} repeated ${a} times!”`,
+            leadingPrompt: `“Add ${b} repeated${a} times!”`,
             answer: a * b,
-            hint: `${a} groups of ${b}: That's ${Array(a).fill(b).join(" + ")} = ${a * b}!`,
+            hint: `${a} groups of${b}: That's ${Array(a).fill(b).join(" + ")} = ${a * b}!`,
             rule: "mult_intro"
           };
         }
       }
 
-      // 3. 4TH GRADE (Aaron) - NO SPOILER HINTS UNLESS PROMPTED
-      let chosen = selectedRule === "mixed" 
-        ? ["zeros", "eleven", "ending_five", "double_half", "split"][Math.floor(Math.random() * 5)] 
-        : selectedRule;
+      // ====================================================
+      // 4. 3RD GRADE
+      // ====================================================
+      if (currentGrade === "grade3") {
+        let chosen = selectedRule === "mixed" 
+          ? ["facts_12", "div_inverse", "distrib_intro", "multi_steps"][Math.floor(Math.random() * 4)] 
+          : selectedRule;
 
-      let a, b, hint;
-      if (chosen === "zeros") {
-        a = (Math.floor(Math.random() * 8) + 2) * 10;
-        b = (Math.floor(Math.random() * 8) + 2) * 10;
-        hint = `Zero Hero: Multiply ${a/10} × ${b/10} = ${(a/10)*(b/10)}. Then add both zeros to make ${a * b}!`;
-      } else if (chosen === "eleven") {
-        a = Math.floor(Math.random() * 80) + 11;
-        b = 11;
-        const tens = Math.floor(a / 10);
-        const ones = a % 10;
-        const mid = tens + ones;
-        hint = `11s Trick: Pull ${tens} and ${ones} apart. Add ${tens} + ${ones} = ${mid}. Place ${mid} in the middle (carry if over 9)!`;
-      } else if (chosen === "ending_five") {
-        const t = Math.floor(Math.random() * 7) + 2;
-        a = t * 10 + 5;
-        b = a;
-        hint = `Square 5s: Multiply tens by next number (${t} × ${t + 1} = ${t * (t + 1)}), then attach 25 to get ${a * b}!`;
-      } else if (chosen === "double_half") {
-        a = [15, 25, 35, 45][Math.floor(Math.random() * 4)];
-        b = (Math.floor(Math.random() * 6) + 2) * 2;
-        hint = `Double & Halve: Double ${a} into ${a * 2}, halve ${b} into ${b / 2}. Now calculate ${a * 2} × ${b / 2} = ${a * b}!`;
-      } else {
-        a = [21, 31, 41, 51][Math.floor(Math.random() * 4)];
-        b = Math.floor(Math.random() * 30) + 12;
-        hint = `Break & Split: Split ${a} into ${a - 1} + 1. Calculate (${a - 1} × ${b}) + (1 × ${b}) = ${a * b}!`;
+        if (chosen === "div_inverse") {
+          const b = Math.floor(Math.random() * 7) + 3; // 3 to 9
+          const ans = Math.floor(Math.random() * 8) + 2; // 2 to 9
+          const total = b * ans;
+          return {
+            text: `${total} ÷${b}`,
+            subText: `What times ${b} =${total}?`,
+            leadingPrompt: `“Think in reverse: ? × ${b} =${total}!”`,
+            answer: ans,
+            hint: `Reverse multiplication: ${ans} ×${b} = ${total}, so${total} ÷ ${b} =${ans}!`,
+            rule: "div_inverse"
+          };
+        } else if (chosen === "distrib_intro") {
+          const a = [6, 7, 8][Math.floor(Math.random() * 3)];
+          const b = Math.floor(Math.random() * 6) + 4;
+          return {
+            text: `${a} ×${b}`,
+            subText: `(5 × ${b}) + (${a - 5} ×${b}) = ?`,
+            leadingPrompt: `“Break ${a} into 5 +${a - 5}!”`,
+            answer: a * b,
+            hint: `Breakup trick: (5 × ${b}) + (${a - 5} × ${b}) =${5 * b} + ${(a - 5) * b} =${a * b}!`,
+            rule: "distrib_intro"
+          };
+        } else if (chosen === "multi_steps") {
+          const a = Math.floor(Math.random() * 5) + 2;
+          const b = Math.floor(Math.random() * 5) + 2;
+          const add = Math.floor(Math.random() * 8) + 3;
+          return {
+            text: `(${a} × ${b}) +${add}`,
+            subText: `Multiply first, then add!`,
+            leadingPrompt: `“Solve the inside multiplication first!”`,
+            answer: (a * b) + add,
+            hint: `${a} × ${b} =${a * b}. Now add ${add} =${(a * b) + add}!`,
+            rule: "multi_steps"
+          };
+        } else {
+          // Core Times Tables 0-12
+          const a = Math.floor(Math.random() * 11) + 2;
+          const b = Math.floor(Math.random() * 11) + 2;
+          return {
+            text: `${a} ×${b}`,
+            subText: ``,
+            leadingPrompt: `“Fast strike times table!”`,
+            answer: a * b,
+            hint: `Core fact: ${a} × ${b} =${a * b}!`,
+            rule: "facts_12"
+          };
+        }
       }
 
-      return {
-        text: `${a} × ${b}`,
-        subText: "", // Left blank so Aaron solves it independently
-        leadingPrompt: null,
-        answer: a * b,
-        hint: hint,
-        rule: chosen
-      };
+      // ====================================================
+      // 5. 4TH GRADE (Aaron)
+      // ====================================================
+      if (currentGrade === "grade4") {
+        let chosen = selectedRule === "mixed" 
+          ? ["zeros", "eleven", "ending_five", "double_half", "split"][Math.floor(Math.random() * 5)] 
+          : selectedRule;
+
+        let a, b, hint;
+        if (chosen === "zeros") {
+          a = (Math.floor(Math.random() * 8) + 2) * 10;
+          b = (Math.floor(Math.random() * 8) + 2) * 10;
+          hint = `Zero Hero: Multiply ${a/10} ×${b/10} = ${(a/10)*(b/10)}. Then add both zeros to make${a * b}!`;
+        } else if (chosen === "eleven") {
+          a = Math.floor(Math.random() * 80) + 11;
+          b = 11;
+          const tens = Math.floor(a / 10);
+          const ones = a % 10;
+          const mid = tens + ones;
+          hint = `11s Trick: Pull ${tens} and${ones} apart. Add ${tens} +${ones} = ${mid}. Place ${mid} in the middle (carry if over 9)!`;
+        } else if (chosen === "ending_five") {
+          const t = Math.floor(Math.random() * 7) + 2;
+          a = t * 10 + 5;
+          b = a;
+          hint = `Square 5s: Multiply tens by next number (${t} ×${t + 1} = ${t * (t + 1)}), then attach 25 to get${a * b}!`;
+        } else if (chosen === "double_half") {
+          a = [15, 25, 35, 45][Math.floor(Math.random() * 4)];
+          b = (Math.floor(Math.random() * 6) + 2) * 2;
+          hint = `Double & Halve: Double ${a} into ${a * 2}, halve${b} into ${b / 2}. Now calculate${a * 2} × ${b / 2} =${a * b}!`;
+        } else {
+          a = [21, 31, 41, 51][Math.floor(Math.random() * 4)];
+          b = Math.floor(Math.random() * 30) + 12;
+          hint = `Break & Split: Split ${a} into${a - 1} + 1. Calculate (${a - 1} ×${b}) + (1 × ${b}) =${a * b}!`;
+        }
+
+        return {
+          text: `${a} ×${b}`,
+          subText: "",
+          leadingPrompt: null,
+          answer: a * b,
+          hint: hint,
+          rule: chosen
+        };
+      }
+
+      // ====================================================
+      // 6. 5TH GRADE
+      // ====================================================
+      if (currentGrade === "grade5") {
+        let chosen = selectedRule === "mixed" 
+          ? ["powers_ten", "multi_digit", "pemdas", "decimals"][Math.floor(Math.random() * 4)] 
+          : selectedRule;
+
+        if (chosen === "powers_ten") {
+          const base = (Math.floor(Math.random() * 80) + 12) / 10; // e.g. 4.5
+          const power = [10, 100][Math.floor(Math.random() * 2)];
+          return {
+            text: `${base} ×${power}`,
+            subText: `Shift the decimal point to the right!`,
+            leadingPrompt: `“Shift the decimal point right for each zero!”`,
+            answer: Math.round(base * power * 100) / 100,
+            hint: `Multiplying by ${power} shifts the decimal point by${power === 10 ? 1 : 2} place(s) right!`,
+            rule: "powers_ten"
+          };
+        } else if (chosen === "multi_digit") {
+          // 3-digit x 1-digit
+          const a = Math.floor(Math.random() * 400) + 120;
+          const b = Math.floor(Math.random() * 5) + 3;
+          return {
+            text: `${a} ×${b}`,
+            subText: ``,
+            leadingPrompt: `“Break it into hundreds, tens, and ones!”`,
+            answer: a * b,
+            hint: `Decompose ${a} into hundreds, tens, and ones: multiply each by ${b} and sum them!`,
+            rule: "multi_digit"
+          };
+        } else if (chosen === "pemdas") {
+          const a = Math.floor(Math.random() * 6) + 3;
+          const b = Math.floor(Math.random() * 5) + 3;
+          const c = Math.floor(Math.random() * 8) + 2;
+          const isParens = Math.random() > 0.5;
+
+          if (isParens) {
+            return {
+              text: `(${a} + ${b}) × ${c}`,
+              subText: `Solve parentheses first!`,
+              leadingPrompt: `“Parentheses have first priority!”`,
+              answer: (a + b) * c,
+              hint: `Parentheses first: ${a} + ${b} = ${a + b}. Then multiply by ${c} = ${(a + b) * c}!`,
+              rule: "pemdas"
+            };
+          } else {
+            return {
+              text: `${a} + ${b} × ${c}`,
+              subText: `Multiplication takes priority over addition!`,
+              leadingPrompt: `“Multiplication strikes before addition!”`,
+              answer: a + (b * c),
+              hint: `Order of Operations: multiply ${b} × ${c} = ${b * c} first, then add ${a} = ${a + (b * c)}!`,
+              rule: "pemdas"
+            };
+          }
+        } else {
+          // Decimal addition
+          const a = (Math.floor(Math.random() * 50) + 10) / 10;
+          const b = (Math.floor(Math.random() * 40) + 10) / 10;
+          return {
+            text: `${a} + ${b}`,
+            subText: `Line up the decimal points!`,
+            leadingPrompt: `“Add tenths and whole units!”`,
+            answer: Math.round((a + b) * 10) / 10,
+            hint: `Line up the decimal points: ${a} + ${b} = ${Math.round((a + b) * 10) / 10}!`,
+            rule: "decimals"
+          };
+        }
+      }
     }
 
     function renderProblem() {
@@ -1499,7 +1722,6 @@
       document.getElementById("hintCard").classList.remove("show");
       document.getElementById("hintBody").textContent = currentProblem.hint;
 
-      // For Aaron, companion gives battle encouragement, not mathematical answers
       if (currentGrade === "grade4") {
         const roster = GRADE_NINJAS[currentGrade] || GRADE_NINJAS.grade4;
         const currentActive = roster.find(n => n.name === equippedNinja) || roster[0];
@@ -1523,7 +1745,7 @@
 
     function submitAnswer() {
       const input = document.getElementById("answerInput");
-      const val = parseInt(input.value);
+      const val = parseFloat(input.value);
       if (isNaN(val)) return;
 
       totalSolved++;
@@ -1535,7 +1757,8 @@
       const roster = GRADE_NINJAS[currentGrade] || GRADE_NINJAS.grade4;
       const currentActive = roster.find(n => n.name === equippedNinja) || roster[0];
 
-      if (val === currentProblem.answer) {
+      // Float comparison margin
+      if (Math.abs(val - currentProblem.answer) < 0.001) {
         playBeep(587.33, 0.15);
         isCorrect = true;
         totalCorrect++;
@@ -1729,8 +1952,8 @@
     }
 
     function submitSpeedAnswer() {
-      const val = parseInt(document.getElementById("speedAnswerInput").value);
-      if (val === currentSpeedProblem.answer) {
+      const val = parseFloat(document.getElementById("speedAnswerInput").value);
+      if (Math.abs(val - currentSpeedProblem.answer) < 0.001) {
         playBeep(587.33, 0.1);
         speedScoreVal++;
         playerXP += 20;
