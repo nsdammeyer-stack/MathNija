@@ -108,10 +108,11 @@
       background: transparent;
       color: #38bdf8;
       font-weight: 800;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       border: none;
       outline: none;
       cursor: pointer;
+      min-width: 80px;
     }
 
     .profile-select option {
@@ -248,7 +249,7 @@
       gap: 0.75rem;
       justify-content: center;
       width: 100%;
-      max-width: 680px;
+      max-width: 760px;
     }
 
     .selector-box {
@@ -272,12 +273,18 @@
       background: #1e293b;
       color: #fff;
       border: 1px solid var(--card-border);
-      padding: 0.4rem 0.65rem;
+      padding: 0.45rem 0.75rem;
       border-radius: 0.5rem;
       font-weight: 700;
       font-size: 0.85rem;
       outline: none;
       cursor: pointer;
+      min-width: 160px;
+    }
+
+    .custom-select option {
+      background: #1e293b;
+      color: #fff;
     }
 
     .game-arena {
@@ -815,7 +822,6 @@
   </nav>
 
   <main>
-    <!-- PRACTICE QUEST PANEL -->
     <div id="practice" class="panel active">
       <div class="card game-arena">
         
@@ -838,7 +844,6 @@
           </div>
         </div>
 
-        <!-- ANIMATED HERO COMBAT STAGE -->
         <div class="combat-stage">
           <div class="ninja-portrait-wrapper">
             <div class="ninja-aura" id="ninjaAura"></div>
@@ -857,7 +862,6 @@
           <span class="streak-badge">Streak: <span id="streakCount">0</span> 🔥</span>
         </div>
 
-        <!-- PROBLEM DISPLAY -->
         <div class="problem-box-container">
           <div class="problem-box" id="problemDisplay">30 × 40</div>
           <div class="problem-leading-sub" id="problemSubDisplay"></div>
@@ -899,7 +903,6 @@
       </div>
     </div>
 
-    <!-- TRICK ACADEMY PANEL -->
     <div id="academy" class="panel">
       <div class="card">
         <h2 style="font-family: 'Fredoka', cursive; color: #fbbf24; margin-bottom: 0.4rem;">Ninja Strategy Scrolls</h2>
@@ -910,7 +913,6 @@
       </div>
     </div>
 
-    <!-- 60s SPEED RUN -->
     <div id="speed" class="panel">
       <div class="card game-arena">
         <h2 style="font-family: 'Fredoka', cursive; color: #f59e0b;">60-Second Ninja Strike</h2>
@@ -935,7 +937,6 @@
       </div>
     </div>
 
-    <!-- NINJA ROSTER -->
     <div id="roster" class="panel">
       <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; margin-bottom: 0.5rem;">
@@ -950,7 +951,6 @@
     </div>
   </main>
 
-  <!-- MODAL: ADD NEW NINJA PROFILE -->
   <div class="modal-overlay" id="newProfileModal">
     <div class="modal-box">
       <h3>Enter Ninja Name</h3>
@@ -973,9 +973,10 @@
     };
 
     let profilesList = JSON.parse(localStorage.getItem("math_ninja_profiles") || '["Aaron", "Micah", "Reid"]');
-    let currentProfile = localStorage.getItem("math_ninja_current_profile") || profilesList[0] || "Aaron";
+    let currentProfile = localStorage.getItem("math_ninja_current_profile") || "Aaron";
+    if (!profilesList.includes(currentProfile)) currentProfile = profilesList[0] || "Aaron";
 
-    let currentGrade = "grade4";
+    let currentGrade = DEFAULT_GRADES[currentProfile] || "grade4";
     let selectedRule = "mixed";
     let playerXP = 0;
     let ruleXP = {}; 
@@ -1027,90 +1028,6 @@
         </svg>
       `;
     }
-
-    // BASE 25 NINJAS TEMPLATE PER GRADE
-    const BASE_GRADE_NINJAS = [
-      { name: "White Belt Ken", color: "#6366f1", headwear: "headband", weapon: "shuriken", rarity: "apprentice", ruleKey: "overall", reqXP: 0, ruleLabel: "Starter", title: "Novice", desc: "Begins the grade training.", shout: "“Let's master the ninja steps!”" },
-      { name: "Striker Bo", color: "#06b6d4", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "rule_1", reqXP: 30, ruleLabel: "Rank 1", title: "Apprentice", desc: "First rule techniques.", shout: "“Clean precision strike!”" },
-      { name: "Swift Claw Ren", color: "#38bdf8", headwear: "headband", weapon: "dual_swords", rarity: "rare", ruleKey: "rule_1", reqXP: 60, ruleLabel: "Rank 1", title: "Dual Edge", desc: "Quick mental calculations.", shout: "“Twin edge strike!”" },
-      { name: "Silent Gale Kage", color: "#0ea5e9", headwear: "horns", weapon: "dual_swords", rarity: "epic", ruleKey: "rule_1", reqXP: 100, ruleLabel: "Rank 1", title: "Wind Striker", desc: "Commands fundamental math.", shout: "“Gale force impact!”" },
-      { name: "Storm Hunter Raiden", color: "#f59e0b", headwear: "flame", weapon: "dual_swords", rarity: "legendary", ruleKey: "rule_1", reqXP: 160, ruleLabel: "Rank 1", title: "Storm Lord", desc: "Strikes like sudden thunder.", shout: "“THUNDER ACCURACY!”" },
-      
-      { name: "Ember Scout Kai", color: "#f97316", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "rule_2", reqXP: 30, ruleLabel: "Rank 2", title: "Fire Scout", desc: "Quick reaction timing.", shout: "“Igniting the calculations!”" },
-      { name: "Flame Cleaver Taro", color: "#ef4444", headwear: "horns", weapon: "axe", rarity: "rare", ruleKey: "rule_2", reqXP: 60, ruleLabel: "Rank 2", title: "Cleaver", desc: "Cuts down complex problems.", shout: "“Cleaving through numbers!”" },
-      { name: "Blaze Alchemist Jin", color: "#dc2626", headwear: "flame", weapon: "dual_swords", rarity: "epic", ruleKey: "rule_2", reqXP: 100, ruleLabel: "Rank 2", title: "Alchemist", desc: "Transforms arithmetic equations.", shout: "“Blaze transformation!”" },
-      { name: "Solar Champion Sol", color: "#fbbf24", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "rule_2", reqXP: 160, ruleLabel: "Rank 2", title: "Solar Guardian", desc: "Radiant mental agility.", shout: "“SOLAR PROMINENCE!”" },
-
-      { name: "Grove Runner Fumi", color: "#10b981", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "rule_3", reqXP: 30, ruleLabel: "Rank 3", title: "Grove Scout", desc: "Agile pattern recognition.", shout: "“Pattern identified!”" },
-      { name: "Jade Viper Orochi", color: "#059669", headwear: "horns", weapon: "dual_swords", rarity: "rare", ruleKey: "rule_3", reqXP: 60, ruleLabel: "Rank 3", title: "Tactician", desc: "Tactical decomposition master.", shout: "“Viper venom accuracy!”" },
-      { name: "Timber Cleaver Cho", color: "#047857", headwear: "headband", weapon: "axe", rarity: "epic", ruleKey: "rule_3", reqXP: 100, ruleLabel: "Rank 3", title: "Woodland Chopper", desc: "Splits equations cleanly.", shout: "“Clean tactical split!”" },
-      { name: "Forest Titan Gou", color: "#065f46", headwear: "horns", weapon: "axe", rarity: "legendary", ruleKey: "rule_3", reqXP: 160, ruleLabel: "Rank 3", title: "Titan Crusher", desc: "Impenetrable arithmetic focus.", shout: "“TITAN STRENGTH!”" },
-
-      { name: "Frost Seeker Yuki", color: "#38bdf8", headwear: "ice", weapon: "shuriken", rarity: "rare", ruleKey: "rule_4", reqXP: 30, ruleLabel: "Rank 4", title: "Frost Apprentice", desc: "Freezes arithmetic errors.", shout: "“Frost cold clarity!”" },
-      { name: "Blizzard Ronin Kuro", color: "#0284c7", headwear: "ice", weapon: "dual_swords", rarity: "rare", ruleKey: "rule_4", reqXP: 60, ruleLabel: "Rank 4", title: "Blizzard Lord", desc: "Calculates at blizzard velocity.", shout: "“Blizzard strike!”" },
-      { name: "Glacial Sovereign Hyou", color: "#bae6fd", headwear: "crown", weapon: "dual_swords", rarity: "epic", ruleKey: "rule_4", reqXP: 100, ruleLabel: "Rank 4", title: "Ice Sovereign", desc: "Cold, collected calculation.", shout: "“Absolute zero focus!”" },
-      { name: "Aurora Weaver Reika", color: "#06b6d4", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "rule_4", reqXP: 160, ruleLabel: "Rank 4", title: "Polar Queen", desc: "Equations align like aurora lights.", shout: "“AURORA BOREALIS!”" },
-
-      { name: "Mystic Fox Kitsune", color: "#ec4899", headwear: "horns", weapon: "shuriken", rarity: "rare", ruleKey: "overall", reqXP: 100, ruleLabel: "Overall", title: "Mage", desc: "Unravels number puzzles.", shout: "“Mystery decoded!”" },
-      { name: "Time Bender Chrono", color: "#8b5cf6", headwear: "headband", weapon: "dual_swords", rarity: "epic", ruleKey: "overall", reqXP: 220, ruleLabel: "Overall", title: "Time Walker", desc: "Controls mathematical speed.", shout: "“Time on our side!”" },
-      { name: "Silver Guardian Gin", color: "#94a3b8", headwear: "horns", weapon: "dual_swords", rarity: "epic", ruleKey: "overall", reqXP: 360, ruleLabel: "Overall", title: "Grade Veteran", desc: "Steady mastery across topics.", shout: "“Silver barrier up!”" },
-      { name: "Golden Sensei Shin", color: "#fbbf24", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "overall", reqXP: 550, ruleLabel: "Overall", title: "Grade Master", desc: "Command over full curriculum.", shout: "“Golden mastery achieved!”" },
-      { name: "Imperial Shogun Nobu", color: "#dc2626", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "overall", reqXP: 750, ruleLabel: "Overall", title: "Shogun", desc: "Leader of elementary martial math.", shout: "“Imperial order delivered!”" },
-      { name: "Void Emperor Ryu", color: "#a855f7", headwear: "crown", weapon: "dual_swords", rarity: "mythic", ruleKey: "overall", reqXP: 1000, ruleLabel: "Overall", title: "Grand Champion", desc: "Supreme master of the grade level.", shout: "“VOID SUPREMACY!”" },
-      { name: "Celestial Dragon Ryujin", color: "#d946ef", headwear: "crown", weapon: "dual_swords", rarity: "mythic", ruleKey: "overall", reqXP: 1300, ruleLabel: "Overall", title: "Mythic Drake", desc: "Ancient mathematical dragon.", shout: "“CELESTIAL DRAGON ROAR!”" },
-      { name: "Infinity Deity Mugen", color: "#f59e0b", headwear: "crown", weapon: "dual_swords", rarity: "mythic", ruleKey: "overall", reqXP: 1600, ruleLabel: "Overall", title: "Cosmic Sovereign", desc: "Transcended this grade to the next!", shout: "“INFINITY COSMOS OMNIPRESENCE!”" }
-    ];
-
-    // GENERATE 25 NINJAS TAILORED FOR EACH OF THE 6 GRADES
-    function buildGradeNinjas(gradeId) {
-      return BASE_GRADE_NINJAS.map((ninja, idx) => {
-        let ruleKey = ninja.ruleKey;
-        let ruleLabel = ninja.ruleLabel;
-
-        if (gradeId === "preschool") {
-          if (ruleKey === "rule_1") { ruleKey = "count"; ruleLabel = "🍎 Counting"; }
-          else if (ruleKey === "rule_2") { ruleKey = "sub_5"; ruleLabel = "➖ Take Away"; }
-          else if (ruleKey === "rule_3") { ruleKey = "add_5"; ruleLabel = "➕ Add to 5"; }
-          else if (ruleKey === "rule_4") { ruleKey = "add_10"; ruleLabel = "⭐ Add to 10"; }
-        } else if (gradeId === "grade1") {
-          if (ruleKey === "rule_1") { ruleKey = "add_sub_20"; ruleLabel = "➕ Add/Sub 20"; }
-          else if (ruleKey === "rule_2") { ruleKey = "missing_addend"; ruleLabel = "❓ Missing Addend"; }
-          else if (ruleKey === "rule_3") { ruleKey = "tens_ones"; ruleLabel = "🔟 Tens & Ones"; }
-          else if (ruleKey === "rule_4") { ruleKey = "comp_20"; ruleLabel = "⚖️ Compare to 20"; }
-        } else if (gradeId === "grade2") {
-          if (ruleKey === "rule_1") { ruleKey = "skip_count"; ruleLabel = "🦘 Skip Count"; }
-          else if (ruleKey === "rule_2") { ruleKey = "make_ten"; ruleLabel = "🎯 Make Ten"; }
-          else if (ruleKey === "rule_3") { ruleKey = "doubles"; ruleLabel = "👯 Doubles"; }
-          else if (ruleKey === "rule_4") { ruleKey = "mult_intro"; ruleLabel = "✖️ Basic Sets"; }
-        } else if (gradeId === "grade3") {
-          if (ruleKey === "rule_1") { ruleKey = "facts_12"; ruleLabel = "✖️ Times Tables"; }
-          else if (ruleKey === "rule_2") { ruleKey = "div_inverse"; ruleLabel = "➗ Inverse Division"; }
-          else if (ruleKey === "rule_3") { ruleKey = "distrib_intro"; ruleLabel = "🪓 Breakup Method"; }
-          else if (ruleKey === "rule_4") { ruleKey = "multi_steps"; ruleLabel = "🧩 Multi-Steps"; }
-        } else if (gradeId === "grade4") {
-          if (ruleKey === "rule_1") { ruleKey = "zeros"; ruleLabel = "0️⃣ Zero Hero"; }
-          else if (ruleKey === "rule_2") { ruleKey = "eleven"; ruleLabel = "🪄 11s Magic"; }
-          else if (ruleKey === "rule_3") { ruleKey = "split"; ruleLabel = "🪓 Break & Split"; }
-          else if (ruleKey === "rule_4") { ruleKey = "ending_five"; ruleLabel = "⚡ Square 5s"; }
-        } else if (gradeId === "grade5") {
-          if (ruleKey === "rule_1") { ruleKey = "powers_ten"; ruleLabel = "🚀 Powers of 10"; }
-          else if (ruleKey === "rule_2") { ruleKey = "multi_digit"; ruleLabel = "⚔️ 3-Digit × 1-Digit"; }
-          else if (ruleKey === "rule_3") { ruleKey = "pemdas"; ruleLabel = "📐 Order Operations"; }
-          else if (ruleKey === "rule_4") { ruleKey = "decimals"; ruleLabel = "💎 Decimals"; }
-        }
-
-        return { ...ninja, ruleKey, ruleLabel };
-      });
-    }
-
-    const GRADE_NINJAS = {
-      preschool: buildGradeNinjas("preschool"),
-      grade1: buildGradeNinjas("grade1"),
-      grade2: buildGradeNinjas("grade2"),
-      grade3: buildGradeNinjas("grade3"),
-      grade4: buildGradeNinjas("grade4"),
-      grade5: buildGradeNinjas("grade5")
-    };
 
     const GRADE_CONFIG = {
       preschool: {
@@ -1210,6 +1127,132 @@
       }
     };
 
+    const BASE_GRADE_NINJAS = [
+      { name: "White Belt Ken", color: "#6366f1", headwear: "headband", weapon: "shuriken", rarity: "apprentice", ruleKey: "overall", reqXP: 0, ruleLabel: "Starter", title: "Novice", desc: "Begins the grade training.", shout: "“Let's master the ninja steps!”" },
+      { name: "Striker Bo", color: "#06b6d4", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "rule_1", reqXP: 30, ruleLabel: "Rank 1", title: "Apprentice", desc: "First rule techniques.", shout: "“Clean precision strike!”" },
+      { name: "Swift Claw Ren", color: "#38bdf8", headwear: "headband", weapon: "dual_swords", rarity: "rare", ruleKey: "rule_1", reqXP: 60, ruleLabel: "Rank 1", title: "Dual Edge", desc: "Quick mental calculations.", shout: "“Twin edge strike!”" },
+      { name: "Silent Gale Kage", color: "#0ea5e9", headwear: "horns", weapon: "dual_swords", rarity: "epic", ruleKey: "rule_1", reqXP: 100, ruleLabel: "Rank 1", title: "Wind Striker", desc: "Commands fundamental math.", shout: "“Gale force impact!”" },
+      { name: "Storm Hunter Raiden", color: "#f59e0b", headwear: "flame", weapon: "dual_swords", rarity: "legendary", ruleKey: "rule_1", reqXP: 160, ruleLabel: "Rank 1", title: "Storm Lord", desc: "Strikes like sudden thunder.", shout: "“THUNDER ACCURACY!”" },
+      
+      { name: "Ember Scout Kai", color: "#f97316", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "rule_2", reqXP: 30, ruleLabel: "Rank 2", title: "Fire Scout", desc: "Quick reaction timing.", shout: "“Igniting the calculations!”" },
+      { name: "Flame Cleaver Taro", color: "#ef4444", headwear: "horns", weapon: "axe", rarity: "rare", ruleKey: "rule_2", reqXP: 60, ruleLabel: "Rank 2", title: "Cleaver", desc: "Cuts down complex problems.", shout: "“Cleaving through numbers!”" },
+      { name: "Blaze Alchemist Jin", color: "#dc2626", headwear: "flame", weapon: "dual_swords", rarity: "epic", ruleKey: "rule_2", reqXP: 100, ruleLabel: "Rank 2", title: "Alchemist", desc: "Transforms arithmetic equations.", shout: "“Blaze transformation!”" },
+      { name: "Solar Champion Sol", color: "#fbbf24", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "rule_2", reqXP: 160, ruleLabel: "Rank 2", title: "Solar Guardian", desc: "Radiant mental agility.", shout: "“SOLAR PROMINENCE!”" },
+
+      { name: "Grove Runner Fumi", color: "#10b981", headwear: "headband", weapon: "shuriken", rarity: "rare", ruleKey: "rule_3", reqXP: 30, ruleLabel: "Rank 3", title: "Grove Scout", desc: "Agile pattern recognition.", shout: "“Pattern identified!”" },
+      { name: "Jade Viper Orochi", color: "#059669", headwear: "horns", weapon: "dual_swords", rarity: "rare", ruleKey: "rule_3", reqXP: 60, ruleLabel: "Rank 3", title: "Tactician", desc: "Tactical decomposition master.", shout: "“Viper venom accuracy!”" },
+      { name: "Timber Cleaver Cho", color: "#047857", headwear: "headband", weapon: "axe", rarity: "epic", ruleKey: "rule_3", reqXP: 100, ruleLabel: "Rank 3", title: "Woodland Chopper", desc: "Splits equations cleanly.", shout: "“Clean tactical split!”" },
+      { name: "Forest Titan Gou", color: "#065f46", headwear: "horns", weapon: "axe", rarity: "legendary", ruleKey: "rule_3", reqXP: 160, ruleLabel: "Rank 3", title: "Titan Crusher", desc: "Impenetrable arithmetic focus.", shout: "“TITAN STRENGTH!”" },
+
+      { name: "Frost Seeker Yuki", color: "#38bdf8", headwear: "ice", weapon: "shuriken", rarity: "rare", ruleKey: "rule_4", reqXP: 30, ruleLabel: "Rank 4", title: "Frost Apprentice", desc: "Freezes arithmetic errors.", shout: "“Frost cold clarity!”" },
+      { name: "Blizzard Ronin Kuro", color: "#0284c7", headwear: "ice", weapon: "dual_swords", rarity: "rare", ruleKey: "rule_4", reqXP: 60, ruleLabel: "Rank 4", title: "Blizzard Lord", desc: "Calculates at blizzard velocity.", shout: "“Blizzard strike!”" },
+      { name: "Glacial Sovereign Hyou", color: "#bae6fd", headwear: "crown", weapon: "dual_swords", rarity: "epic", ruleKey: "rule_4", reqXP: 100, ruleLabel: "Rank 4", title: "Ice Sovereign", desc: "Cold, collected calculation.", shout: "“Absolute zero focus!”" },
+      { name: "Aurora Weaver Reika", color: "#06b6d4", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "rule_4", reqXP: 160, ruleLabel: "Rank 4", title: "Polar Queen", desc: "Equations align like aurora lights.", shout: "“AURORA BOREALIS!”" },
+
+      { name: "Mystic Fox Kitsune", color: "#ec4899", headwear: "horns", weapon: "shuriken", rarity: "rare", ruleKey: "overall", reqXP: 100, ruleLabel: "Overall", title: "Mage", desc: "Unravels number puzzles.", shout: "“Mystery decoded!”" },
+      { name: "Time Bender Chrono", color: "#8b5cf6", headwear: "headband", weapon: "dual_swords", rarity: "epic", ruleKey: "overall", reqXP: 220, ruleLabel: "Overall", title: "Time Walker", desc: "Controls mathematical speed.", shout: "“Time on our side!”" },
+      { name: "Silver Guardian Gin", color: "#94a3b8", headwear: "horns", weapon: "dual_swords", rarity: "epic", ruleKey: "overall", reqXP: 360, ruleLabel: "Overall", title: "Grade Veteran", desc: "Steady mastery across topics.", shout: "“Silver barrier up!”" },
+      { name: "Golden Sensei Shin", color: "#fbbf24", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "overall", reqXP: 550, ruleLabel: "Overall", title: "Grade Master", desc: "Command over full curriculum.", shout: "“Golden mastery achieved!”" },
+      { name: "Imperial Shogun Nobu", color: "#dc2626", headwear: "crown", weapon: "dual_swords", rarity: "legendary", ruleKey: "overall", reqXP: 750, ruleLabel: "Overall", title: "Shogun", desc: "Leader of elementary martial math.", shout: "“Imperial order delivered!”" },
+      { name: "Void Emperor Ryu", color: "#a855f7", headwear: "crown", weapon: "dual_swords", rarity: "mythic", ruleKey: "overall", reqXP: 1000, ruleLabel: "Overall", title: "Grand Champion", desc: "Supreme master of the grade level.", shout: "“VOID SUPREMACY!”" },
+      { name: "Celestial Dragon Ryujin", color: "#d946ef", headwear: "crown", weapon: "dual_swords", rarity: "mythic", ruleKey: "overall", reqXP: 1300, ruleLabel: "Overall", title: "Mythic Drake", desc: "Ancient mathematical dragon.", shout: "“CELESTIAL DRAGON ROAR!”" },
+      { name: "Infinity Deity Mugen", color: "#f59e0b", headwear: "crown", weapon: "dual_swords", rarity: "mythic", ruleKey: "overall", reqXP: 1600, ruleLabel: "Overall", title: "Cosmic Sovereign", desc: "Transcended this grade to the next!", shout: "“INFINITY COSMOS OMNIPRESENCE!”" }
+    ];
+
+    function buildGradeNinjas(gradeId) {
+      return BASE_GRADE_NINJAS.map(ninja => {
+        let ruleKey = ninja.ruleKey;
+        let ruleLabel = ninja.ruleLabel;
+
+        if (gradeId === "preschool") {
+          if (ruleKey === "rule_1") { ruleKey = "count"; ruleLabel = "🍎 Counting"; }
+          else if (ruleKey === "rule_2") { ruleKey = "sub_5"; ruleLabel = "➖ Take Away"; }
+          else if (ruleKey === "rule_3") { ruleKey = "add_5"; ruleLabel = "➕ Add to 5"; }
+          else if (ruleKey === "rule_4") { ruleKey = "add_10"; ruleLabel = "⭐ Add to 10"; }
+        } else if (gradeId === "grade1") {
+          if (ruleKey === "rule_1") { ruleKey = "add_sub_20"; ruleLabel = "➕ Add/Sub 20"; }
+          else if (ruleKey === "rule_2") { ruleKey = "missing_addend"; ruleLabel = "❓ Missing Addend"; }
+          else if (ruleKey === "rule_3") { ruleKey = "tens_ones"; ruleLabel = "🔟 Tens & Ones"; }
+          else if (ruleKey === "rule_4") { ruleKey = "comp_20"; ruleLabel = "⚖️ Balance within 20"; }
+        } else if (gradeId === "grade2") {
+          if (ruleKey === "rule_1") { ruleKey = "skip_count"; ruleLabel = "🦘 Skip Count"; }
+          else if (ruleKey === "rule_2") { ruleKey = "make_ten"; ruleLabel = "🎯 Make Ten"; }
+          else if (ruleKey === "rule_3") { ruleKey = "doubles"; ruleLabel = "👯 Doubles"; }
+          else if (ruleKey === "rule_4") { ruleKey = "mult_intro"; ruleLabel = "✖️ Basic Sets"; }
+        } else if (gradeId === "grade3") {
+          if (ruleKey === "rule_1") { ruleKey = "facts_12"; ruleLabel = "✖️ Times Tables"; }
+          else if (ruleKey === "rule_2") { ruleKey = "div_inverse"; ruleLabel = "➗ Inverse Division"; }
+          else if (ruleKey === "rule_3") { ruleKey = "distrib_intro"; ruleLabel = "🪓 Breakup Method"; }
+          else if (ruleKey === "rule_4") { ruleKey = "multi_steps"; ruleLabel = "🧩 Multi-Steps"; }
+        } else if (gradeId === "grade4") {
+          if (ruleKey === "rule_1") { ruleKey = "zeros"; ruleLabel = "0️⃣ Zero Hero"; }
+          else if (ruleKey === "rule_2") { ruleKey = "eleven"; ruleLabel = "🪄 11s Magic"; }
+          else if (ruleKey === "rule_3") { ruleKey = "split"; ruleLabel = "🪓 Break & Split"; }
+          else if (ruleKey === "rule_4") { ruleKey = "ending_five"; ruleLabel = "⚡ Square 5s"; }
+        } else if (gradeId === "grade5") {
+          if (ruleKey === "rule_1") { ruleKey = "powers_ten"; ruleLabel = "🚀 Powers of 10"; }
+          else if (ruleKey === "rule_2") { ruleKey = "multi_digit"; ruleLabel = "⚔️ 3-Digit × 1-Digit"; }
+          else if (ruleKey === "rule_3") { ruleKey = "pemdas"; ruleLabel = "📐 Order Operations"; }
+          else if (ruleKey === "rule_4") { ruleKey = "decimals"; ruleLabel = "💎 Decimals"; }
+        }
+
+        return { ...ninja, ruleKey, ruleLabel };
+      });
+    }
+
+    const GRADE_NINJAS = {
+      preschool: buildGradeNinjas("preschool"),
+      grade1: buildGradeNinjas("grade1"),
+      grade2: buildGradeNinjas("grade2"),
+      grade3: buildGradeNinjas("grade3"),
+      grade4: buildGradeNinjas("grade4"),
+      grade5: buildGradeNinjas("grade5")
+    };
+
+    function renderProfileSelector() {
+      const select = document.getElementById("profileSelect");
+      select.innerHTML = "";
+      profilesList.forEach(name => {
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        if (name === currentProfile) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    function populateRulesDropdown() {
+      const ruleSelect = document.getElementById("ruleSelect");
+      ruleSelect.innerHTML = "";
+      const cfg = GRADE_CONFIG[currentGrade] || GRADE_CONFIG.grade4;
+      cfg.rules.forEach(r => {
+        const opt = document.createElement("option");
+        opt.value = r.id;
+        opt.textContent = r.name;
+        if (r.id === selectedRule) opt.selected = true;
+        ruleSelect.appendChild(opt);
+      });
+    }
+
+    function renderAcademyScrolls() {
+      const container = document.getElementById("academyScrolls");
+      container.innerHTML = "";
+      const cfg = GRADE_CONFIG[currentGrade] || GRADE_CONFIG.grade4;
+      cfg.academy.forEach(s => {
+        const card = document.createElement("div");
+        card.className = "trick-card";
+        card.onclick = () => selectAndPractice(s.id);
+        card.innerHTML = `
+          <div>
+            <h3><span>${s.icon \vert{}\vert{} '📜'}</span> ${s.title}</h3>
+            <p>${s.desc}</p>
+          </div>
+          <div class="trick-example">${s.example}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
     function loadActiveProfileData() {
       const data = JSON.parse(localStorage.getItem(`math_ninja_data_${currentProfile}`) || "{}");
       playerXP = data.xp || 0;
@@ -1217,7 +1260,7 @@
       totalSolved = data.totalSolved || 0;
       totalCorrect = data.totalCorrect || 0;
       currentGrade = data.grade || DEFAULT_GRADES[currentProfile] || "grade4";
-      
+
       const roster = GRADE_NINJAS[currentGrade] || GRADE_NINJAS.grade4;
       equippedNinja = data.ninja || roster[0].name;
 
@@ -1225,8 +1268,9 @@
       currentStreak = 0;
       document.getElementById("streakCount").textContent = 0;
       document.getElementById("gradeSelect").value = currentGrade;
-      document.getElementById("headerSubtitle").textContent = GRADE_CONFIG[currentGrade].title;
+      document.getElementById("headerSubtitle").textContent = (GRADE_CONFIG[currentGrade] || GRADE_CONFIG.grade4).title;
 
+      renderProfileSelector();
       populateRulesDropdown();
       renderAcademyScrolls();
     }
@@ -1245,18 +1289,6 @@
       localStorage.setItem("math_ninja_profiles", JSON.stringify(profilesList));
     }
 
-    function renderProfileSelector() {
-      const select = document.getElementById("profileSelect");
-      select.innerHTML = "";
-      profilesList.forEach(name => {
-        const opt = document.createElement("option");
-        opt.value = name;
-        opt.textContent = name;
-        if (name === currentProfile) opt.selected = true;
-        select.appendChild(opt);
-      });
-    }
-
     function onProfileChange() {
       currentProfile = document.getElementById("profileSelect").value;
       loadActiveProfileData();
@@ -1269,44 +1301,12 @@
       selectedRule = "mixed";
       const roster = GRADE_NINJAS[currentGrade] || GRADE_NINJAS.grade4;
       equippedNinja = roster[0].name;
-      document.getElementById("headerSubtitle").textContent = GRADE_CONFIG[currentGrade].title;
+      document.getElementById("headerSubtitle").textContent = (GRADE_CONFIG[currentGrade] || GRADE_CONFIG.grade4).title;
       populateRulesDropdown();
       renderAcademyScrolls();
       saveActiveProfileData();
       updateUI();
       renderProblem();
-    }
-
-    function populateRulesDropdown() {
-      const ruleSelect = document.getElementById("ruleSelect");
-      ruleSelect.innerHTML = "";
-      const rules = GRADE_CONFIG[currentGrade].rules;
-      rules.forEach(r => {
-        const opt = document.createElement("option");
-        opt.value = r.id;
-        opt.textContent = r.name;
-        if (r.id === selectedRule) opt.selected = true;
-        ruleSelect.appendChild(opt);
-      });
-    }
-
-    function renderAcademyScrolls() {
-      const container = document.getElementById("academyScrolls");
-      container.innerHTML = "";
-      const scrolls = GRADE_CONFIG[currentGrade].academy;
-      scrolls.forEach(s => {
-        const card = document.createElement("div");
-        card.className = "trick-card";
-        card.onclick = () => selectAndPractice(s.id);
-        card.innerHTML = `
-          <div>
-            <h3><span>${s.icon \vert{}\vert{} '📜'}</span> ${s.title}</h3>
-            <p>${s.desc}</p>
-          </div>
-          <div class="trick-example">${s.example}</div>
-        `;
-        container.appendChild(card);
-      });
     }
 
     function onRuleChange() {
@@ -1367,14 +1367,11 @@
       } catch (e) {}
     }
 
-    // FULL MULTI-GRADE ENGINE (PRESCHOOL THROUGH 5TH GRADE)
     function generateProblem() {
       const visualElem = document.getElementById("visualCounter");
       visualElem.textContent = "";
 
-      // ====================================================
       // 1. PRESCHOOL (Reid)
-      // ====================================================
       if (currentGrade === "preschool") {
         let chosen = selectedRule === "mixed" 
           ? ["count", "add_5", "sub_5", "add_10"][Math.floor(Math.random() * 4)] 
@@ -1405,17 +1402,15 @@
         }
       }
 
-      // ====================================================
       // 2. 1ST GRADE
-      // ====================================================
       if (currentGrade === "grade1") {
         let chosen = selectedRule === "mixed" 
           ? ["add_sub_20", "missing_addend", "tens_ones", "comp_20"][Math.floor(Math.random() * 4)] 
           : selectedRule;
 
         if (chosen === "missing_addend") {
-          const a = Math.floor(Math.random() * 7) + 5; // 5 to 11
-          const missing = Math.floor(Math.random() * 6) + 3; // 3 to 8
+          const a = Math.floor(Math.random() * 7) + 5;
+          const missing = Math.floor(Math.random() * 6) + 3;
           const total = a + missing;
           const isLeft = Math.random() > 0.5;
 
@@ -1449,7 +1444,6 @@
             rule: "comp_20"
           };
         } else {
-          // Facts within 20
           const a = Math.floor(Math.random() * 8) + 7;
           const b = Math.floor(Math.random() * 5) + 3;
           return {
@@ -1463,9 +1457,7 @@
         }
       }
 
-      // ====================================================
       // 3. 2ND GRADE (Micah)
-      // ====================================================
       if (currentGrade === "grade2") {
         let chosen = selectedRule === "mixed" 
           ? ["skip_count", "make_ten", "doubles", "mult_intro"][Math.floor(Math.random() * 4)] 
@@ -1539,17 +1531,15 @@
         }
       }
 
-      // ====================================================
       // 4. 3RD GRADE
-      // ====================================================
       if (currentGrade === "grade3") {
         let chosen = selectedRule === "mixed" 
           ? ["facts_12", "div_inverse", "distrib_intro", "multi_steps"][Math.floor(Math.random() * 4)] 
           : selectedRule;
 
         if (chosen === "div_inverse") {
-          const b = Math.floor(Math.random() * 7) + 3; // 3 to 9
-          const ans = Math.floor(Math.random() * 8) + 2; // 2 to 9
+          const b = Math.floor(Math.random() * 7) + 3;
+          const ans = Math.floor(Math.random() * 8) + 2;
           const total = b * ans;
           return {
             text: `${total} ÷${b}`,
@@ -1583,7 +1573,6 @@
             rule: "multi_steps"
           };
         } else {
-          // Core Times Tables 0-12
           const a = Math.floor(Math.random() * 11) + 2;
           const b = Math.floor(Math.random() * 11) + 2;
           return {
@@ -1597,9 +1586,7 @@
         }
       }
 
-      // ====================================================
       // 5. 4TH GRADE (Aaron)
-      // ====================================================
       if (currentGrade === "grade4") {
         let chosen = selectedRule === "mixed" 
           ? ["zeros", "eleven", "ending_five", "double_half", "split"][Math.floor(Math.random() * 5)] 
@@ -1642,16 +1629,14 @@
         };
       }
 
-      // ====================================================
       // 6. 5TH GRADE
-      // ====================================================
       if (currentGrade === "grade5") {
         let chosen = selectedRule === "mixed" 
           ? ["powers_ten", "multi_digit", "pemdas", "decimals"][Math.floor(Math.random() * 4)] 
           : selectedRule;
 
         if (chosen === "powers_ten") {
-          const base = (Math.floor(Math.random() * 80) + 12) / 10; // e.g. 4.5
+          const base = (Math.floor(Math.random() * 80) + 12) / 10;
           const power = [10, 100][Math.floor(Math.random() * 2)];
           return {
             text: `${base} ×${power}`,
@@ -1662,7 +1647,6 @@
             rule: "powers_ten"
           };
         } else if (chosen === "multi_digit") {
-          // 3-digit x 1-digit
           const a = Math.floor(Math.random() * 400) + 120;
           const b = Math.floor(Math.random() * 5) + 3;
           return {
@@ -1699,7 +1683,6 @@
             };
           }
         } else {
-          // Decimal addition
           const a = (Math.floor(Math.random() * 50) + 10) / 10;
           const b = (Math.floor(Math.random() * 40) + 10) / 10;
           return {
@@ -1757,7 +1740,6 @@
       const roster = GRADE_NINJAS[currentGrade] || GRADE_NINJAS.grade4;
       const currentActive = roster.find(n => n.name === equippedNinja) || roster[0];
 
-      // Float comparison margin
       if (Math.abs(val - currentProblem.answer) < 0.001) {
         playBeep(587.33, 0.15);
         isCorrect = true;
@@ -1843,7 +1825,7 @@
       container.innerHTML = "";
 
       const roster = GRADE_NINJAS[currentGrade] || GRADE_NINJAS.grade4;
-      document.getElementById("dojoHeading").textContent = `${GRADE_CONFIG[currentGrade].title} Dojo`;
+      document.getElementById("dojoHeading").textContent = `${(GRADE_CONFIG[currentGrade] || GRADE_CONFIG.grade4).title} Dojo`;
       document.getElementById("dojoSubheading").textContent = `${roster.length} Champions Available`;
 
       roster.forEach(n => {
@@ -1896,7 +1878,7 @@
         totalSolved: totalSolved,
         accuracy: accuracyPct,
         log: {
-          mode: GRADE_CONFIG[currentGrade].title,
+          mode: (GRADE_CONFIG[currentGrade] || GRADE_CONFIG.grade4).title,
           problem: prob.text,
           correct: isCorrect,
           xpGained: gainedXP,
@@ -1979,10 +1961,10 @@
       }
     });
 
-    renderProfileSelector();
+    // ROCK-SOLID INITIALIZATION
     loadActiveProfileData();
-    renderProblem();
     updateUI();
+    renderProblem();
   </script>
 </body>
 </html>
