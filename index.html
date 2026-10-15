@@ -812,16 +812,16 @@
   </header>
 
   <nav>
-    <button class="nav-btn active" id="tab-btn-practice" onclick="switchTab('practice')">
+    <button class="nav-btn active" id="tabBtn-practice" onclick="switchTab('practice')">
       <span>⚔️</span> Practice Quest
     </button>
-    <button class="nav-btn" id="tab-btn-academy" onclick="switchTab('academy')">
+    <button class="nav-btn" id="tabBtn-academy" onclick="switchTab('academy')">
       <span>📜</span> Trick Academy
     </button>
-    <button class="nav-btn" id="tab-btn-speed" onclick="switchTab('speed')">
+    <button class="nav-btn" id="tabBtn-speed" onclick="switchTab('speed')">
       <span>⚡</span> 60s Speed Run
     </button>
-    <button class="nav-btn" id="tab-btn-roster" onclick="switchTab('roster')">
+    <button class="nav-btn" id="tabBtn-roster" onclick="switchTab('roster')">
       <span>🥷</span> Ninja Dojo
     </button>
   </nav>
@@ -986,51 +986,54 @@
     let currentGrade = DEFAULT_GRADES[currentProfile] || "grade4";
     let selectedRule = "mixed";
     let playerXP = 0;
-    let ruleXP = {}; 
+    let ruleXP = {};
     let equippedNinja = "";
     let totalSolved = 0;
     let totalCorrect = 0;
     let currentStreak = 0;
     let currentProblem = null;
 
-    function getNinjaSvg(color = "#6366f1", headwear = "headband", weapon = "shuriken") {
-      let maskColor = "#0f172a";
-      let eyeColor = "#38bdf8";
+    function getNinjaSvg(color, headwear, weapon) {
+      const c = color || "#6366f1";
+      const hw = headwear || "headband";
+      const wp = weapon || "shuriken";
+      const maskColor = "#0f172a";
+      const eyeColor = "#38bdf8";
 
-      let headwearSvg = `<path d="M12 28 Q32 20 52 28 L50 33 Q32 25 14 33 Z" fill="${color}"/>`;
-      if (headwear === "horns") {
-        headwearSvg += `<path d="M16 24 L10 10 L22 20 Z M48 24 L54 10 L42 20 Z" fill="${color}"/>`;
-      } else if (headwear === "crown") {
+      let headwearSvg = `<path d="M12 28 Q32 20 52 28 L50 33 Q32 25 14 33 Z" fill="${c}"/>`;
+      if (hw === "horns") {
+        headwearSvg += `<path d="M16 24 L10 10 L22 20 Z M48 24 L54 10 L42 20 Z" fill="${c}"/>`;
+      } else if (hw === "crown") {
         headwearSvg += `<polygon points="18,24 24,12 32,22 40,12 46,24" fill="#fbbf24"/>`;
-      } else if (headwear === "flame") {
+      } else if (hw === "flame") {
         headwearSvg += `<path d="M26 22 Q32 8 38 22 Q35 14 32 10 Q29 14 26 22 Z" fill="#f59e0b"/>`;
-      } else if (headwear === "ice") {
+      } else if (hw === "ice") {
         headwearSvg += `<polygon points="32,8 36,22 28,22" fill="#bae6fd"/>`;
       }
 
       let weaponSvg = '';
-      if (weapon === "dual_swords") {
+      if (wp === "dual_swords") {
         weaponSvg = `<line x1="6" y1="6" x2="22" y2="22" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round"/>
                      <line x1="58" y1="6" x2="42" y2="22" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round"/>`;
-      } else if (weapon === "axe") {
+      } else if (wp === "axe") {
         weaponSvg = `<line x1="56" y1="12" x2="48" y2="40" stroke="#78350f" stroke-width="3"/>
                      <path d="M52 16 Q62 10 58 24 Z" fill="#94a3b8"/>`;
-      } else if (weapon === "shuriken") {
-        weaponSvg = `<circle cx="50" cy="50" r="4" fill="${color}"/>`;
+      } else if (wp === "shuriken") {
+        weaponSvg = `<circle cx="50" cy="50" r="4" fill="${c}"/>`;
       }
 
       return `
         <svg class="ninja-avatar-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
           ${weaponSvg}
           <circle cx="32" cy="32" r="22" fill="${maskColor}"/>
-          <path d="M16 48 Q32 58 48 48 L52 62 L12 62 Z" fill="${color}"/>
+          <path d="M16 48 Q32 58 48 48 L52 62 L12 62 Z" fill="${c}"/>
           <ellipse cx="32" cy="31" rx="15" ry="9" fill="#1e293b"/>
           <ellipse cx="26" cy="30" rx="3" ry="1.8" fill="${eyeColor}"/>
           <circle cx="27" cy="29.5" r="0.8" fill="#fff"/>
           <ellipse cx="38" cy="30" rx="3" ry="1.8" fill="${eyeColor}"/>
           <circle cx="39" cy="29.5" r="0.8" fill="#fff"/>
-          <line x1="23" y1="27" x2="29" y2="29" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="41" y1="27" x2="35" y2="29" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="23" y1="27" x2="29" y2="29" stroke="${c}" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="41" y1="27" x2="35" y2="29" stroke="${c}" stroke-width="1.5" stroke-linecap="round"/>
           ${headwearSvg}
         </svg>
       `;
@@ -1252,9 +1255,10 @@
         const card = document.createElement("div");
         card.className = "trick-card";
         card.onclick = () => selectAndPractice(s.id);
+        const icon = s.icon || '📜';
         card.innerHTML = `
           <div>
-            <h3><span>${s.icon \vert{}\vert{} '📜'}</span> ${s.title}</h3>
+            <h3><span>${icon}</span>${s.title}</h3>
             <p>${s.desc}</p>
           </div>
           <div class="trick-example">${s.example}</div>
@@ -1269,10 +1273,10 @@
         data = JSON.parse(localStorage.getItem(`math_ninja_data_${currentProfile}`) || "{}");
       } catch (e) { data = {}; }
 
-      playerXP = data.xp || 0;
+      playerXP = Number(data.xp) || 0;
       ruleXP = data.ruleXP || {};
-      totalSolved = data.totalSolved || 0;
-      totalCorrect = data.totalCorrect || 0;
+      totalSolved = Number(data.totalSolved) || 0;
+      totalCorrect = Number(data.totalCorrect) || 0;
       currentGrade = data.grade || DEFAULT_GRADES[currentProfile] || "grade4";
 
       const roster = GRADE_NINJAS[currentGrade] || GRADE_NINJAS.grade4;
@@ -1303,6 +1307,45 @@
       localStorage.setItem(`math_ninja_data_${currentProfile}`, JSON.stringify(data));
       localStorage.setItem("math_ninja_current_profile", currentProfile);
       localStorage.setItem("math_ninja_profiles", JSON.stringify(profilesList));
+    }
+
+    // PULL DATA DIRECTLY FROM GOOGLE SHEETS
+    async function fetchCloudProfiles() {
+      if (!APPS_SCRIPT_URL) return;
+      const syncLabel = document.getElementById("syncText");
+      if (syncLabel) syncLabel.textContent = "Loading cloud XP...";
+
+      try {
+        const res = await fetch(`${APPS_SCRIPT_URL}?action=getProfiles`);
+        const json = await res.json();
+        if (json && json.status === "success" && json.profiles) {
+          Object.keys(json.profiles).forEach(pName => {
+            const pData = json.profiles[pName];
+            let local = {};
+            try {
+              local = JSON.parse(localStorage.getItem(`math_ninja_data_${pName}`) || "{}");
+            } catch (e) {}
+
+            // Keep whichever XP is higher (cloud vs local)
+            const resolvedXP = Math.max(Number(local.xp) || 0, Number(pData.xp) || 0);
+            local.xp = resolvedXP;
+            if (pData.equippedNinja) local.ninja = pData.equippedNinja;
+            if (pData.totalSolved) local.totalSolved = Math.max(Number(local.totalSolved) || 0, Number(pData.totalSolved) || 0);
+            
+            localStorage.setItem(`math_ninja_data_${pName}`, JSON.stringify(local));
+
+            if (!profilesList.includes(pName)) profilesList.push(pName);
+          });
+
+          localStorage.setItem("math_ninja_profiles", JSON.stringify(profilesList));
+          renderProfileSelector();
+          loadActiveProfileData();
+          updateUI();
+          if (syncLabel) syncLabel.textContent = "Google Sheets Synced ✓";
+        }
+      } catch (e) {
+        if (syncLabel) syncLabel.textContent = "Google Sheets Ready (Offline)";
+      }
     }
 
     function onProfileChange() {
@@ -1844,7 +1887,7 @@
       const p = document.getElementById(tabId);
       if (p) p.classList.add("active");
       
-      const targetBtn = document.getElementById(`tab-btn-${tabId}`);
+      const targetBtn = document.getElementById(`tabBtn-${tabId}`);
       if (targetBtn) targetBtn.classList.add("active");
     }
 
@@ -2034,7 +2077,7 @@
       }
     });
 
-    // ROBUST BOOTSTRAP PIPELINE
+    // STARTUP PIPELINE
     window.addEventListener("DOMContentLoaded", () => {
       renderProfileSelector();
       loadActiveProfileData();
@@ -2042,6 +2085,7 @@
       renderAcademyScrolls();
       updateUI();
       renderProblem();
+      fetchCloudProfiles(); // Asynchronously pull existing Google Sheets XP
     });
   </script>
 </body>
