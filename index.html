@@ -812,16 +812,16 @@
   </header>
 
   <nav>
-    <button class="nav-btn active" onclick="switchTab('practice')">
+    <button class="nav-btn active" id="tab-btn-practice" onclick="switchTab('practice')">
       <span>⚔️</span> Practice Quest
     </button>
-    <button class="nav-btn" onclick="switchTab('academy')">
+    <button class="nav-btn" id="tab-btn-academy" onclick="switchTab('academy')">
       <span>📜</span> Trick Academy
     </button>
-    <button class="nav-btn" onclick="switchTab('speed')">
+    <button class="nav-btn" id="tab-btn-speed" onclick="switchTab('speed')">
       <span>⚡</span> 60s Speed Run
     </button>
-    <button class="nav-btn" onclick="switchTab('roster')">
+    <button class="nav-btn" id="tab-btn-roster" onclick="switchTab('roster')">
       <span>🥷</span> Ninja Dojo
     </button>
   </nav>
@@ -1840,9 +1840,11 @@
     function switchTab(tabId) {
       document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
       document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+      
       const p = document.getElementById(tabId);
       if (p) p.classList.add("active");
-      const targetBtn = Array.from(document.querySelectorAll(".nav-btn")).find(b => b.getAttribute("onclick") && b.getAttribute("onclick").includes(tabId));
+      
+      const targetBtn = document.getElementById(`tab-btn-${tabId}`);
       if (targetBtn) targetBtn.classList.add("active");
     }
 
