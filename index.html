@@ -112,7 +112,7 @@
       border: none;
       outline: none;
       cursor: pointer;
-      min-width: 80px;
+      min-width: 90px;
     }
 
     .profile-select option {
@@ -279,7 +279,7 @@
       font-size: 0.85rem;
       outline: none;
       cursor: pointer;
-      min-width: 160px;
+      min-width: 180px;
     }
 
     .custom-select option {
@@ -321,6 +321,7 @@
       border-radius: 50%;
       filter: blur(12px);
       opacity: 0.5;
+      background: #6366f1;
       transition: all 0.3s;
       animation: pulseAura 2.5s infinite alternate;
     }
@@ -786,12 +787,16 @@
     <div class="player-stats">
       <div class="profile-controls">
         <span>👤</span>
-        <select id="profileSelect" class="profile-select" onchange="onProfileChange()"></select>
+        <select id="profileSelect" class="profile-select" onchange="onProfileChange()">
+          <option value="Aaron">Aaron</option>
+          <option value="Micah">Micah</option>
+          <option value="Reid">Reid</option>
+        </select>
         <button class="add-profile-btn" onclick="openNewProfileModal()" title="Add New Ninja">+</button>
       </div>
 
       <div class="ninja-badge">
-        <div class="active-emblem" id="activeEmblem">🥋</div>
+        <div class="active-emblem" id="activeEmblem">⚔️</div>
         <span id="activeNinjaName">Trainee</span>
       </div>
       <div class="xp-meter-wrap">
@@ -840,7 +845,9 @@
 
           <div class="selector-box" id="ruleSelectorBox">
             <label for="ruleSelect">🎯 Target Rule:</label>
-            <select id="ruleSelect" class="custom-select" onchange="onRuleChange()"></select>
+            <select id="ruleSelect" class="custom-select" onchange="onRuleChange()">
+              <option value="mixed">Mixed (All Grade Rules)</option>
+            </select>
           </div>
         </div>
 
@@ -1211,6 +1218,7 @@
 
     function renderProfileSelector() {
       const select = document.getElementById("profileSelect");
+      if (!select) return;
       select.innerHTML = "";
       profilesList.forEach(name => {
         const opt = document.createElement("option");
@@ -1223,6 +1231,7 @@
 
     function populateRulesDropdown() {
       const ruleSelect = document.getElementById("ruleSelect");
+      if (!ruleSelect) return;
       ruleSelect.innerHTML = "";
       const cfg = GRADE_CONFIG[currentGrade] || GRADE_CONFIG.grade4;
       cfg.rules.forEach(r => {
@@ -1236,6 +1245,7 @@
 
     function renderAcademyScrolls() {
       const container = document.getElementById("academyScrolls");
+      if (!container) return;
       container.innerHTML = "";
       const cfg = GRADE_CONFIG[currentGrade] || GRADE_CONFIG.grade4;
       cfg.academy.forEach(s => {
@@ -1254,7 +1264,11 @@
     }
 
     function loadActiveProfileData() {
-      const data = JSON.parse(localStorage.getItem(`math_ninja_data_${currentProfile}`) || "{}");
+      let data = {};
+      try {
+        data = JSON.parse(localStorage.getItem(`math_ninja_data_${currentProfile}`) || "{}");
+      } catch (e) { data = {}; }
+
       playerXP = data.xp || 0;
       ruleXP = data.ruleXP || {};
       totalSolved = data.totalSolved || 0;
@@ -1266,13 +1280,15 @@
 
       selectedRule = "mixed";
       currentStreak = 0;
-      document.getElementById("streakCount").textContent = 0;
-      document.getElementById("gradeSelect").value = currentGrade;
-      document.getElementById("headerSubtitle").textContent = (GRADE_CONFIG[currentGrade] || GRADE_CONFIG.grade4).title;
+      
+      const streakElem = document.getElementById("streakCount");
+      if (streakElem) streakElem.textContent = 0;
 
-      renderProfileSelector();
-      populateRulesDropdown();
-      renderAcademyScrolls();
+      const gradeElem = document.getElementById("gradeSelect");
+      if (gradeElem) gradeElem.value = currentGrade;
+
+      const subElem = document.getElementById("headerSubtitle");
+      if (subElem) subElem.textContent = (GRADE_CONFIG[currentGrade] || GRADE_CONFIG.grade4).title;
     }
 
     function saveActiveProfileData() {
@@ -1290,18 +1306,27 @@
     }
 
     function onProfileChange() {
-      currentProfile = document.getElementById("profileSelect").value;
+      const select = document.getElementById("profileSelect");
+      if (!select) return;
+      currentProfile = select.value;
       loadActiveProfileData();
+      populateRulesDropdown();
+      renderAcademyScrolls();
       updateUI();
       renderProblem();
     }
 
     function onGradeChange() {
-      currentGrade = document.getElementById("gradeSelect").value;
+      const select = document.getElementById("gradeSelect");
+      if (!select) return;
+      currentGrade = select.value;
       selectedRule = "mixed";
       const roster = GRADE_NINJAS[currentGrade] || GRADE_NINJAS.grade4;
       equippedNinja = roster[0].name;
-      document.getElementById("headerSubtitle").textContent = (GRADE_CONFIG[currentGrade] || GRADE_CONFIG.grade4).title;
+
+      const subElem = document.getElementById("headerSubtitle");
+      if (subElem) subElem.textContent = (GRADE_CONFIG[currentGrade] || GRADE_CONFIG.grade4).title;
+
       populateRulesDropdown();
       renderAcademyScrolls();
       saveActiveProfileData();
@@ -1310,12 +1335,15 @@
     }
 
     function onRuleChange() {
-      selectedRule = document.getElementById("ruleSelect").value;
+      const ruleSelect = document.getElementById("ruleSelect");
+      if (!ruleSelect) return;
+      selectedRule = ruleSelect.value;
       renderProblem();
     }
 
     function selectAndPractice(ruleId) {
-      document.getElementById("ruleSelect").value = ruleId;
+      const ruleSelect = document.getElementById("ruleSelect");
+      if (ruleSelect) ruleSelect.value = ruleId;
       selectedRule = ruleId;
       switchTab("practice");
       renderProblem();
@@ -1324,17 +1352,21 @@
     function openNewProfileModal() {
       const modal = document.getElementById("newProfileModal");
       const input = document.getElementById("newProfileNameInput");
-      modal.classList.add("active");
-      input.value = "";
-      input.focus();
+      if (modal && input) {
+        modal.classList.add("active");
+        input.value = "";
+        input.focus();
+      }
     }
 
     function closeNewProfileModal() {
-      document.getElementById("newProfileModal").classList.remove("active");
+      const modal = document.getElementById("newProfileModal");
+      if (modal) modal.classList.remove("active");
     }
 
     function createNewProfile() {
       const input = document.getElementById("newProfileNameInput");
+      if (!input) return;
       const name = input.value.trim();
       if (!name) return;
 
@@ -1346,6 +1378,8 @@
       saveActiveProfileData();
       renderProfileSelector();
       loadActiveProfileData();
+      populateRulesDropdown();
+      renderAcademyScrolls();
       updateUI();
       closeNewProfileModal();
       renderProblem();
@@ -1369,7 +1403,7 @@
 
     function generateProblem() {
       const visualElem = document.getElementById("visualCounter");
-      visualElem.textContent = "";
+      if (visualElem) visualElem.textContent = "";
 
       // 1. PRESCHOOL (Reid)
       if (currentGrade === "preschool") {
@@ -1382,22 +1416,22 @@
 
         if (chosen === "count") {
           const count = Math.floor(Math.random() * 7) + 1;
-          visualElem.textContent = icon.repeat(count);
+          if (visualElem) visualElem.textContent = icon.repeat(count);
           return { text: `Count the ${icon}!`, subText: `Point and count one by one!`, answer: count, hint: `Count out loud: 1, 2, 3... until you reach the end!`, rule: "count" };
         } else if (chosen === "add_5") {
           const a = Math.floor(Math.random() * 4) + 1;
           const b = Math.floor(Math.random() * (5 - a)) + 1;
-          visualElem.textContent = `${icon.repeat(a)}  +${icon.repeat(b)}`;
+          if (visualElem) visualElem.textContent = `${icon.repeat(a)}  +${icon.repeat(b)}`;
           return { text: `${a} +${b}`, subText: `Hold up ${a} fingers, add${b} more!`, answer: a + b, hint: `Start at ${a} and count forward${b} more!`, rule: "add_5" };
         } else if (chosen === "sub_5") {
           const a = Math.floor(Math.random() * 4) + 2;
           const b = Math.floor(Math.random() * (a - 1)) + 1;
-          visualElem.textContent = `${icon.repeat(a)}  (take away${b})`;
+          if (visualElem) visualElem.textContent = `${icon.repeat(a)}  (take away${b})`;
           return { text: `${a} -${b}`, subText: `Start with ${a}, take away${b}!`, answer: a - b, hint: `Hold up ${a} fingers and take away${b}!`, rule: "sub_5" };
         } else {
           const a = Math.floor(Math.random() * 6) + 2;
           const b = Math.floor(Math.random() * (10 - a)) + 1;
-          visualElem.textContent = `${icon.repeat(a)}  +${icon.repeat(b)}`;
+          if (visualElem) visualElem.textContent = `${icon.repeat(a)}  +${icon.repeat(b)}`;
           return { text: `${a} +${b}`, subText: `How many to make ten?`, answer: a + b, hint: `Count on starting from ${a}!`, rule: "add_10" };
         }
       }
@@ -1695,39 +1729,59 @@
           };
         }
       }
+
+      return { text: "10 + 10", subText: "", answer: 20, hint: "10 + 10 = 20", rule: "mixed" };
     }
 
     function renderProblem() {
       currentProblem = generateProblem();
-      document.getElementById("problemDisplay").textContent = currentProblem.text;
-      document.getElementById("problemSubDisplay").textContent = currentProblem.subText || "";
-      document.getElementById("answerInput").value = "";
-      document.getElementById("hintCard").classList.remove("show");
-      document.getElementById("hintBody").textContent = currentProblem.hint;
+      const probElem = document.getElementById("problemDisplay");
+      if (probElem) probElem.textContent = currentProblem.text;
+      
+      const subElem = document.getElementById("problemSubDisplay");
+      if (subElem) subElem.textContent = currentProblem.subText || "";
 
-      if (currentGrade === "grade4") {
-        const roster = GRADE_NINJAS[currentGrade] || GRADE_NINJAS.grade4;
-        const currentActive = roster.find(n => n.name === equippedNinja) || roster[0];
-        document.getElementById("companionSpeech").textContent = currentActive.shout || "“Strike with focus, ninja!”";
-      } else if (currentProblem.leadingPrompt) {
-        document.getElementById("companionSpeech").textContent = currentProblem.leadingPrompt;
+      const input = document.getElementById("answerInput");
+      if (input) input.value = "";
+
+      const hintCard = document.getElementById("hintCard");
+      if (hintCard) hintCard.classList.remove("show");
+
+      const hintBody = document.getElementById("hintBody");
+      if (hintBody) hintBody.textContent = currentProblem.hint;
+
+      const speech = document.getElementById("companionSpeech");
+      if (speech) {
+        if (currentGrade === "grade4") {
+          const roster = GRADE_NINJAS[currentGrade] || GRADE_NINJAS.grade4;
+          const currentActive = roster.find(n => n.name === equippedNinja) || roster[0];
+          speech.textContent = currentActive.shout || "“Strike with focus, ninja!”";
+        } else if (currentProblem.leadingPrompt) {
+          speech.textContent = currentProblem.leadingPrompt;
+        } else {
+          speech.textContent = "“Focus your ninja mind!”";
+        }
       }
     }
 
     function toggleHint() {
-      document.getElementById("hintCard").classList.toggle("show");
+      const hintCard = document.getElementById("hintCard");
+      if (hintCard) hintCard.classList.toggle("show");
     }
 
     function padPress(num) {
-      document.getElementById("answerInput").value += num;
+      const input = document.getElementById("answerInput");
+      if (input) input.value += num;
     }
 
     function padClear() {
-      document.getElementById("answerInput").value = "";
+      const input = document.getElementById("answerInput");
+      if (input) input.value = "";
     }
 
     function submitAnswer() {
       const input = document.getElementById("answerInput");
+      if (!input || !currentProblem) return;
       const val = parseFloat(input.value);
       if (isNaN(val)) return;
 
@@ -1751,24 +1805,30 @@
         ruleXP[rKey] = (ruleXP[rKey] || 0) + gained;
 
         currentStreak++;
-        document.getElementById("streakCount").textContent = currentStreak;
+        const streakElem = document.getElementById("streakCount");
+        if (streakElem) streakElem.textContent = currentStreak;
         
-        fig.classList.remove("attack", "hit");
-        void fig.offsetWidth;
-        fig.classList.add("attack");
+        if (fig) {
+          fig.classList.remove("attack", "hit");
+          void fig.offsetWidth;
+          fig.classList.add("attack");
+        }
 
-        speech.textContent = currentActive.shout || "“DIRECT STRIKE! Precision landing!”";
+        if (speech) speech.textContent = currentActive.shout || "“DIRECT STRIKE! Precision landing!”";
         renderProblem();
       } else {
         playBeep(220, 0.2);
         currentStreak = 0;
-        document.getElementById("streakCount").textContent = 0;
+        const streakElem = document.getElementById("streakCount");
+        if (streakElem) streakElem.textContent = 0;
 
-        fig.classList.remove("attack", "hit");
-        void fig.offsetWidth;
-        fig.classList.add("hit");
+        if (fig) {
+          fig.classList.remove("attack", "hit");
+          void fig.offsetWidth;
+          fig.classList.add("hit");
+        }
 
-        speech.textContent = `“Stay centered! Correct answer was ${currentProblem.answer}.”`;
+        if (speech) speech.textContent = `“Stay centered! Correct answer was ${currentProblem.answer}.”`;
         toggleHint();
       }
 
@@ -1780,8 +1840,9 @@
     function switchTab(tabId) {
       document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
       document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
-      document.getElementById(tabId).classList.add("active");
-      const targetBtn = Array.from(document.querySelectorAll(".nav-btn")).find(b => b.getAttribute("onclick").includes(tabId));
+      const p = document.getElementById(tabId);
+      if (p) p.classList.add("active");
+      const targetBtn = Array.from(document.querySelectorAll(".nav-btn")).find(b => b.getAttribute("onclick") && b.getAttribute("onclick").includes(tabId));
       if (targetBtn) targetBtn.classList.add("active");
     }
 
@@ -1799,34 +1860,44 @@
       const nextNinja = overallNinjas.find(n => n.reqXP > playerXP) || overallNinjas[overallNinjas.length - 1];
 
       const pct = Math.min(100, Math.round((playerXP / Math.max(1, (nextNinja ? nextNinja.reqXP : 100))) * 100));
-      document.getElementById("xpFill").style.width = `${pct}%`;
-      document.getElementById("xpValue").textContent = `${playerXP} XP`;
+      const fill = document.getElementById("xpFill");
+      if (fill) fill.style.width = `${pct}%`;
+
+      const val = document.getElementById("xpValue");
+      if (val) val.textContent = `${playerXP} XP`;
 
       const current = roster.find(n => n.name === equippedNinja) || roster[0];
-      document.getElementById("activeNinjaName").textContent = current.name;
+      const nameElem = document.getElementById("activeNinjaName");
+      if (nameElem) nameElem.textContent = current.name;
 
       const aura = document.getElementById("ninjaAura");
       const fig = document.getElementById("ninjaFigure");
       const figSvg = document.getElementById("ninjaFigureSvg");
       
-      aura.style.background = current.color || "#6366f1";
-      fig.style.borderColor = current.color || "#6366f1";
-      figSvg.innerHTML = getNinjaSvg(current.color, current.headwear, current.weapon);
+      if (aura) aura.style.background = current.color || "#6366f1";
+      if (fig) fig.style.borderColor = current.color || "#6366f1";
+      if (figSvg) figSvg.innerHTML = getNinjaSvg(current.color, current.headwear, current.weapon);
 
       const emblem = document.getElementById("activeEmblem");
-      emblem.style.borderColor = current.color || "#6366f1";
-      emblem.innerHTML = `<span style="font-size:0.9rem;">⚔️</span>`;
+      if (emblem) {
+        emblem.style.borderColor = current.color || "#6366f1";
+        emblem.innerHTML = `<span style="font-size:0.9rem;">⚔️</span>`;
+      }
 
       renderRoster();
     }
 
     function renderRoster() {
       const container = document.getElementById("rosterContainer");
+      if (!container) return;
       container.innerHTML = "";
 
       const roster = GRADE_NINJAS[currentGrade] || GRADE_NINJAS.grade4;
-      document.getElementById("dojoHeading").textContent = `${(GRADE_CONFIG[currentGrade] || GRADE_CONFIG.grade4).title} Dojo`;
-      document.getElementById("dojoSubheading").textContent = `${roster.length} Champions Available`;
+      const head = document.getElementById("dojoHeading");
+      if (head) head.textContent = `${(GRADE_CONFIG[currentGrade] || GRADE_CONFIG.grade4).title} Dojo`;
+
+      const sub = document.getElementById("dojoSubheading");
+      if (sub) sub.textContent = `${roster.length} Champions Available`;
 
       roster.forEach(n => {
         const unlocked = isNinjaUnlocked(n);
@@ -1866,7 +1937,7 @@
       if (!APPS_SCRIPT_URL) return;
 
       const syncLabel = document.getElementById("syncText");
-      syncLabel.textContent = "Syncing to cloud...";
+      if (syncLabel) syncLabel.textContent = "Syncing to cloud...";
 
       const accuracyPct = totalSolved > 0 ? Math.round((totalCorrect / totalSolved) * 100) + "%" : "100%";
 
@@ -1893,9 +1964,9 @@
           headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify(payload)
         });
-        syncLabel.textContent = "Saved to Google Sheets ✓";
+        if (syncLabel) syncLabel.textContent = "Saved to Google Sheets ✓";
       } catch (err) {
-        syncLabel.textContent = "Saved locally";
+        if (syncLabel) syncLabel.textContent = "Saved locally";
       }
     }
 
@@ -1951,7 +2022,7 @@
     document.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         const modal = document.getElementById("newProfileModal");
-        if (modal.classList.contains("active")) {
+        if (modal && modal.classList.contains("active")) {
           createNewProfile();
         } else if (document.getElementById("practice").classList.contains("active")) {
           submitAnswer();
@@ -1961,10 +2032,15 @@
       }
     });
 
-    // ROCK-SOLID INITIALIZATION
-    loadActiveProfileData();
-    updateUI();
-    renderProblem();
+    // ROBUST BOOTSTRAP PIPELINE
+    window.addEventListener("DOMContentLoaded", () => {
+      renderProfileSelector();
+      loadActiveProfileData();
+      populateRulesDropdown();
+      renderAcademyScrolls();
+      updateUI();
+      renderProblem();
+    });
   </script>
 </body>
 </html>
