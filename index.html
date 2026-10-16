@@ -815,7 +815,7 @@
         <button class="add-profile-btn" onclick="openNewProfileModal()" title="Add New Ninja">+</button>
       </div>
 
-      <!-- ON-DEMAND SYNC BUTTONS -->
+      <!-- RECOVERY CONTROLS -->
       <button class="sync-action-btn" onclick="manualPushToCloud()" title="Push all earned progress on this device to Google Sheets">
         ☁️ Backup
       </button>
@@ -1008,6 +1008,9 @@
     };
 
     let profilesList = JSON.parse(localStorage.getItem("math_ninja_profiles") || '["Aaron", "Micah", "Reid"]');
+    profilesList = profilesList.filter(name => isNaN(name) && !name.toLowerCase().includes("xp") && !name.toLowerCase().includes("name"));
+    if (profilesList.length === 0) profilesList = ["Aaron", "Micah", "Reid"];
+
     let currentProfile = localStorage.getItem("math_ninja_current_profile") || "Aaron";
     if (!profilesList.includes(currentProfile)) currentProfile = profilesList[0] || "Aaron";
 
@@ -1072,95 +1075,95 @@
         title: "Preschool (Reid)",
         rules: [
           { id: "mixed", name: "Mixed Preschool" },
-          { id: "count", name: "🍎 Counting Objects" },
-          { id: "add_5", name: "➕ Add within 5" },
-          { id: "sub_5", name: "➖ Take Away within 5" },
-          { id: "add_10", name: "⭐ Add to 10" }
+          { id: "pre_count", name: "🍎 Counting Objects" },
+          { id: "pre_add_5", name: "➕ Add within 5" },
+          { id: "pre_sub_5", name: "➖ Take Away within 5" },
+          { id: "pre_add_10", name: "⭐ Add to 10" }
         ],
         academy: [
-          { id: "count", icon: "🍎", title: "Counting Apples", desc: "Count each item carefully one-by-one with your finger!", example: "🍎 🍎 🍎 = 3" },
-          { id: "add_5", icon: "➕", title: "Adding with Hands", desc: "Hold up fingers on both hands and count them all together!", example: "3 + 2 = 5" },
-          { id: "sub_5", icon: "➖", title: "Eating the Snacks", desc: "If you have 4 berries and eat 1, how many are still left?", example: "4 - 1 = 3" },
-          { id: "add_10", icon: "⭐", title: "Two-Hand Ten", desc: "Put all ten fingers up! 5 on one hand, 5 on the other makes 10!", example: "6 + 4 = 10" }
+          { id: "pre_count", icon: "🍎", title: "Counting Apples", desc: "Count each item carefully one-by-one with your finger!", example: "🍎 🍎 🍎 = 3" },
+          { id: "pre_add_5", icon: "➕", title: "Adding with Hands", desc: "Hold up fingers on both hands and count them all together!", example: "3 + 2 = 5" },
+          { id: "pre_sub_5", icon: "➖", title: "Eating the Snacks", desc: "If you have 4 berries and eat 1, how many are still left?", example: "4 - 1 = 3" },
+          { id: "pre_add_10", icon: "⭐", title: "Two-Hand Ten", desc: "Put all ten fingers up! 5 on one hand, 5 on the other makes 10!", example: "6 + 4 = 10" }
         ]
       },
       grade1: {
         title: "1st Grade Academy",
         rules: [
           { id: "mixed", name: "Mixed 1st Grade" },
-          { id: "add_sub_20", name: "➕ Facts within 20" },
-          { id: "missing_addend", name: "❓ Missing Addends (? + 6 = 14)" },
-          { id: "tens_ones", name: "🔟 Place Value (10 + 7)" },
-          { id: "comp_20", name: "⚖️ Balance within 20" }
+          { id: "g1_add_sub_20", name: "➕ Facts within 20" },
+          { id: "g1_missing_addend", name: "❓ Missing Addends (? + 6 = 14)" },
+          { id: "g1_tens_ones", name: "🔟 Place Value (10 + 7)" },
+          { id: "g1_comp_20", name: "⚖️ Balance within 20" }
         ],
         academy: [
-          { id: "missing_addend", icon: "❓", title: "The Missing Addend", desc: "To find what's missing in 8 + ? = 14, count up from 8 to 14!", example: "8 + [6] = 14" },
-          { id: "tens_ones", icon: "🔟", title: "Tens & Ones Power", desc: "A bundle of 10 plus single ones makes numbers in the teens in a snap!", example: "10 + 7 = 17" },
-          { id: "add_sub_20", icon: "➕", title: "Count On from the Big Number", desc: "Always start at the bigger number in your mind, then count on the smaller one!", example: "12 + 5 = 17" }
+          { id: "g1_missing_addend", icon: "❓", title: "The Missing Addend", desc: "To find what's missing in 8 + ? = 14, count up from 8 to 14!", example: "8 + [6] = 14" },
+          { id: "g1_tens_ones", icon: "🔟", title: "Tens & Ones Power", desc: "A bundle of 10 plus single ones makes numbers in the teens in a snap!", example: "10 + 7 = 17" },
+          { id: "g1_add_sub_20", icon: "➕", title: "Count On from the Big Number", desc: "Always start at the bigger number in your mind, then count on the smaller one!", example: "12 + 5 = 17" }
         ]
       },
       grade2: {
         title: "2nd Grade (Micah)",
         rules: [
           { id: "mixed", name: "Mixed 2nd Grade" },
-          { id: "skip_count", name: "🦘 Skip Counting (Find the Next Number)" },
-          { id: "make_ten", name: "🎯 Make Ten (Bridge to 10)" },
-          { id: "doubles", name: "👯 Doubles & Near-Doubles" },
-          { id: "mult_intro", name: "✖️ Basic Sets & Groups" }
+          { id: "g2_skip_count", name: "🦘 Skip Counting (Find the Next Number)" },
+          { id: "g2_make_ten", name: "🎯 Make Ten (Bridge to 10)" },
+          { id: "g2_doubles", name: "👯 Doubles & Near-Doubles" },
+          { id: "g2_mult_intro", name: "✖️ Basic Sets & Groups" }
         ],
         academy: [
-          { id: "skip_count", icon: "🦘", title: "Skip Counting Sequence", desc: "Keep the cadence going! Count up by 2s, 5s, or 10s to find the next missing number in line.", example: "5, 10, 15, 20, 25, ___ → 30!" },
-          { id: "make_ten", icon: "🎯", title: "Bridge to 10", desc: "Turn the bigger number into 10! Borrow from the other number to make 10, then add the leftovers.", example: "8 + 7 → 8 + (2 + 5) → 10 + 5 = 15" },
-          { id: "doubles", icon: "👯", title: "Doubles Fast-Strike", desc: "Remember twins: 6+6=12, 7+7=14, 8+8=16. For 7+8, do 7+7 and add 1!", example: "7 + 8 → (7 + 7) + 1 = 15" },
-          { id: "mult_intro", icon: "✖️", title: "Equal Groups & Sets", desc: "Equal groups are just repeated addition: 3 groups of 4!", example: "3 groups of 4 = 4 + 4 + 4 = 12" }
+          { id: "g2_skip_count", icon: "🦘", title: "Skip Counting Sequence", desc: "Keep the cadence going! Count up by 2s, 5s, or 10s to find the next missing number in line.", example: "5, 10, 15, 20, 25, ___ → 30!" },
+          { id: "g2_make_ten", icon: "🎯", title: "Bridge to 10", desc: "Turn the bigger number into 10! Borrow from the other number to make 10, then add the leftovers.", example: "8 + 7 → 8 + (2 + 5) → 10 + 5 = 15" },
+          { id: "g2_doubles", icon: "👯", title: "Doubles Fast-Strike", desc: "Remember twins: 6+6=12, 7+7=14, 8+8=16. For 7+8, do 7+7 and add 1!", example: "7 + 8 → (7 + 7) + 1 = 15" },
+          { id: "g2_mult_intro", icon: "✖️", title: "Equal Groups & Sets", desc: "Equal groups are just repeated addition: 3 groups of 4!", example: "3 groups of 4 = 4 + 4 + 4 = 12" }
         ]
       },
       grade3: {
         title: "3rd Grade Mastery",
         rules: [
           { id: "mixed", name: "Mixed 3rd Grade" },
-          { id: "facts_12", name: "✖️ Core Times Tables (0–12)" },
-          { id: "div_inverse", name: "➗ Inverse Division (48 ÷ 6)" },
-          { id: "distrib_intro", name: "🪓 Factor Breakup (7 × 8)" },
-          { id: "multi_steps", name: "🧩 Multi-Step Basics" }
+          { id: "g3_facts_12", name: "✖️ Core Times Tables (0–12)" },
+          { id: "g3_div_inverse", name: "➗ Inverse Division (48 ÷ 6)" },
+          { id: "g3_distrib_intro", name: "🪓 Factor Breakup (7 × 8)" },
+          { id: "g3_multi_steps", name: "🧩 Multi-Step Basics" }
         ],
         academy: [
-          { id: "div_inverse", icon: "➗", title: "Division as Reverse Multiplication", desc: "Ask: 'What times 6 equals 48?' That's 8!", example: "48 ÷ 6 = 8 (since 8 × 6 = 48)" },
-          { id: "distrib_intro", icon: "🪓", title: "Break Tricky Multipliers into 5 + 2", desc: "To multiply by 7: multiply by 5, multiply by 2, and add them together!", example: "7 × 8 = (5 × 8) + (2 × 8) = 40 + 16 = 56" },
-          { id: "facts_12", icon: "✖️", title: "The 9s Finger / Subtraction Trick", desc: "To multiply 9 × 7: do 10 × 7 = 70, then subtract 7 to get 63!", example: "9 × 7 = 70 - 7 = 63" }
+          { id: "g3_div_inverse", icon: "➗", title: "Division as Reverse Multiplication", desc: "Ask: 'What times 6 equals 48?' That's 8!", example: "48 ÷ 6 = 8 (since 8 × 6 = 48)" },
+          { id: "g3_distrib_intro", icon: "🪓", title: "Break Tricky Multipliers into 5 + 2", desc: "To multiply by 7: multiply by 5, multiply by 2, and add them together!", example: "7 × 8 = (5 × 8) + (2 × 8) = 40 + 16 = 56" },
+          { id: "g3_facts_12", icon: "✖️", title: "The 9s Finger / Subtraction Trick", desc: "To multiply 9 × 7: do 10 × 7 = 70, then subtract 7 to get 63!", example: "9 × 7 = 70 - 7 = 63" }
         ]
       },
       grade4: {
         title: "4th Grade (Aaron)",
         rules: [
           { id: "mixed", name: "Mixed (All 4th Grade Rules)" },
-          { id: "zeros", name: "0️⃣ The Zero Hero (e.g. 30 × 40)" },
-          { id: "eleven", name: "🪄 The 11s Magic Trick (e.g. 35 × 11)" },
-          { id: "split", name: "🪓 The Break & Split (e.g. 31 × 35)" },
-          { id: "double_half", name: "⚖️ Double & Halve (e.g. 15 × 24)" },
-          { id: "ending_five", name: "⚡ Square Ending in 5 (e.g. 35 × 35)" }
+          { id: "g4_zeros", name: "0️⃣ The Zero Hero (e.g. 30 × 40)" },
+          { id: "g4_eleven", name: "🪄 The 11s Magic Trick (e.g. 35 × 11)" },
+          { id: "g4_split", name: "🪓 The Break & Split (e.g. 31 × 35)" },
+          { id: "g4_double_half", name: "⚖️ Double & Halve (e.g. 15 × 24)" },
+          { id: "g4_ending_five", name: "⚡ Square Ending in 5 (e.g. 35 × 35)" }
         ],
         academy: [
-          { id: "zeros", icon: "0️⃣", title: "The Zero Hero", desc: "Multiply the non-zero front digits first, then count and attach all the zeros!", example: "30 × 40 → (3 × 4) & 00 = 1,200" },
-          { id: "eleven", icon: "🪄", title: "The 11s Magic Trick", desc: "Pull the two digits apart, sum them (3 + 5 = 8), and place that sum in the middle!", example: "35 × 11 → 3 [3+5] 5 = 385" },
-          { id: "split", icon: "🪓", title: "The Break & Split", desc: "Split a tricky factor into friendly tens and ones to make mental addition easy!", example: "31 × 35 → (30 × 35) + (1 × 35) = 1,085" },
-          { id: "double_half", icon: "⚖️", title: "Double & Halve", desc: "Double the number ending in 5 and halve the even number to make simple products!", example: "15 × 24 → 30 × 12 = 360" },
-          { id: "ending_five", icon: "⚡", title: "Square Ending in 5", desc: "Multiply the tens digit by the next integer (3 × 4 = 12), then append 25 to the end!", example: "35 × 35 → (3 × 4) & 25 = 1,225" }
+          { id: "g4_zeros", icon: "0️⃣", title: "The Zero Hero", desc: "Multiply the non-zero front digits first, then count and attach all the zeros!", example: "30 × 40 → (3 × 4) & 00 = 1,200" },
+          { id: "g4_eleven", icon: "🪄", title: "The 11s Magic Trick", desc: "Pull the two digits apart, sum them (3 + 5 = 8), and place that sum in the middle!", example: "35 × 11 → 3 [3+5] 5 = 385" },
+          { id: "g4_split", icon: "🪓", title: "The Break & Split", desc: "Split a tricky factor into friendly tens and ones to make mental addition easy!", example: "31 × 35 → (30 × 35) + (1 × 35) = 1,085" },
+          { id: "g4_double_half", icon: "⚖️", title: "Double & Halve", desc: "Double the number ending in 5 and halve the even number to make simple products!", example: "15 × 24 → 30 × 12 = 360" },
+          { id: "g4_ending_five", icon: "⚡", title: "Square Ending in 5", desc: "Multiply the tens digit by the next integer (3 × 4 = 12), then append 25 to the end!", example: "35 × 35 → (3 × 4) & 25 = 1,225" }
         ]
       },
       grade5: {
         title: "5th Grade Champions",
         rules: [
           { id: "mixed", name: "Mixed 5th Grade" },
-          { id: "powers_ten", name: "🚀 Shift by Powers of 10 (4.5 × 10)" },
-          { id: "multi_digit", name: "⚔️ 3-Digit × 1-Digit (315 × 3)" },
-          { id: "pemdas", name: "📐 Order of Operations (PEMDAS)" },
-          { id: "decimals", name: "💎 Decimal Arithmetic" }
+          { id: "g5_powers_ten", name: "🚀 Shift by Powers of 10 (4.5 × 10)" },
+          { id: "g5_multi_digit", name: "⚔️ 3-Digit × 1-Digit (315 × 3)" },
+          { id: "g5_pemdas", name: "📐 Order of Operations (PEMDAS)" },
+          { id: "g5_decimals", name: "💎 Decimal Arithmetic" }
         ],
         academy: [
-          { id: "powers_ten", icon: "🚀", title: "Powers of 10 Decimal Shifts", desc: "Multiplying by 10 moves the decimal one space right. Dividing moves it left!", example: "4.5 × 10 = 45 | 12.8 × 100 = 1,280" },
-          { id: "pemdas", icon: "📐", title: "Order of Operations Priority", desc: "Multiplication and Division always strike before Addition and Subtraction!", example: "5 + (4 × 6) = 5 + 24 = 29" },
-          { id: "multi_digit", icon: "⚔️", title: "Triple-Digit Mental Decomposition", desc: "Break 315 × 3 into (300 × 3) + (10 × 3) + (5 × 3) = 900 + 30 + 15 = 945!", example: "315 × 3 = 900 + 30 + 15 = 945" }
+          { id: "g5_powers_ten", icon: "🚀", title: "Powers of 10 Decimal Shifts", desc: "Multiplying by 10 moves the decimal one space right. Dividing moves it left!", example: "4.5 × 10 = 45 | 12.8 × 100 = 1,280" },
+          { id: "g5_pemdas", icon: "📐", title: "Order of Operations Priority", desc: "Multiplication and Division always strike before Addition and Subtraction!", example: "5 + (4 × 6) = 5 + 24 = 29" },
+          { id: "g5_multi_digit", icon: "⚔️", title: "Triple-Digit Mental Decomposition", desc: "Break 315 × 3 into (300 × 3) + (10 × 3) + (5 × 3) = 900 + 30 + 15 = 945!", example: "315 × 3 = 900 + 30 + 15 = 945" }
         ]
       }
     };
@@ -1198,50 +1201,49 @@
     ];
 
     function buildGradeNinjas(gradeId) {
-  return BASE_GRADE_NINJAS.map(ninja => {
-    let ruleKey = ninja.ruleKey;
-    let ruleLabel = ninja.ruleLabel;
+      return BASE_GRADE_NINJAS.map(ninja => {
+        let ruleKey = ninja.ruleKey;
+        let ruleLabel = ninja.ruleLabel;
 
-    if (gradeId === "preschool") {
-      if (ruleKey === "rule_1") { ruleKey = "pre_count"; ruleLabel = "🍎 Counting"; }
-      else if (ruleKey === "rule_2") { ruleKey = "pre_sub_5"; ruleLabel = "➖ Take Away"; }
-      else if (ruleKey === "rule_3") { ruleKey = "pre_add_5"; ruleLabel = "➕ Add to 5"; }
-      else if (ruleKey === "rule_4") { ruleKey = "pre_add_10"; ruleLabel = "⭐ Add to 10"; }
-    } else if (gradeId === "grade1") {
-      if (ruleKey === "rule_1") { ruleKey = "g1_add_sub_20"; ruleLabel = "➕ Add/Sub 20"; }
-      else if (ruleKey === "rule_2") { ruleKey = "g1_missing_addend"; ruleLabel = "❓ Missing Addend"; }
-      else if (ruleKey === "rule_3") { ruleKey = "g1_tens_ones"; ruleLabel = "🔟 Tens & Ones"; }
-      else if (ruleKey === "rule_4") { ruleKey = "g1_comp_20"; ruleLabel = "⚖️ Balance within 20"; }
-    } else if (gradeId === "grade2") {
-      if (ruleKey === "rule_1") { ruleKey = "g2_skip_count"; ruleLabel = "🦘 Skip Count"; }
-      else if (ruleKey === "rule_2") { ruleKey = "g2_make_ten"; ruleLabel = "🎯 Make Ten"; }
-      else if (ruleKey === "rule_3") { ruleKey = "g2_doubles"; ruleLabel = "👯 Doubles"; }
-      else if (ruleKey === "rule_4") { ruleKey = "g2_mult_intro"; ruleLabel = "✖️ Basic Sets"; }
-    } else if (gradeId === "grade3") {
-      if (ruleKey === "rule_1") { ruleKey = "g3_facts_12"; ruleLabel = "✖️ Times Tables"; }
-      else if (ruleKey === "rule_2") { ruleKey = "g3_div_inverse"; ruleLabel = "➗ Inverse Division"; }
-      else if (ruleKey === "rule_3") { ruleKey = "g3_distrib_intro"; ruleLabel = "🪓 Breakup Method"; }
-      else if (ruleKey === "rule_4") { ruleKey = "g3_multi_steps"; ruleLabel = "🧩 Multi-Steps"; }
-    } else if (gradeId === "grade4") {
-      if (ruleKey === "rule_1") { ruleKey = "g4_zeros"; ruleLabel = "0️⃣ Zero Hero"; }
-      else if (ruleKey === "rule_2") { ruleKey = "g4_eleven"; ruleLabel = "🪄 11s Magic"; }
-      else if (ruleKey === "rule_3") { ruleKey = "g4_split"; ruleLabel = "🪓 Break & Split"; }
-      else if (ruleKey === "rule_4") { ruleKey = "g4_ending_five"; ruleLabel = "⚡ Square 5s"; }
-    } else if (gradeId === "grade5") {
-      if (ruleKey === "rule_1") { ruleKey = "g5_powers_ten"; ruleLabel = "🚀 Powers of 10"; }
-      else if (ruleKey === "rule_2") { ruleKey = "g5_multi_digit"; ruleLabel = "⚔️ 3-Digit × 1-Digit"; }
-      else if (ruleKey === "rule_3") { ruleKey = "g5_pemdas"; ruleLabel = "📐 Order Operations"; }
-      else if (ruleKey === "rule_4") { ruleKey = "g5_decimals"; ruleLabel = "💎 Decimals"; }
+        if (gradeId === "preschool") {
+          if (ruleKey === "rule_1") { ruleKey = "pre_count"; ruleLabel = "🍎 Counting"; }
+          else if (ruleKey === "rule_2") { ruleKey = "pre_sub_5"; ruleLabel = "➖ Take Away"; }
+          else if (ruleKey === "rule_3") { ruleKey = "pre_add_5"; ruleLabel = "➕ Add to 5"; }
+          else if (ruleKey === "rule_4") { ruleKey = "pre_add_10"; ruleLabel = "⭐ Add to 10"; }
+        } else if (gradeId === "grade1") {
+          if (ruleKey === "rule_1") { ruleKey = "g1_add_sub_20"; ruleLabel = "➕ Add/Sub 20"; }
+          else if (ruleKey === "rule_2") { ruleKey = "g1_missing_addend"; ruleLabel = "❓ Missing Addend"; }
+          else if (ruleKey === "rule_3") { ruleKey = "g1_tens_ones"; ruleLabel = "🔟 Tens & Ones"; }
+          else if (ruleKey === "rule_4") { ruleKey = "g1_comp_20"; ruleLabel = "⚖️ Balance within 20"; }
+        } else if (gradeId === "grade2") {
+          if (ruleKey === "rule_1") { ruleKey = "g2_skip_count"; ruleLabel = "🦘 Skip Count"; }
+          else if (ruleKey === "rule_2") { ruleKey = "g2_make_ten"; ruleLabel = "🎯 Make Ten"; }
+          else if (ruleKey === "rule_3") { ruleKey = "g2_doubles"; ruleLabel = "👯 Doubles"; }
+          else if (ruleKey === "rule_4") { ruleKey = "g2_mult_intro"; ruleLabel = "✖️ Basic Sets"; }
+        } else if (gradeId === "grade3") {
+          if (ruleKey === "rule_1") { ruleKey = "g3_facts_12"; ruleLabel = "✖️ Times Tables"; }
+          else if (ruleKey === "rule_2") { ruleKey = "g3_div_inverse"; ruleLabel = "➗ Inverse Division"; }
+          else if (ruleKey === "rule_3") { ruleKey = "g3_distrib_intro"; ruleLabel = "🪓 Breakup Method"; }
+          else if (ruleKey === "rule_4") { ruleKey = "g3_multi_steps"; ruleLabel = "🧩 Multi-Steps"; }
+        } else if (gradeId === "grade4") {
+          if (ruleKey === "rule_1") { ruleKey = "g4_zeros"; ruleLabel = "0️⃣ Zero Hero"; }
+          else if (ruleKey === "rule_2") { ruleKey = "g4_eleven"; ruleLabel = "🪄 11s Magic"; }
+          else if (ruleKey === "rule_3") { ruleKey = "g4_split"; ruleLabel = "🪓 Break & Split"; }
+          else if (ruleKey === "rule_4") { ruleKey = "g4_ending_five"; ruleLabel = "⚡ Square 5s"; }
+        } else if (gradeId === "grade5") {
+          if (ruleKey === "rule_1") { ruleKey = "g5_powers_ten"; ruleLabel = "🚀 Powers of 10"; }
+          else if (ruleKey === "rule_2") { ruleKey = "g5_multi_digit"; ruleLabel = "⚔️ 3-Digit × 1-Digit"; }
+          else if (ruleKey === "rule_3") { ruleKey = "g5_pemdas"; ruleLabel = "📐 Order Operations"; }
+          else if (ruleKey === "rule_4") { ruleKey = "g5_decimals"; ruleLabel = "💎 Decimals"; }
+        }
+
+        if (ruleKey === "overall") {
+          ruleKey = `${gradeId}_overall`;
+        }
+
+        return { ...ninja, ruleKey, ruleLabel, gradeId };
+      });
     }
-
-    // Prefix overall grade champions with the grade so 2nd Grade XP doesn't unlock 3rd Grade champions
-    if (ruleKey === "overall") {
-      ruleKey = `${gradeId}_overall`;
-    }
-
-    return { ...ninja, ruleKey, ruleLabel, gradeId };
-  });
-}
 
     const GRADE_NINJAS = {
       preschool: buildGradeNinjas("preschool"),
@@ -1342,6 +1344,27 @@
       localStorage.setItem("math_ninja_profiles", JSON.stringify(profilesList));
     }
 
+    // SILK-SAFE JSONP PROMISE
+    function loadCloudProfilesJSONP() {
+      return new Promise((resolve, reject) => {
+        const callbackName = 'ninjaProfileCallback_' + Math.round(100000 * Math.random());
+        window[callbackName] = function(data) {
+          delete window[callbackName];
+          if (script && script.parentNode) script.parentNode.removeChild(script);
+          resolve(data);
+        };
+
+        const script = document.createElement('script');
+        script.src = `${APPS_SCRIPT_URL}?action=getProfiles&callback=${callbackName}`;
+        script.onerror = function() {
+          delete window[callbackName];
+          if (script && script.parentNode) script.parentNode.removeChild(script);
+          reject(new Error("Network / CORS error on Kindle Silk"));
+        };
+        document.body.appendChild(script);
+      });
+    }
+
     // ON-DEMAND MANUAL BACKUP: Pushes current device state directly to Sheets Col I
     async function manualPushToCloud() {
       const syncLabel = document.getElementById("syncText");
@@ -1383,8 +1406,7 @@
       if (syncLabel) syncLabel.textContent = "Checking Google Sheets for backup...";
 
       try {
-        const res = await fetch(`${APPS_SCRIPT_URL}?action=getProfiles`);
-        const json = await res.json();
+        const json = await loadCloudProfilesJSONP();
         if (json && json.status === "success" && json.profiles && json.profiles[currentProfile]) {
           const cloud = json.profiles[currentProfile];
           const backup = cloud.fullData;
@@ -1417,65 +1439,57 @@
       }
     }
 
-    // BACKGROUND SILENT PULL: Merges progress without disturbing gameplay
-  async function fetchCloudProfiles() {
-  if (!APPS_SCRIPT_URL) return;
-  const syncLabel = document.getElementById("syncText");
-  if (syncLabel) syncLabel.textContent = "Checking cloud sync...";
+    // BACKGROUND SILENT PULL: Merges progress on page startup
+    async function fetchCloudProfiles() {
+      if (!APPS_SCRIPT_URL) return;
+      const syncLabel = document.getElementById("syncText");
+      if (syncLabel) syncLabel.textContent = "Checking cloud sync...";
 
-  try {
-    const res = await fetch(`${APPS_SCRIPT_URL}?action=getProfiles`);
-    const json = await res.json();
-    if (json && json.status === "success" && json.profiles) {
-      // 1. Sanitize list: Discard any numbers or column header artifacts
-      profilesList = profilesList.filter(name => {
-        return isNaN(name) && name.toLowerCase() !== "current xp" && name.toLowerCase() !== "player name";
-      });
+      try {
+        const json = await loadCloudProfilesJSONP();
+        if (json && json.status === "success" && json.profiles) {
+          profilesList = profilesList.filter(name => isNaN(name) && !name.toLowerCase().includes("xp") && !name.toLowerCase().includes("name"));
 
-      Object.keys(json.profiles).forEach(pName => {
-        // Enforce valid name: not a number, not empty, not header
-        if (!pName || !isNaN(pName) || pName.toLowerCase().includes("xp") || pName.toLowerCase().includes("name")) return;
+          Object.keys(json.profiles).forEach(pName => {
+            if (!pName || !isNaN(pName) || pName.toLowerCase().includes("xp") || pName.toLowerCase().includes("name")) return;
 
-        const pData = json.profiles[pName];
-        let local = {};
-        try {
-          local = JSON.parse(localStorage.getItem(`math_ninja_data_${pName}`) || "{}");
-        } catch (e) {}
+            const pData = json.profiles[pName];
+            let local = {};
+            try {
+              local = JSON.parse(localStorage.getItem(`math_ninja_data_${pName}`) || "{}");
+            } catch (e) {}
 
-        const backup = pData.fullData;
-        if (backup && backup.ruleXP) {
-          local.ruleXP = local.ruleXP || {};
-          Object.keys(backup.ruleXP).forEach(r => {
-            local.ruleXP[r] = Math.max(local.ruleXP[r] || 0, backup.ruleXP[r] || 0);
+            const backup = pData.fullData;
+            if (backup && backup.ruleXP) {
+              local.ruleXP = local.ruleXP || {};
+              Object.keys(backup.ruleXP).forEach(r => {
+                local.ruleXP[r] = Math.max(local.ruleXP[r] || 0, backup.ruleXP[r] || 0);
+              });
+            }
+
+            local.xp = Math.max(Number(local.xp) || 0, Number(pData.xp) || 0);
+            if (pData.equippedNinja && !local.ninja) local.ninja = pData.equippedNinja;
+            if (pData.totalSolved) local.totalSolved = Math.max(Number(local.totalSolved) || 0, Number(pData.totalSolved) || 0);
+
+            localStorage.setItem(`math_ninja_data_${pName}`, JSON.stringify(local));
+
+            if (!profilesList.includes(pName)) profilesList.push(pName);
           });
+
+          if (!profilesList.includes(currentProfile)) currentProfile = profilesList[0] || "Aaron";
+
+          localStorage.setItem("math_ninja_profiles", JSON.stringify(profilesList));
+          localStorage.setItem("math_ninja_current_profile", currentProfile);
+
+          renderProfileSelector();
+          loadActiveProfileData();
+          updateUI();
+          if (syncLabel) syncLabel.textContent = "Google Sheets Synced ✓";
         }
-
-        local.xp = Math.max(Number(local.xp) || 0, Number(pData.xp) || 0);
-        if (pData.equippedNinja && !local.ninja) local.ninja = pData.equippedNinja;
-        if (pData.totalSolved) local.totalSolved = Math.max(Number(local.totalSolved) || 0, Number(pData.totalSolved) || 0);
-
-        localStorage.setItem(`math_ninja_data_${pName}`, JSON.stringify(local));
-
-        if (!profilesList.includes(pName)) profilesList.push(pName);
-      });
-
-      // Default back to Aaron if current profile was an artifact
-      if (!profilesList.includes(currentProfile)) {
-        currentProfile = profilesList[0] || "Aaron";
+      } catch (e) {
+        if (syncLabel) syncLabel.textContent = "Google Sheets Ready (Offline)";
       }
-
-      localStorage.setItem("math_ninja_profiles", JSON.stringify(profilesList));
-      localStorage.setItem("math_ninja_current_profile", currentProfile);
-      
-      renderProfileSelector();
-      loadActiveProfileData();
-      updateUI();
-      if (syncLabel) syncLabel.textContent = "Google Sheets Synced ✓";
     }
-  } catch (e) {
-    if (syncLabel) syncLabel.textContent = "Google Sheets Ready (Offline)";
-  }
-}
 
     function onProfileChange() {
       const select = document.getElementById("profileSelect");
@@ -1580,41 +1594,41 @@
       // 1. PRESCHOOL (Reid)
       if (currentGrade === "preschool") {
         let chosen = selectedRule === "mixed" 
-          ? ["count", "add_5", "sub_5", "add_10"][Math.floor(Math.random() * 4)] 
+          ? ["pre_count", "pre_add_5", "pre_sub_5", "pre_add_10"][Math.floor(Math.random() * 4)] 
           : selectedRule;
 
         const icons = ["🍎", "🚗", "⭐", "🐶", "🎈"];
         const icon = icons[Math.floor(Math.random() * icons.length)];
 
-        if (chosen === "count") {
+        if (chosen === "pre_count") {
           const count = Math.floor(Math.random() * 7) + 1;
           if (visualElem) visualElem.textContent = icon.repeat(count);
-          return { text: `Count the ${icon}!`, subText: `Point and count one by one!`, answer: count, hint: `Count out loud: 1, 2, 3... until you reach the end!`, rule: "count" };
-        } else if (chosen === "add_5") {
+          return { text: `Count the ${icon}!`, subText: `Point and count one by one!`, answer: count, hint: `Count out loud: 1, 2, 3... until you reach the end!`, rule: "pre_count" };
+        } else if (chosen === "pre_add_5") {
           const a = Math.floor(Math.random() * 4) + 1;
           const b = Math.floor(Math.random() * (5 - a)) + 1;
           if (visualElem) visualElem.textContent = `${icon.repeat(a)}  +${icon.repeat(b)}`;
-          return { text: `${a} +${b}`, subText: `Hold up ${a} fingers, add${b} more!`, answer: a + b, hint: `Start at ${a} and count forward${b} more!`, rule: "add_5" };
-        } else if (chosen === "sub_5") {
+          return { text: `${a} +${b}`, subText: `Hold up ${a} fingers, add${b} more!`, answer: a + b, hint: `Start at ${a} and count forward${b} more!`, rule: "pre_add_5" };
+        } else if (chosen === "pre_sub_5") {
           const a = Math.floor(Math.random() * 4) + 2;
           const b = Math.floor(Math.random() * (a - 1)) + 1;
           if (visualElem) visualElem.textContent = `${icon.repeat(a)}  (take away${b})`;
-          return { text: `${a} -${b}`, subText: `Start with ${a}, take away${b}!`, answer: a - b, hint: `Hold up ${a} fingers and take away${b}!`, rule: "sub_5" };
+          return { text: `${a} -${b}`, subText: `Start with ${a}, take away${b}!`, answer: a - b, hint: `Hold up ${a} fingers and take away${b}!`, rule: "pre_sub_5" };
         } else {
           const a = Math.floor(Math.random() * 6) + 2;
           const b = Math.floor(Math.random() * (10 - a)) + 1;
           if (visualElem) visualElem.textContent = `${icon.repeat(a)}  +${icon.repeat(b)}`;
-          return { text: `${a} +${b}`, subText: `How many to make ten?`, answer: a + b, hint: `Count on starting from ${a}!`, rule: "add_10" };
+          return { text: `${a} +${b}`, subText: `How many to make ten?`, answer: a + b, hint: `Count on starting from ${a}!`, rule: "pre_add_10" };
         }
       }
 
       // 2. 1ST GRADE
       if (currentGrade === "grade1") {
         let chosen = selectedRule === "mixed" 
-          ? ["add_sub_20", "missing_addend", "tens_ones", "comp_20"][Math.floor(Math.random() * 4)] 
+          ? ["g1_add_sub_20", "g1_missing_addend", "g1_tens_ones", "g1_comp_20"][Math.floor(Math.random() * 4)] 
           : selectedRule;
 
-        if (chosen === "missing_addend") {
+        if (chosen === "g1_missing_addend") {
           const a = Math.floor(Math.random() * 7) + 5;
           const missing = Math.floor(Math.random() * 6) + 3;
           const total = a + missing;
@@ -1626,9 +1640,9 @@
             leadingPrompt: `“What number completes the sum?”`,
             answer: missing,
             hint: `Start at ${a} and count up to${total}. You added ${missing}!`,
-            rule: "missing_addend"
+            rule: "g1_missing_addend"
           };
-        } else if (chosen === "tens_ones") {
+        } else if (chosen === "g1_tens_ones") {
           const ones = Math.floor(Math.random() * 9) + 1;
           return {
             text: `10 + ${ones}`,
@@ -1636,9 +1650,9 @@
             leadingPrompt: `“10 plus single units gives the teen number!”`,
             answer: 10 + ones,
             hint: `10 + ${ones} puts ${ones} in the ones place:${10 + ones}!`,
-            rule: "tens_ones"
+            rule: "g1_tens_ones"
           };
-        } else if (chosen === "comp_20") {
+        } else if (chosen === "g1_comp_20") {
           const a = Math.floor(Math.random() * 8) + 11;
           const sub = Math.floor(Math.random() * 5) + 2;
           return {
@@ -1647,7 +1661,7 @@
             leadingPrompt: `“Take away ${sub}!”`,
             answer: a - sub,
             hint: `Count backwards: ${a - 1},${a - 2}...`,
-            rule: "comp_20"
+            rule: "g1_comp_20"
           };
         } else {
           const a = Math.floor(Math.random() * 8) + 7;
@@ -1658,7 +1672,7 @@
             leadingPrompt: `“Add the numbers!”`,
             answer: a + b,
             hint: `Start at ${a} and count on ${b} more:${a + b}!`,
-            rule: "add_sub_20"
+            rule: "g1_add_sub_20"
           };
         }
       }
@@ -1666,10 +1680,10 @@
       // 3. 2ND GRADE (Micah)
       if (currentGrade === "grade2") {
         let chosen = selectedRule === "mixed" 
-          ? ["skip_count", "make_ten", "doubles", "mult_intro"][Math.floor(Math.random() * 4)] 
+          ? ["g2_skip_count", "g2_make_ten", "g2_doubles", "g2_mult_intro"][Math.floor(Math.random() * 4)] 
           : selectedRule;
 
-        if (chosen === "skip_count") {
+        if (chosen === "g2_skip_count") {
           const step = [2, 5, 10][Math.floor(Math.random() * 3)];
           const countLen = Math.floor(Math.random() * 4) + 3;
           let seq = [];
@@ -1682,9 +1696,9 @@
             leadingPrompt: `“Keep the rhythm going! Count up by ${step}s:${seq.slice(-2).join(", ")}... what's next?”`,
             answer: nextVal,
             hint: `We are counting by ${step}s. Take ${seq[seq.length - 1]} and add${step}!`,
-            rule: "skip_count"
+            rule: "g2_skip_count"
           };
-        } else if (chosen === "make_ten") {
+        } else if (chosen === "g2_make_ten") {
           const big = [8, 9, 7][Math.floor(Math.random() * 3)];
           const small = Math.floor(Math.random() * 4) + 5;
           const [a, b] = big >= small ? [big, small] : [small, big];
@@ -1697,9 +1711,9 @@
             leadingPrompt: `“${a} needs ${needed} to make 10! 10 +${leftover} = ?”`,
             answer: a + b,
             hint: `Bridge to 10: Turn ${a} into 10 by taking ${needed} from${b}. Now add 10 + ${leftover} =${a + b}!`,
-            rule: "make_ten"
+            rule: "g2_make_ten"
           };
-        } else if (chosen === "doubles") {
+        } else if (chosen === "g2_doubles") {
           const base = Math.floor(Math.random() * 5) + 5;
           const isNear = Math.random() > 0.4;
 
@@ -1711,7 +1725,7 @@
               leadingPrompt: `“Double ${base} is${base * 2}. Now add 1 more!”`,
               answer: base + b,
               hint: `Near Doubles: Double ${base} is ${base * 2}, plus 1 more makes${base + b}!`,
-              rule: "doubles"
+              rule: "g2_doubles"
             };
           } else {
             return {
@@ -1720,7 +1734,7 @@
               leadingPrompt: `“Twins strike! What is double ${base}?”`,
               answer: base * 2,
               hint: `Twins: Double ${base} is${base * 2}!`,
-              rule: "doubles"
+              rule: "g2_doubles"
             };
           }
         } else {
@@ -1732,7 +1746,7 @@
             leadingPrompt: `“Add ${b} repeated${a} times!”`,
             answer: a * b,
             hint: `${a} groups of${b}: That's ${Array(a).fill(b).join(" + ")} = ${a * b}!`,
-            rule: "mult_intro"
+            rule: "g2_mult_intro"
           };
         }
       }
@@ -1740,10 +1754,10 @@
       // 4. 3RD GRADE
       if (currentGrade === "grade3") {
         let chosen = selectedRule === "mixed" 
-          ? ["facts_12", "div_inverse", "distrib_intro", "multi_steps"][Math.floor(Math.random() * 4)] 
+          ? ["g3_facts_12", "g3_div_inverse", "g3_distrib_intro", "g3_multi_steps"][Math.floor(Math.random() * 4)] 
           : selectedRule;
 
-        if (chosen === "div_inverse") {
+        if (chosen === "g3_div_inverse") {
           const b = Math.floor(Math.random() * 7) + 3;
           const ans = Math.floor(Math.random() * 8) + 2;
           const total = b * ans;
@@ -1753,9 +1767,9 @@
             leadingPrompt: `“Think in reverse: ? × ${b} =${total}!”`,
             answer: ans,
             hint: `Reverse multiplication: ${ans} ×${b} = ${total}, so${total} ÷ ${b} =${ans}!`,
-            rule: "div_inverse"
+            rule: "g3_div_inverse"
           };
-        } else if (chosen === "distrib_intro") {
+        } else if (chosen === "g3_distrib_intro") {
           const a = [6, 7, 8][Math.floor(Math.random() * 3)];
           const b = Math.floor(Math.random() * 6) + 4;
           return {
@@ -1764,9 +1778,9 @@
             leadingPrompt: `“Break ${a} into 5 +${a - 5}!”`,
             answer: a * b,
             hint: `Breakup trick: (5 × ${b}) + (${a - 5} × ${b}) =${5 * b} + ${(a - 5) * b} =${a * b}!`,
-            rule: "distrib_intro"
+            rule: "g3_distrib_intro"
           };
-        } else if (chosen === "multi_steps") {
+        } else if (chosen === "g3_multi_steps") {
           const a = Math.floor(Math.random() * 5) + 2;
           const b = Math.floor(Math.random() * 5) + 2;
           const add = Math.floor(Math.random() * 8) + 3;
@@ -1776,7 +1790,7 @@
             leadingPrompt: `“Solve the inside multiplication first!”`,
             answer: (a * b) + add,
             hint: `${a} × ${b} =${a * b}. Now add ${add} =${(a * b) + add}!`,
-            rule: "multi_steps"
+            rule: "g3_multi_steps"
           };
         } else {
           const a = Math.floor(Math.random() * 11) + 2;
@@ -1787,7 +1801,7 @@
             leadingPrompt: `“Fast strike times table!”`,
             answer: a * b,
             hint: `Core fact: ${a} × ${b} =${a * b}!`,
-            rule: "facts_12"
+            rule: "g3_facts_12"
           };
         }
       }
@@ -1795,27 +1809,27 @@
       // 5. 4TH GRADE (Aaron)
       if (currentGrade === "grade4") {
         let chosen = selectedRule === "mixed" 
-          ? ["zeros", "eleven", "ending_five", "double_half", "split"][Math.floor(Math.random() * 5)] 
+          ? ["g4_zeros", "g4_eleven", "g4_ending_five", "g4_double_half", "g4_split"][Math.floor(Math.random() * 5)] 
           : selectedRule;
 
         let a, b, hint;
-        if (chosen === "zeros") {
+        if (chosen === "g4_zeros") {
           a = (Math.floor(Math.random() * 8) + 2) * 10;
           b = (Math.floor(Math.random() * 8) + 2) * 10;
           hint = `Zero Hero: Multiply ${a/10} ×${b/10} = ${(a/10)*(b/10)}. Then add both zeros to make${a * b}!`;
-        } else if (chosen === "eleven") {
+        } else if (chosen === "g4_eleven") {
           a = Math.floor(Math.random() * 80) + 11;
           b = 11;
           const tens = Math.floor(a / 10);
           const ones = a % 10;
           const mid = tens + ones;
           hint = `11s Trick: Pull ${tens} and${ones} apart. Add ${tens} +${ones} = ${mid}. Place ${mid} in the middle (carry if over 9)!`;
-        } else if (chosen === "ending_five") {
+        } else if (chosen === "g4_ending_five") {
           const t = Math.floor(Math.random() * 7) + 2;
           a = t * 10 + 5;
           b = a;
           hint = `Square 5s: Multiply tens by next number (${t} ×${t + 1} = ${t * (t + 1)}), then attach 25 to get${a * b}!`;
-        } else if (chosen === "double_half") {
+        } else if (chosen === "g4_double_half") {
           a = [15, 25, 35, 45][Math.floor(Math.random() * 4)];
           b = (Math.floor(Math.random() * 6) + 2) * 2;
           hint = `Double & Halve: Double ${a} into ${a * 2}, halve${b} into ${b / 2}. Now calculate${a * 2} × ${b / 2} =${a * b}!`;
@@ -1838,10 +1852,10 @@
       // 6. 5TH GRADE
       if (currentGrade === "grade5") {
         let chosen = selectedRule === "mixed" 
-          ? ["powers_ten", "multi_digit", "pemdas", "decimals"][Math.floor(Math.random() * 4)] 
+          ? ["g5_powers_ten", "g5_multi_digit", "g5_pemdas", "g5_decimals"][Math.floor(Math.random() * 4)] 
           : selectedRule;
 
-        if (chosen === "powers_ten") {
+        if (chosen === "g5_powers_ten") {
           const base = (Math.floor(Math.random() * 80) + 12) / 10;
           const power = [10, 100][Math.floor(Math.random() * 2)];
           return {
@@ -1850,9 +1864,9 @@
             leadingPrompt: `“Shift the decimal point right for each zero!”`,
             answer: Math.round(base * power * 100) / 100,
             hint: `Multiplying by ${power} shifts the decimal point by${power === 10 ? 1 : 2} place(s) right!`,
-            rule: "powers_ten"
+            rule: "g5_powers_ten"
           };
-        } else if (chosen === "multi_digit") {
+        } else if (chosen === "g5_multi_digit") {
           const a = Math.floor(Math.random() * 400) + 120;
           const b = Math.floor(Math.random() * 5) + 3;
           return {
@@ -1861,9 +1875,9 @@
             leadingPrompt: `“Break it into hundreds, tens, and ones!”`,
             answer: a * b,
             hint: `Decompose ${a} into hundreds, tens, and ones: multiply each by ${b} and sum them!`,
-            rule: "multi_digit"
+            rule: "g5_multi_digit"
           };
-        } else if (chosen === "pemdas") {
+        } else if (chosen === "g5_pemdas") {
           const a = Math.floor(Math.random() * 6) + 3;
           const b = Math.floor(Math.random() * 5) + 3;
           const c = Math.floor(Math.random() * 8) + 2;
@@ -1876,7 +1890,7 @@
               leadingPrompt: `“Parentheses have first priority!”`,
               answer: (a + b) * c,
               hint: `Parentheses first: ${a} + ${b} = ${a + b}. Then multiply by ${c} = ${(a + b) * c}!`,
-              rule: "pemdas"
+              rule: "g5_pemdas"
             };
           } else {
             return {
@@ -1885,7 +1899,7 @@
               leadingPrompt: `“Multiplication strikes before addition!”`,
               answer: a + (b * c),
               hint: `Order of Operations: multiply ${b} × ${c} = ${b * c} first, then add ${a} = ${a + (b * c)}!`,
-              rule: "pemdas"
+              rule: "g5_pemdas"
             };
           }
         } else {
@@ -1897,7 +1911,7 @@
             leadingPrompt: `“Add tenths and whole units!”`,
             answer: Math.round((a + b) * 10) / 10,
             hint: `Line up the decimal points: ${a} + ${b} = ${Math.round((a + b) * 10) / 10}!`,
-            rule: "decimals"
+            rule: "g5_decimals"
           };
         }
       }
@@ -1973,7 +1987,7 @@
         gained = 15;
         playerXP += gained;
 
-        const rKey = currentProblem.rule || "overall";
+        const rKey = currentProblem.rule || `${currentGrade}_overall`;
         ruleXP[rKey] = (ruleXP[rKey] || 0) + gained;
 
         currentStreak++;
@@ -2020,33 +2034,33 @@
       if (targetBtn) targetBtn.classList.add("active");
     }
 
-   function isNinjaUnlocked(ninja) {
-  // If viewing a grade other than the profile's home grade, overall champions require grade-specific work
-  const homeGrade = DEFAULT_GRADES[currentProfile] || "grade4";
+    // ACCURATE GRADE-SCOPED UNLOCK EVALUATION
+    function isNinjaUnlocked(ninja) {
+      const homeGrade = DEFAULT_GRADES[currentProfile] || "grade4";
 
-  if (ninja.ruleKey.endsWith("_overall")) {
-    // Novice (reqXP === 0) is always available
-    if (ninja.reqXP === 0) return true;
-    
-    // Only unlock overall champions in their home grade using total playerXP
-    if (currentGrade === homeGrade) {
-      return playerXP >= ninja.reqXP;
+      if (ninja.ruleKey.endsWith("_overall")) {
+        if (ninja.reqXP === 0) return true;
+        
+        // Overall champions unlock only in home grade via total playerXP
+        if (currentGrade === homeGrade) {
+          return playerXP >= ninja.reqXP;
+        }
+        
+        // For outside grades, evaluate XP strictly accumulated within that grade
+        const gradeTotal = Object.keys(ruleXP)
+          .filter(k => k.startsWith(currentGrade.replace("grade", "g").replace("preschool", "pre")))
+          .reduce((sum, k) => sum + (ruleXP[k] || 0), 0);
+        return gradeTotal >= ninja.reqXP;
+      }
+
+      // Technique ninjas strictly require XP accumulated within this rule
+      const specificXP = ruleXP[ninja.ruleKey] || 0;
+      return specificXP >= ninja.reqXP;
     }
-    // For other grades, they must earn specific XP in that grade
-    const gradeTotal = Object.keys(ruleXP)
-      .filter(k => k.startsWith(currentGrade))
-      .reduce((sum, k) => sum + (ruleXP[k] || 0), 0);
-    return gradeTotal >= ninja.reqXP;
-  }
-
-  // Technique ninjas: strictly requires XP earned in this specific grade's rule
-  const specificXP = ruleXP[ninja.ruleKey] || 0;
-  return specificXP >= ninja.reqXP;
-}
 
     function updateUI() {
       const roster = GRADE_NINJAS[currentGrade] || GRADE_NINJAS.grade4;
-      const overallNinjas = roster.filter(n => n.ruleKey === "overall");
+      const overallNinjas = roster.filter(n => n.ruleKey.endsWith("_overall"));
       const nextNinja = overallNinjas.find(n => n.reqXP > playerXP) || overallNinjas[overallNinjas.length - 1];
 
       const pct = Math.min(100, Math.round((playerXP / Math.max(1, (nextNinja ? nextNinja.reqXP : 100))) * 100));
@@ -2092,7 +2106,7 @@
       roster.forEach(n => {
         const unlocked = isNinjaUnlocked(n);
         const isEquipped = n.name === equippedNinja;
-        const currentScore = n.ruleKey === "overall" ? playerXP : (ruleXP[n.ruleKey] || 0);
+        const currentScore = n.ruleKey.endsWith("_overall") ? playerXP : (ruleXP[n.ruleKey] || 0);
 
         const card = document.createElement("div");
         card.className = `ninja-card ${unlocked ? "" : "locked"} ${isEquipped ? "equipped" : ""}`;
@@ -2123,7 +2137,7 @@
       updateUI();
     }
 
-    // AUTOMATIC BACKGROUND SYNC: Passes full bundle on every question
+    // SILENT BACKGROUND SYNC
     async function syncToGoogleSheets(prob, isCorrect, gainedXP) {
       if (!APPS_SCRIPT_URL) return;
 
@@ -2204,7 +2218,7 @@
         playBeep(587.33, 0.1);
         speedScoreVal++;
         playerXP += 20;
-        const rKey = currentSpeedProblem.rule || "overall";
+        const rKey = currentSpeedProblem.rule || `${currentGrade}_overall`;
         ruleXP[rKey] = (ruleXP[rKey] || 0) + 20;
         document.getElementById("speedScore").textContent = speedScoreVal;
       }
@@ -2226,7 +2240,7 @@
       }
     });
 
-    // STARTUP SEQUENCE
+    // STARTUP PIPELINE
     window.addEventListener("DOMContentLoaded", () => {
       renderProfileSelector();
       loadActiveProfileData();
