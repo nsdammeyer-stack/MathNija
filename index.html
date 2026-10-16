@@ -1198,45 +1198,50 @@
     ];
 
     function buildGradeNinjas(gradeId) {
-      return BASE_GRADE_NINJAS.map(ninja => {
-        let ruleKey = ninja.ruleKey;
-        let ruleLabel = ninja.ruleLabel;
+  return BASE_GRADE_NINJAS.map(ninja => {
+    let ruleKey = ninja.ruleKey;
+    let ruleLabel = ninja.ruleLabel;
 
-        if (gradeId === "preschool") {
-          if (ruleKey === "rule_1") { ruleKey = "count"; ruleLabel = "🍎 Counting"; }
-          else if (ruleKey === "rule_2") { ruleKey = "sub_5"; ruleLabel = "➖ Take Away"; }
-          else if (ruleKey === "rule_3") { ruleKey = "add_5"; ruleLabel = "➕ Add to 5"; }
-          else if (ruleKey === "rule_4") { ruleKey = "add_10"; ruleLabel = "⭐ Add to 10"; }
-        } else if (gradeId === "grade1") {
-          if (ruleKey === "rule_1") { ruleKey = "add_sub_20"; ruleLabel = "➕ Add/Sub 20"; }
-          else if (ruleKey === "rule_2") { ruleKey = "missing_addend"; ruleLabel = "❓ Missing Addend"; }
-          else if (ruleKey === "rule_3") { ruleKey = "tens_ones"; ruleLabel = "🔟 Tens & Ones"; }
-          else if (ruleKey === "rule_4") { ruleKey = "comp_20"; ruleLabel = "⚖️ Balance within 20"; }
-        } else if (gradeId === "grade2") {
-          if (ruleKey === "rule_1") { ruleKey = "skip_count"; ruleLabel = "🦘 Skip Count"; }
-          else if (ruleKey === "rule_2") { ruleKey = "make_ten"; ruleLabel = "🎯 Make Ten"; }
-          else if (ruleKey === "rule_3") { ruleKey = "doubles"; ruleLabel = "👯 Doubles"; }
-          else if (ruleKey === "rule_4") { ruleKey = "mult_intro"; ruleLabel = "✖️ Basic Sets"; }
-        } else if (gradeId === "grade3") {
-          if (ruleKey === "rule_1") { ruleKey = "facts_12"; ruleLabel = "✖️ Times Tables"; }
-          else if (ruleKey === "rule_2") { ruleKey = "div_inverse"; ruleLabel = "➗ Inverse Division"; }
-          else if (ruleKey === "rule_3") { ruleKey = "distrib_intro"; ruleLabel = "🪓 Breakup Method"; }
-          else if (ruleKey === "rule_4") { ruleKey = "multi_steps"; ruleLabel = "🧩 Multi-Steps"; }
-        } else if (gradeId === "grade4") {
-          if (ruleKey === "rule_1") { ruleKey = "zeros"; ruleLabel = "0️⃣ Zero Hero"; }
-          else if (ruleKey === "rule_2") { ruleKey = "eleven"; ruleLabel = "🪄 11s Magic"; }
-          else if (ruleKey === "rule_3") { ruleKey = "split"; ruleLabel = "🪓 Break & Split"; }
-          else if (ruleKey === "rule_4") { ruleKey = "ending_five"; ruleLabel = "⚡ Square 5s"; }
-        } else if (gradeId === "grade5") {
-          if (ruleKey === "rule_1") { ruleKey = "powers_ten"; ruleLabel = "🚀 Powers of 10"; }
-          else if (ruleKey === "rule_2") { ruleKey = "multi_digit"; ruleLabel = "⚔️ 3-Digit × 1-Digit"; }
-          else if (ruleKey === "rule_3") { ruleKey = "pemdas"; ruleLabel = "📐 Order Operations"; }
-          else if (ruleKey === "rule_4") { ruleKey = "decimals"; ruleLabel = "💎 Decimals"; }
-        }
-
-        return { ...ninja, ruleKey, ruleLabel };
-      });
+    if (gradeId === "preschool") {
+      if (ruleKey === "rule_1") { ruleKey = "pre_count"; ruleLabel = "🍎 Counting"; }
+      else if (ruleKey === "rule_2") { ruleKey = "pre_sub_5"; ruleLabel = "➖ Take Away"; }
+      else if (ruleKey === "rule_3") { ruleKey = "pre_add_5"; ruleLabel = "➕ Add to 5"; }
+      else if (ruleKey === "rule_4") { ruleKey = "pre_add_10"; ruleLabel = "⭐ Add to 10"; }
+    } else if (gradeId === "grade1") {
+      if (ruleKey === "rule_1") { ruleKey = "g1_add_sub_20"; ruleLabel = "➕ Add/Sub 20"; }
+      else if (ruleKey === "rule_2") { ruleKey = "g1_missing_addend"; ruleLabel = "❓ Missing Addend"; }
+      else if (ruleKey === "rule_3") { ruleKey = "g1_tens_ones"; ruleLabel = "🔟 Tens & Ones"; }
+      else if (ruleKey === "rule_4") { ruleKey = "g1_comp_20"; ruleLabel = "⚖️ Balance within 20"; }
+    } else if (gradeId === "grade2") {
+      if (ruleKey === "rule_1") { ruleKey = "g2_skip_count"; ruleLabel = "🦘 Skip Count"; }
+      else if (ruleKey === "rule_2") { ruleKey = "g2_make_ten"; ruleLabel = "🎯 Make Ten"; }
+      else if (ruleKey === "rule_3") { ruleKey = "g2_doubles"; ruleLabel = "👯 Doubles"; }
+      else if (ruleKey === "rule_4") { ruleKey = "g2_mult_intro"; ruleLabel = "✖️ Basic Sets"; }
+    } else if (gradeId === "grade3") {
+      if (ruleKey === "rule_1") { ruleKey = "g3_facts_12"; ruleLabel = "✖️ Times Tables"; }
+      else if (ruleKey === "rule_2") { ruleKey = "g3_div_inverse"; ruleLabel = "➗ Inverse Division"; }
+      else if (ruleKey === "rule_3") { ruleKey = "g3_distrib_intro"; ruleLabel = "🪓 Breakup Method"; }
+      else if (ruleKey === "rule_4") { ruleKey = "g3_multi_steps"; ruleLabel = "🧩 Multi-Steps"; }
+    } else if (gradeId === "grade4") {
+      if (ruleKey === "rule_1") { ruleKey = "g4_zeros"; ruleLabel = "0️⃣ Zero Hero"; }
+      else if (ruleKey === "rule_2") { ruleKey = "g4_eleven"; ruleLabel = "🪄 11s Magic"; }
+      else if (ruleKey === "rule_3") { ruleKey = "g4_split"; ruleLabel = "🪓 Break & Split"; }
+      else if (ruleKey === "rule_4") { ruleKey = "g4_ending_five"; ruleLabel = "⚡ Square 5s"; }
+    } else if (gradeId === "grade5") {
+      if (ruleKey === "rule_1") { ruleKey = "g5_powers_ten"; ruleLabel = "🚀 Powers of 10"; }
+      else if (ruleKey === "rule_2") { ruleKey = "g5_multi_digit"; ruleLabel = "⚔️ 3-Digit × 1-Digit"; }
+      else if (ruleKey === "rule_3") { ruleKey = "g5_pemdas"; ruleLabel = "📐 Order Operations"; }
+      else if (ruleKey === "rule_4") { ruleKey = "g5_decimals"; ruleLabel = "💎 Decimals"; }
     }
+
+    // Prefix overall grade champions with the grade so 2nd Grade XP doesn't unlock 3rd Grade champions
+    if (ruleKey === "overall") {
+      ruleKey = `${gradeId}_overall`;
+    }
+
+    return { ...ninja, ruleKey, ruleLabel, gradeId };
+  });
+}
 
     const GRADE_NINJAS = {
       preschool: buildGradeNinjas("preschool"),
@@ -2015,14 +2020,29 @@
       if (targetBtn) targetBtn.classList.add("active");
     }
 
-    // FAIL-SAFE UNLOCK: Checks ruleXP, but safely unlocks based on overall playerXP if ruleXP was wiped
-    function isNinjaUnlocked(ninja) {
-      if (ninja.ruleKey === "overall") {
-        return playerXP >= ninja.reqXP;
-      }
-      const specificXP = ruleXP[ninja.ruleKey] || 0;
-      return (specificXP >= ninja.reqXP) || (playerXP >= Math.max(ninja.reqXP, 120));
+   function isNinjaUnlocked(ninja) {
+  // If viewing a grade other than the profile's home grade, overall champions require grade-specific work
+  const homeGrade = DEFAULT_GRADES[currentProfile] || "grade4";
+
+  if (ninja.ruleKey.endsWith("_overall")) {
+    // Novice (reqXP === 0) is always available
+    if (ninja.reqXP === 0) return true;
+    
+    // Only unlock overall champions in their home grade using total playerXP
+    if (currentGrade === homeGrade) {
+      return playerXP >= ninja.reqXP;
     }
+    // For other grades, they must earn specific XP in that grade
+    const gradeTotal = Object.keys(ruleXP)
+      .filter(k => k.startsWith(currentGrade))
+      .reduce((sum, k) => sum + (ruleXP[k] || 0), 0);
+    return gradeTotal >= ninja.reqXP;
+  }
+
+  // Technique ninjas: strictly requires XP earned in this specific grade's rule
+  const specificXP = ruleXP[ninja.ruleKey] || 0;
+  return specificXP >= ninja.reqXP;
+}
 
     function updateUI() {
       const roster = GRADE_NINJAS[currentGrade] || GRADE_NINJAS.grade4;
