@@ -1413,49 +1413,64 @@
     }
 
     // BACKGROUND SILENT PULL: Merges progress without disturbing gameplay
-    async function fetchCloudProfiles() {
-      if (!APPS_SCRIPT_URL) return;
-      const syncLabel = document.getElementById("syncText");
-      if (syncLabel) syncLabel.textContent = "Checking cloud sync...";
+  async function fetchCloudProfiles() {
+  if (!APPS_SCRIPT_URL) return;
+  const syncLabel = document.getElementById("syncText");
+  if (syncLabel) syncLabel.textContent = "Checking cloud sync...";
 
-      try {
-        const res = await fetch(`${APPS_SCRIPT_URL}?action=getProfiles`);
-        const json = await res.json();
-        if (json && json.status === "success" && json.profiles) {
-          Object.keys(json.profiles).forEach(pName => {
-            const pData = json.profiles[pName];
-            let local = {};
-            try {
-              local = JSON.parse(localStorage.getItem(`math_ninja_data_${pName}`) || "{}");
-            } catch (e) {}
+  try {
+    const res = await fetch(`${APPS_SCRIPT_URL}?action=getProfiles`);
+    const json = await res.json();
+    if (json && json.status === "success" && json.profiles) {
+      // 1. Sanitize list: Discard any numbers or column header artifacts
+      profilesList = profilesList.filter(name => {
+        return isNaN(name) && name.toLowerCase() !== "current xp" && name.toLowerCase() !== "player name";
+      });
 
-            const backup = pData.fullData;
-            if (backup && backup.ruleXP) {
-              local.ruleXP = local.ruleXP || {};
-              Object.keys(backup.ruleXP).forEach(r => {
-                local.ruleXP[r] = Math.max(local.ruleXP[r] || 0, backup.ruleXP[r] || 0);
-              });
-            }
+      Object.keys(json.profiles).forEach(pName => {
+        // Enforce valid name: not a number, not empty, not header
+        if (!pName || !isNaN(pName) || pName.toLowerCase().includes("xp") || pName.toLowerCase().includes("name")) return;
 
-            local.xp = Math.max(Number(local.xp) || 0, Number(pData.xp) || 0);
-            if (pData.equippedNinja && !local.ninja) local.ninja = pData.equippedNinja;
-            if (pData.totalSolved) local.totalSolved = Math.max(Number(local.totalSolved) || 0, Number(pData.totalSolved) || 0);
+        const pData = json.profiles[pName];
+        let local = {};
+        try {
+          local = JSON.parse(localStorage.getItem(`math_ninja_data_${pName}`) || "{}");
+        } catch (e) {}
 
-            localStorage.setItem(`math_ninja_data_${pName}`, JSON.stringify(local));
-
-            if (!profilesList.includes(pName)) profilesList.push(pName);
+        const backup = pData.fullData;
+        if (backup && backup.ruleXP) {
+          local.ruleXP = local.ruleXP || {};
+          Object.keys(backup.ruleXP).forEach(r => {
+            local.ruleXP[r] = Math.max(local.ruleXP[r] || 0, backup.ruleXP[r] || 0);
           });
-
-          localStorage.setItem("math_ninja_profiles", JSON.stringify(profilesList));
-          renderProfileSelector();
-          loadActiveProfileData();
-          updateUI();
-          if (syncLabel) syncLabel.textContent = "Google Sheets Synced ✓";
         }
-      } catch (e) {
-        if (syncLabel) syncLabel.textContent = "Google Sheets Ready (Offline)";
+
+        local.xp = Math.max(Number(local.xp) || 0, Number(pData.xp) || 0);
+        if (pData.equippedNinja && !local.ninja) local.ninja = pData.equippedNinja;
+        if (pData.totalSolved) local.totalSolved = Math.max(Number(local.totalSolved) || 0, Number(pData.totalSolved) || 0);
+
+        localStorage.setItem(`math_ninja_data_${pName}`, JSON.stringify(local));
+
+        if (!profilesList.includes(pName)) profilesList.push(pName);
+      });
+
+      // Default back to Aaron if current profile was an artifact
+      if (!profilesList.includes(currentProfile)) {
+        currentProfile = profilesList[0] || "Aaron";
       }
+
+      localStorage.setItem("math_ninja_profiles", JSON.stringify(profilesList));
+      localStorage.setItem("math_ninja_current_profile", currentProfile);
+      
+      renderProfileSelector();
+      loadActiveProfileData();
+      updateUI();
+      if (syncLabel) syncLabel.textContent = "Google Sheets Synced ✓";
     }
+  } catch (e) {
+    if (syncLabel) syncLabel.textContent = "Google Sheets Ready (Offline)";
+  }
+}
 
     function onProfileChange() {
       const select = document.getElementById("profileSelect");
