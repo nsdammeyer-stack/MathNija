@@ -90,7 +90,7 @@
     .player-stats {
       display: flex;
       align-items: center;
-      gap: 0.85rem;
+      gap: 0.65rem;
       flex-wrap: wrap;
     }
 
@@ -138,6 +138,26 @@
 
     .add-profile-btn:hover { background: #4f46e5; }
 
+    .sync-action-btn {
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid var(--card-border);
+      border-radius: 9999px;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .sync-action-btn:hover {
+      background: #334155;
+      transform: translateY(-1px);
+    }
+
     .ninja-badge {
       display: flex;
       align-items: center;
@@ -165,7 +185,7 @@
       display: flex;
       flex-direction: column;
       gap: 0.25rem;
-      width: 130px;
+      width: 120px;
     }
 
     .xp-text {
@@ -795,6 +815,14 @@
         <button class="add-profile-btn" onclick="openNewProfileModal()" title="Add New Ninja">+</button>
       </div>
 
+      <!-- ON-DEMAND SYNC BUTTONS -->
+      <button class="sync-action-btn" onclick="manualPushToCloud()" title="Push all earned progress on this device to Google Sheets">
+        ☁️ Backup
+      </button>
+      <button class="sync-action-btn" onclick="manualPullFromCloud()" title="Download latest Google Sheets backup to this device">
+        ⬇️ Restore
+      </button>
+
       <div class="ninja-badge">
         <div class="active-emblem" id="activeEmblem">⚔️</div>
         <span id="activeNinjaName">Trainee</span>
@@ -1309,11 +1337,86 @@
       localStorage.setItem("math_ninja_profiles", JSON.stringify(profilesList));
     }
 
-    // PULL DATA DIRECTLY FROM GOOGLE SHEETS
+    // ON-DEMAND MANUAL BACKUP: Pushes current device state directly to Sheets Col I
+    async function manualPushToCloud() {
+      const syncLabel = document.getElementById("syncText");
+      if (syncLabel) syncLabel.textContent = `Backing up ${currentProfile} to Google Sheets...`;
+
+      const accuracyPct = totalSolved > 0 ? Math.round((totalCorrect / totalSolved) * 100) + "%" : "100%";
+
+      const payload = {
+        name: currentProfile,
+        xp: playerXP,
+        ruleXP: ruleXP,
+        grade: currentGrade,
+        equippedNinja: equippedNinja,
+        level: Math.floor(playerXP / 150) + 1,
+        totalSolved: totalSolved,
+        totalCorrect: totalCorrect,
+        accuracy: accuracyPct,
+        log: null
+      };
+
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+        if (syncLabel) syncLabel.textContent = `${currentProfile}'s progress saved to Cloud ✓`;
+        alert(`Success! ${currentProfile}'s XP, Grade, and unlocked Ninjas are safely backed up to Google Sheets.`);
+      } catch (err) {
+        if (syncLabel) syncLabel.textContent = "Backup failed (Check internet connection)";
+        alert("Could not reach Google Sheets. Please verify your connection.");
+      }
+    }
+
+    // ON-DEMAND MANUAL RESTORE: Restores full profile from Sheets without overwriting higher values
+    async function manualPullFromCloud() {
+      const syncLabel = document.getElementById("syncText");
+      if (syncLabel) syncLabel.textContent = "Checking Google Sheets for backup...";
+
+      try {
+        const res = await fetch(`${APPS_SCRIPT_URL}?action=getProfiles`);
+        const json = await res.json();
+        if (json && json.status === "success" && json.profiles && json.profiles[currentProfile]) {
+          const cloud = json.profiles[currentProfile];
+          const backup = cloud.fullData;
+
+          if (backup) {
+            if (backup.ruleXP) {
+              Object.keys(backup.ruleXP).forEach(r => {
+                ruleXP[r] = Math.max(ruleXP[r] || 0, backup.ruleXP[r] || 0);
+              });
+            }
+            playerXP = Math.max(playerXP, backup.xp || cloud.xp || 0);
+            totalSolved = Math.max(totalSolved, backup.totalSolved || cloud.totalSolved || 0);
+            totalCorrect = Math.max(totalCorrect, backup.totalCorrect || 0);
+            if (backup.ninja) equippedNinja = backup.ninja;
+            if (backup.grade) currentGrade = backup.grade;
+          } else {
+            playerXP = Math.max(playerXP, cloud.xp || 0);
+            if (cloud.equippedNinja) equippedNinja = cloud.equippedNinja;
+          }
+
+          saveActiveProfileData();
+          updateUI();
+          if (syncLabel) syncLabel.textContent = "Restored from Google Sheets ✓";
+          alert(`${currentProfile}'s progress has been restored!`);
+        } else {
+          alert(`No backup found on Google Sheets for ${currentProfile} yet.`);
+        }
+      } catch (e) {
+        alert("Could not pull from Google Sheets. Check your internet connection.");
+      }
+    }
+
+    // BACKGROUND SILENT PULL: Merges progress without disturbing gameplay
     async function fetchCloudProfiles() {
       if (!APPS_SCRIPT_URL) return;
       const syncLabel = document.getElementById("syncText");
-      if (syncLabel) syncLabel.textContent = "Loading cloud XP...";
+      if (syncLabel) syncLabel.textContent = "Checking cloud sync...";
 
       try {
         const res = await fetch(`${APPS_SCRIPT_URL}?action=getProfiles`);
@@ -1326,12 +1429,18 @@
               local = JSON.parse(localStorage.getItem(`math_ninja_data_${pName}`) || "{}");
             } catch (e) {}
 
-            // Keep whichever XP is higher (cloud vs local)
-            const resolvedXP = Math.max(Number(local.xp) || 0, Number(pData.xp) || 0);
-            local.xp = resolvedXP;
-            if (pData.equippedNinja) local.ninja = pData.equippedNinja;
+            const backup = pData.fullData;
+            if (backup && backup.ruleXP) {
+              local.ruleXP = local.ruleXP || {};
+              Object.keys(backup.ruleXP).forEach(r => {
+                local.ruleXP[r] = Math.max(local.ruleXP[r] || 0, backup.ruleXP[r] || 0);
+              });
+            }
+
+            local.xp = Math.max(Number(local.xp) || 0, Number(pData.xp) || 0);
+            if (pData.equippedNinja && !local.ninja) local.ninja = pData.equippedNinja;
             if (pData.totalSolved) local.totalSolved = Math.max(Number(local.totalSolved) || 0, Number(pData.totalSolved) || 0);
-            
+
             localStorage.setItem(`math_ninja_data_${pName}`, JSON.stringify(local));
 
             if (!profilesList.includes(pName)) profilesList.push(pName);
@@ -1891,12 +2000,13 @@
       if (targetBtn) targetBtn.classList.add("active");
     }
 
+    // FAIL-SAFE UNLOCK: Checks ruleXP, but safely unlocks based on overall playerXP if ruleXP was wiped
     function isNinjaUnlocked(ninja) {
       if (ninja.ruleKey === "overall") {
         return playerXP >= ninja.reqXP;
       }
       const specificXP = ruleXP[ninja.ruleKey] || 0;
-      return specificXP >= ninja.reqXP;
+      return (specificXP >= ninja.reqXP) || (playerXP >= Math.max(ninja.reqXP, 120));
     }
 
     function updateUI() {
@@ -1978,6 +2088,7 @@
       updateUI();
     }
 
+    // AUTOMATIC BACKGROUND SYNC: Passes full bundle on every question
     async function syncToGoogleSheets(prob, isCorrect, gainedXP) {
       if (!APPS_SCRIPT_URL) return;
 
@@ -1989,9 +2100,12 @@
       const payload = {
         name: currentProfile,
         xp: playerXP,
+        ruleXP: ruleXP,
+        grade: currentGrade,
         equippedNinja: equippedNinja,
         level: Math.floor(playerXP / 150) + 1,
         totalSolved: totalSolved,
+        totalCorrect: totalCorrect,
         accuracy: accuracyPct,
         log: {
           mode: (GRADE_CONFIG[currentGrade] || GRADE_CONFIG.grade4).title,
@@ -2077,7 +2191,7 @@
       }
     });
 
-    // STARTUP PIPELINE
+    // STARTUP SEQUENCE
     window.addEventListener("DOMContentLoaded", () => {
       renderProfileSelector();
       loadActiveProfileData();
@@ -2085,7 +2199,7 @@
       renderAcademyScrolls();
       updateUI();
       renderProblem();
-      fetchCloudProfiles(); // Asynchronously pull existing Google Sheets XP
+      fetchCloudProfiles();
     });
   </script>
 </body>
