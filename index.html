@@ -822,6 +822,9 @@
       <button class="sync-action-btn" onclick="manualPullFromCloud()" title="Download latest Google Sheets backup to this device">
         ⬇️ Restore
       </button>
+      <button class="sync-action-btn" onclick="manualRefreshProfiles()" title="Check Google Sheets for profiles created on another device">
+        🔄 Profiles
+      </button>
 
       <div class="ninja-badge">
         <div class="active-emblem" id="activeEmblem">⚔️</div>
@@ -1356,21 +1359,37 @@
       localStorage.setItem("math_ninja_profiles", JSON.stringify(profilesList));
     }
 
-    // SILK-SAFE JSONP PROMISE
+    // SILK-SAFE JSONP PROMISE (with a timeout: a script that never loads
+    // must not hang the cloud pull forever with no error)
     function loadCloudProfilesJSONP() {
       return new Promise((resolve, reject) => {
         const callbackName = 'ninjaProfileCallback_' + Math.round(100000 * Math.random());
-        window[callbackName] = function(data) {
+        let settled = false;
+        const cleanup = () => {
           delete window[callbackName];
           if (script && script.parentNode) script.parentNode.removeChild(script);
+        };
+        const timer = setTimeout(() => {
+          if (settled) return;
+          settled = true;
+          cleanup();
+          reject(new Error("Cloud profile request timed out"));
+        }, 10000);
+        window[callbackName] = function(data) {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          cleanup();
           resolve(data);
         };
 
         const script = document.createElement('script');
         script.src = `${APPS_SCRIPT_URL}?action=getProfiles&callback=${callbackName}`;
         script.onerror = function() {
-          delete window[callbackName];
-          if (script && script.parentNode) script.parentNode.removeChild(script);
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          cleanup();
           reject(new Error("Network / CORS error on Kindle Silk"));
         };
         document.body.appendChild(script);
@@ -1504,9 +1523,29 @@
           loadActiveProfileData();
           updateUI();
           if (syncLabel) syncLabel.textContent = "Google Sheets Synced ✓";
+        } else {
+          if (syncLabel) syncLabel.textContent = "Google Sheets Ready (Offline)";
         }
       } catch (e) {
         if (syncLabel) syncLabel.textContent = "Google Sheets Ready (Offline)";
+      }
+    }
+
+    // ON-DEMAND PROFILE REFRESH: Re-runs the startup cloud pull and tells
+    // the player which profiles (if any) were newly found, so a profile
+    // created on another device appears without reloading the whole app.
+    async function manualRefreshProfiles() {
+      const before = [...profilesList];
+      await fetchCloudProfiles();
+      const added = profilesList.filter(name => !before.includes(name));
+      const syncLabel = document.getElementById("syncText");
+      if (added.length) {
+        if (syncLabel) syncLabel.textContent = "Google Sheets Synced ✓";
+        alert(`Found new profile(s) from Google Sheets: ${added.join(", ")}. Pick one from the profile dropdown.`);
+      } else if (syncLabel && syncLabel.textContent.includes("Offline")) {
+        alert("Could not reach Google Sheets. Check your internet connection and try again.");
+      } else {
+        alert("No new profiles found on Google Sheets.");
       }
     }
 
