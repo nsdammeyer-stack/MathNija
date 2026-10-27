@@ -1598,6 +1598,16 @@
       } catch (e) {}
     }
 
+    // PROGRESSIVE DIFFICULTY: tier 0 = starting ranges, 1 = after 150 XP in a rule,
+    // 2 = after 300 XP in a rule. Per-rule XP is saved and synced, so difficulty follows
+    // the player across devices, and one wrong answer does not drop them back down.
+    function difficultyTier(ruleId) {
+      const xp = ruleXP[ruleId] || 0;
+      if (xp >= 300) return 2;
+      if (xp >= 150) return 1;
+      return 0;
+    }
+
     function generateProblem() {
       const visualElem = document.getElementById("visualCounter");
       if (visualElem) visualElem.textContent = "";
@@ -1610,24 +1620,30 @@
 
         const icons = ["🍎", "🚗", "⭐", "🐶", "🎈"];
         const icon = icons[Math.floor(Math.random() * icons.length)];
+        const tier = difficultyTier(chosen);
 
         if (chosen === "pre_count") {
-          const count = Math.floor(Math.random() * 7) + 1;
+          const countMin = tier === 0 ? 1 : tier === 1 ? 3 : 5;
+          const countMax = tier === 0 ? 7 : tier === 1 ? 10 : 15;
+          const count = Math.floor(Math.random() * (countMax - countMin + 1)) + countMin;
           if (visualElem) visualElem.textContent = icon.repeat(count);
           return { text: `Count the ${icon}!`, subText: `Point and count one by one!`, answer: count, hint: `Count out loud: 1, 2, 3... until you reach the end!`, rule: "pre_count" };
         } else if (chosen === "pre_add_5") {
-          const a = Math.floor(Math.random() * 4) + 1;
-          const b = Math.floor(Math.random() * (5 - a)) + 1;
+          const totalCap = tier === 0 ? 5 : tier === 1 ? 7 : 10;
+          const a = Math.floor(Math.random() * (totalCap - 1)) + 1;
+          const b = Math.floor(Math.random() * (totalCap - a)) + 1;
           if (visualElem) visualElem.textContent = `${icon.repeat(a)}  +${icon.repeat(b)}`;
           return { text: `${a} +${b}`, subText: `Hold up ${a} fingers, add${b} more!`, answer: a + b, hint: `Start at ${a} and count forward${b} more!`, rule: "pre_add_5" };
         } else if (chosen === "pre_sub_5") {
-          const a = Math.floor(Math.random() * 4) + 2;
+          const maxA = tier === 0 ? 5 : tier === 1 ? 8 : 10;
+          const a = Math.floor(Math.random() * (maxA - 1)) + 2;
           const b = Math.floor(Math.random() * (a - 1)) + 1;
           if (visualElem) visualElem.textContent = `${icon.repeat(a)}  (take away${b})`;
           return { text: `${a} -${b}`, subText: `Start with ${a}, take away${b}!`, answer: a - b, hint: `Hold up ${a} fingers and take away${b}!`, rule: "pre_sub_5" };
         } else {
-          const a = Math.floor(Math.random() * 6) + 2;
-          const b = Math.floor(Math.random() * (10 - a)) + 1;
+          const totalCap = tier === 0 ? 10 : tier === 1 ? 15 : 20;
+          const a = Math.floor(Math.random() * (totalCap - 3)) + 2;
+          const b = Math.floor(Math.random() * (totalCap - a)) + 1;
           if (visualElem) visualElem.textContent = `${icon.repeat(a)}  +${icon.repeat(b)}`;
           return { text: `${a} +${b}`, subText: `How many to make ten?`, answer: a + b, hint: `Count on starting from ${a}!`, rule: "pre_add_10" };
         }
@@ -1638,10 +1654,11 @@
         let chosen = selectedRule === "mixed" 
           ? ["g1_add_sub_20", "g1_missing_addend", "g1_tens_ones", "g1_comp_20"][Math.floor(Math.random() * 4)] 
           : selectedRule;
+        const tier = difficultyTier(chosen);
 
         if (chosen === "g1_missing_addend") {
-          const a = Math.floor(Math.random() * 7) + 5;
-          const missing = Math.floor(Math.random() * 6) + 3;
+          const a = Math.floor(Math.random() * (tier === 0 ? 7 : tier === 1 ? 10 : 12)) + (tier === 2 ? 8 : 5);
+          const missing = Math.floor(Math.random() * (tier === 0 ? 6 : tier === 1 ? 8 : 9)) + (tier === 0 ? 3 : tier === 1 ? 4 : 6);
           const total = a + missing;
           const isLeft = Math.random() > 0.5;
 
@@ -1654,18 +1671,19 @@
             rule: "g1_missing_addend"
           };
         } else if (chosen === "g1_tens_ones") {
+          const baseTen = tier === 0 ? 10 : tier === 1 ? 20 : 50;
           const ones = Math.floor(Math.random() * 9) + 1;
           return {
-            text: `10 + ${ones}`,
-            subText: `1 Ten and ${ones} Ones = ?`,
-            leadingPrompt: `“10 plus single units gives the teen number!”`,
-            answer: 10 + ones,
-            hint: `10 + ${ones} puts ${ones} in the ones place:${10 + ones}!`,
+            text: `${baseTen} + ${ones}`,
+            subText: `${baseTen / 10} Tens and ${ones} Ones = ?`,
+            leadingPrompt: `“${baseTen} plus single units!”`,
+            answer: baseTen + ones,
+            hint: `${baseTen} + ${ones} puts ${ones} in the ones place:${baseTen + ones}!`,
             rule: "g1_tens_ones"
           };
         } else if (chosen === "g1_comp_20") {
-          const a = Math.floor(Math.random() * 8) + 11;
-          const sub = Math.floor(Math.random() * 5) + 2;
+          const a = Math.floor(Math.random() * (tier === 0 ? 8 : tier === 1 ? 10 : 15)) + (tier === 0 ? 11 : tier === 1 ? 15 : 20);
+          const sub = Math.floor(Math.random() * (tier === 0 ? 5 : tier === 1 ? 7 : 10)) + (tier === 0 ? 2 : tier === 1 ? 3 : 5);
           return {
             text: `${a} -${sub}`,
             subText: `Count back ${sub} steps from${a}!`,
@@ -1675,8 +1693,8 @@
             rule: "g1_comp_20"
           };
         } else {
-          const a = Math.floor(Math.random() * 8) + 7;
-          const b = Math.floor(Math.random() * 5) + 3;
+          const a = Math.floor(Math.random() * (tier === 0 ? 8 : tier === 1 ? 10 : 15)) + (tier === 0 ? 7 : tier === 1 ? 10 : 15);
+          const b = Math.floor(Math.random() * (tier === 0 ? 5 : tier === 1 ? 8 : 9)) + (tier === 0 ? 3 : tier === 1 ? 4 : 6);
           return {
             text: `${a} +${b}`,
             subText: ``,
@@ -1693,10 +1711,12 @@
         let chosen = selectedRule === "mixed" 
           ? ["g2_skip_count", "g2_make_ten", "g2_doubles", "g2_mult_intro", "g2_algebra"][Math.floor(Math.random() * 5)] 
           : selectedRule;
+        const tier = difficultyTier(chosen);
 
         if (chosen === "g2_skip_count") {
-          const step = [2, 5, 10][Math.floor(Math.random() * 3)];
-          const countLen = Math.floor(Math.random() * 4) + 3;
+          const steps = tier === 0 ? [2, 5, 10] : tier === 1 ? [2, 3, 5, 10] : [3, 4, 6, 10, 12];
+          const step = steps[Math.floor(Math.random() * steps.length)];
+          const countLen = Math.floor(Math.random() * 4) + 3 + tier;
           let seq = [];
           for (let i = 1; i <= countLen; i++) seq.push(i * step);
           const nextVal = (countLen + 1) * step;
@@ -1710,22 +1730,23 @@
             rule: "g2_skip_count"
           };
         } else if (chosen === "g2_make_ten") {
-          const big = [8, 9, 7][Math.floor(Math.random() * 3)];
-          const small = Math.floor(Math.random() * 4) + 5;
+          const target = tier === 0 ? 10 : tier === 1 ? 20 : 50;
+          const big = target - [1, 2, 3][Math.floor(Math.random() * 3)];
+          const small = Math.floor(Math.random() * (tier === 0 ? 4 : tier === 1 ? 8 : 11)) + 5;
           const [a, b] = big >= small ? [big, small] : [small, big];
-          const needed = 10 - a;
+          const needed = target - a;
           const leftover = b - needed;
 
           return {
             text: `${a} +${b}`,
-            subText: `${a} + (${needed} + ${leftover})  →  10 +${leftover} = ?`,
-            leadingPrompt: `“${a} needs ${needed} to make 10! 10 +${leftover} = ?”`,
+            subText: `${a} + (${needed} + ${leftover})  →  ${target} +${leftover} = ?`,
+            leadingPrompt: `“${a} needs ${needed} to make ${target}! ${target} +${leftover} = ?”`,
             answer: a + b,
-            hint: `Bridge to 10: Turn ${a} into 10 by taking ${needed} from${b}. Now add 10 + ${leftover} =${a + b}!`,
+            hint: `Bridge to ${target}: Turn ${a} into ${target} by taking ${needed} from${b}. Now add ${target} + ${leftover} =${a + b}!`,
             rule: "g2_make_ten"
           };
         } else if (chosen === "g2_doubles") {
-          const base = Math.floor(Math.random() * 5) + 5;
+          const base = Math.floor(Math.random() * (tier === 0 ? 5 : tier === 1 ? 9 : 15)) + (tier === 0 ? 5 : tier === 1 ? 6 : 10);
           const isNear = Math.random() > 0.4;
 
           if (isNear) {
@@ -1750,10 +1771,11 @@
           }
         } else if (chosen === "g2_algebra") {
           const kind = Math.floor(Math.random() * 4);
+          const totalCap = tier === 0 ? 20 : tier === 1 ? 50 : 100;
           if (kind === 0) {
-            const a = Math.floor(Math.random() * 9) + 2;
-            const missing = Math.floor(Math.random() * 8) + 2;
-            const total = a + missing;
+            const total = Math.floor(Math.random() * (totalCap - 4)) + 5;
+            const a = Math.floor(Math.random() * (total - 3)) + 2;
+            const missing = total - a;
             return {
               text: `${a} + ? = ${total}`,
               subText: `What number makes this true?`,
@@ -1763,9 +1785,9 @@
               rule: "g2_algebra"
             };
           } else if (kind === 1) {
-            const a = Math.floor(Math.random() * 9) + 2;
-            const missing = Math.floor(Math.random() * 8) + 2;
-            const total = a + missing;
+            const total = Math.floor(Math.random() * (totalCap - 4)) + 5;
+            const a = Math.floor(Math.random() * (total - 3)) + 2;
+            const missing = total - a;
             return {
               text: `? + ${a} = ${total}`,
               subText: `What number makes this true?`,
@@ -1775,7 +1797,7 @@
               rule: "g2_algebra"
             };
           } else if (kind === 2) {
-            const total = Math.floor(Math.random() * 11) + 10;
+            const total = Math.floor(Math.random() * (totalCap - 9)) + 10;
             const missing = Math.floor(Math.random() * (total - 2)) + 2;
             const remainder = total - missing;
             return {
@@ -1787,8 +1809,9 @@
               rule: "g2_algebra"
             };
           } else {
-            const b = Math.floor(Math.random() * 8) + 2;
-            const remainder = Math.floor(Math.random() * 9) + 2;
+            const partRange = tier === 0 ? 8 : tier === 1 ? 23 : 48;
+            const b = Math.floor(Math.random() * partRange) + 2;
+            const remainder = Math.floor(Math.random() * partRange) + 2;
             const missing = b + remainder;
             return {
               text: `? - ${b} = ${remainder}`,
@@ -1800,8 +1823,8 @@
             };
           }
         } else {
-          const a = Math.floor(Math.random() * 4) + 2;
-          const b = [3, 4, 5][Math.floor(Math.random() * 3)];
+          const a = Math.floor(Math.random() * (tier === 0 ? 4 : tier === 1 ? 5 : 6)) + (tier === 2 ? 3 : 2);
+          const b = tier === 0 ? [3, 4, 5][Math.floor(Math.random() * 3)] : tier === 1 ? Math.floor(Math.random() * 4) + 3 : Math.floor(Math.random() * 6) + 4;
           return {
             text: `${a} groups of${b}`,
             subText: `${Array(a).fill(b).join(" + ")} = ?`,
@@ -1818,10 +1841,11 @@
         let chosen = selectedRule === "mixed" 
           ? ["g3_facts_12", "g3_div_inverse", "g3_distrib_intro", "g3_multi_steps"][Math.floor(Math.random() * 4)] 
           : selectedRule;
+        const tier = difficultyTier(chosen);
 
         if (chosen === "g3_div_inverse") {
-          const b = Math.floor(Math.random() * 7) + 3;
-          const ans = Math.floor(Math.random() * 8) + 2;
+          const b = Math.floor(Math.random() * (tier === 0 ? 7 : tier === 1 ? 10 : 12)) + (tier === 2 ? 4 : 3);
+          const ans = Math.floor(Math.random() * (tier === 0 ? 8 : tier === 1 ? 11 : 13)) + (tier === 2 ? 3 : 2);
           const total = b * ans;
           return {
             text: `${total} ÷${b}`,
@@ -1832,8 +1856,9 @@
             rule: "g3_div_inverse"
           };
         } else if (chosen === "g3_distrib_intro") {
-          const a = [6, 7, 8][Math.floor(Math.random() * 3)];
-          const b = Math.floor(Math.random() * 6) + 4;
+          const aList = tier === 0 ? [6, 7, 8] : tier === 1 ? [6, 7, 8, 9] : [7, 8, 9, 11, 12];
+          const a = aList[Math.floor(Math.random() * aList.length)];
+          const b = Math.floor(Math.random() * (tier === 0 ? 6 : tier === 1 ? 9 : 10)) + (tier === 2 ? 6 : 4);
           return {
             text: `${a} ×${b}`,
             subText: `(5 × ${b}) + (${a - 5} ×${b}) = ?`,
@@ -1843,9 +1868,9 @@
             rule: "g3_distrib_intro"
           };
         } else if (chosen === "g3_multi_steps") {
-          const a = Math.floor(Math.random() * 5) + 2;
-          const b = Math.floor(Math.random() * 5) + 2;
-          const add = Math.floor(Math.random() * 8) + 3;
+          const a = Math.floor(Math.random() * (tier === 0 ? 5 : tier === 1 ? 7 : 10)) + (tier === 2 ? 3 : 2);
+          const b = Math.floor(Math.random() * (tier === 0 ? 5 : tier === 1 ? 7 : 10)) + (tier === 2 ? 3 : 2);
+          const add = Math.floor(Math.random() * (tier === 0 ? 8 : tier === 1 ? 12 : 21)) + (tier === 0 ? 3 : tier === 1 ? 4 : 5);
           return {
             text: `(${a} × ${b}) +${add}`,
             subText: `Multiply first, then add!`,
@@ -1855,8 +1880,8 @@
             rule: "g3_multi_steps"
           };
         } else {
-          const a = Math.floor(Math.random() * 11) + 2;
-          const b = Math.floor(Math.random() * 11) + 2;
+          const a = Math.floor(Math.random() * (tier === 0 ? 11 : tier === 1 ? 14 : 18)) + (tier === 2 ? 3 : 2);
+          const b = Math.floor(Math.random() * (tier === 0 ? 11 : tier === 1 ? 14 : 18)) + (tier === 2 ? 3 : 2);
           return {
             text: `${a} ×${b}`,
             subText: ``,
@@ -1873,31 +1898,47 @@
         let chosen = selectedRule === "mixed" 
           ? ["g4_zeros", "g4_eleven", "g4_ending_five", "g4_double_half", "g4_split"][Math.floor(Math.random() * 5)] 
           : selectedRule;
+        const tier = difficultyTier(chosen);
 
         let a, b, hint;
         if (chosen === "g4_zeros") {
-          a = (Math.floor(Math.random() * 8) + 2) * 10;
-          b = (Math.floor(Math.random() * 8) + 2) * 10;
+          a = (Math.floor(Math.random() * (tier === 0 ? 8 : tier === 1 ? 11 : 18)) + 2) * 10;
+          b = (Math.floor(Math.random() * (tier === 0 ? 8 : tier === 1 ? 11 : 18)) + 2) * 10;
           hint = `Zero Hero: Multiply ${a/10} ×${b/10} = ${(a/10)*(b/10)}. Then add both zeros to make${a * b}!`;
         } else if (chosen === "g4_eleven") {
-          a = Math.floor(Math.random() * 80) + 11;
+          if (tier === 0) {
+            a = Math.floor(Math.random() * 80) + 11;
+          } else if (tier === 1) {
+            a = (Math.floor(Math.random() * 6) + 4) * 10 + (Math.floor(Math.random() * 4) + 6);
+          } else {
+            a = Math.floor(Math.random() * 97) + 102;
+          }
           b = 11;
-          const tens = Math.floor(a / 10);
-          const ones = a % 10;
-          const mid = tens + ones;
-          hint = `11s Trick: Pull ${tens} and${ones} apart. Add ${tens} +${ones} = ${mid}. Place ${mid} in the middle (carry if over 9)!`;
+          if (tier === 2) {
+            const h = Math.floor(a / 100);
+            const t = Math.floor(a / 10) % 10;
+            const o = a % 10;
+            hint = `11s Trick: Keep the outer digits ${h} and ${o}. Add neighbors: ${h}+${t}=${h + t}, ${t}+${o}=${t + o}. Combine them (carrying tens where needed) to get${a * b}!`;
+          } else {
+            const tens = Math.floor(a / 10);
+            const ones = a % 10;
+            const mid = tens + ones;
+            hint = `11s Trick: Pull ${tens} and${ones} apart. Add ${tens} +${ones} = ${mid}. Place ${mid} in the middle (carry if over 9)!`;
+          }
         } else if (chosen === "g4_ending_five") {
-          const t = Math.floor(Math.random() * 7) + 2;
+          const t = Math.floor(Math.random() * (tier === 0 ? 7 : tier === 1 ? 11 : 15)) + (tier === 2 ? 5 : 2);
           a = t * 10 + 5;
           b = a;
           hint = `Square 5s: Multiply tens by next number (${t} ×${t + 1} = ${t * (t + 1)}), then attach 25 to get${a * b}!`;
         } else if (chosen === "g4_double_half") {
-          a = [15, 25, 35, 45][Math.floor(Math.random() * 4)];
-          b = (Math.floor(Math.random() * 6) + 2) * 2;
+          const aList = tier === 0 ? [15, 25, 35, 45] : tier === 1 ? [15, 25, 35, 45, 55, 65] : [25, 35, 45, 55, 65, 75, 85];
+          a = aList[Math.floor(Math.random() * aList.length)];
+          b = (Math.floor(Math.random() * (tier === 0 ? 6 : tier === 1 ? 8 : 10)) + (tier === 2 ? 3 : 2)) * 2;
           hint = `Double & Halve: Double ${a} into ${a * 2}, halve${b} into ${b / 2}. Now calculate${a * 2} × ${b / 2} =${a * b}!`;
         } else {
-          a = [21, 31, 41, 51][Math.floor(Math.random() * 4)];
-          b = Math.floor(Math.random() * 30) + 12;
+          const aList = tier === 0 ? [21, 31, 41, 51] : tier === 1 ? [21, 31, 41, 51, 61, 71] : [31, 41, 51, 61, 71, 81, 91];
+          a = aList[Math.floor(Math.random() * aList.length)];
+          b = Math.floor(Math.random() * (tier === 0 ? 30 : tier === 1 ? 50 : 69)) + (tier === 0 ? 12 : tier === 1 ? 12 : 21);
           hint = `Break & Split: Split ${a} into${a - 1} + 1. Calculate (${a - 1} ×${b}) + (1 × ${b}) =${a * b}!`;
         }
 
@@ -1916,21 +1957,23 @@
         let chosen = selectedRule === "mixed" 
           ? ["g5_powers_ten", "g5_multi_digit", "g5_pemdas", "g5_decimals"][Math.floor(Math.random() * 4)] 
           : selectedRule;
+        const tier = difficultyTier(chosen);
 
         if (chosen === "g5_powers_ten") {
-          const base = (Math.floor(Math.random() * 80) + 12) / 10;
-          const power = [10, 100][Math.floor(Math.random() * 2)];
+          const base = (Math.floor(Math.random() * (tier === 0 ? 80 : tier === 1 ? 180 : 980)) + 12) / 10;
+          const powerList = tier === 0 ? [10, 100] : [10, 100, 1000];
+          const power = powerList[Math.floor(Math.random() * powerList.length)];
           return {
             text: `${base} ×${power}`,
             subText: `Shift the decimal point to the right!`,
             leadingPrompt: `“Shift the decimal point right for each zero!”`,
             answer: Math.round(base * power * 100) / 100,
-            hint: `Multiplying by ${power} shifts the decimal point by${power === 10 ? 1 : 2} place(s) right!`,
+            hint: `Multiplying by ${power} shifts the decimal point by${String(power).length - 1} place(s) right!`,
             rule: "g5_powers_ten"
           };
         } else if (chosen === "g5_multi_digit") {
-          const a = Math.floor(Math.random() * 400) + 120;
-          const b = Math.floor(Math.random() * 5) + 3;
+          const a = Math.floor(Math.random() * (tier === 0 ? 400 : 800)) + (tier === 0 ? 120 : 200);
+          const b = tier === 2 ? Math.floor(Math.random() * 10) + 3 : Math.floor(Math.random() * (tier === 0 ? 5 : 7)) + 3;
           return {
             text: `${a} ×${b}`,
             subText: ``,
@@ -1940,9 +1983,9 @@
             rule: "g5_multi_digit"
           };
         } else if (chosen === "g5_pemdas") {
-          const a = Math.floor(Math.random() * 6) + 3;
-          const b = Math.floor(Math.random() * 5) + 3;
-          const c = Math.floor(Math.random() * 8) + 2;
+          const a = Math.floor(Math.random() * (tier === 0 ? 6 : tier === 1 ? 10 : 16)) + (tier === 2 ? 5 : 3);
+          const b = Math.floor(Math.random() * (tier === 0 ? 5 : tier === 1 ? 10 : 16)) + (tier === 2 ? 5 : 3);
+          const c = Math.floor(Math.random() * (tier === 0 ? 8 : tier === 1 ? 14 : 23)) + (tier === 2 ? 3 : 2);
           const isParens = Math.random() > 0.5;
 
           if (isParens) {
@@ -1965,14 +2008,16 @@
             };
           }
         } else {
-          const a = (Math.floor(Math.random() * 50) + 10) / 10;
-          const b = (Math.floor(Math.random() * 40) + 10) / 10;
+          const places = tier === 2 ? 100 : 10;
+          const offset = tier === 2 ? 100 : 10;
+          const a = (Math.floor(Math.random() * (tier === 0 ? 50 : tier === 1 ? 90 : 900)) + offset) / places;
+          const b = (Math.floor(Math.random() * (tier === 0 ? 40 : tier === 1 ? 90 : 900)) + offset) / places;
           return {
             text: `${a} + ${b}`,
             subText: `Line up the decimal points!`,
             leadingPrompt: `“Add tenths and whole units!”`,
-            answer: Math.round((a + b) * 10) / 10,
-            hint: `Line up the decimal points: ${a} + ${b} = ${Math.round((a + b) * 10) / 10}!`,
+            answer: Math.round((a + b) * places) / places,
+            hint: `Line up the decimal points: ${a} + ${b} = ${Math.round((a + b) * places) / places}!`,
             rule: "g5_decimals"
           };
         }
@@ -1987,7 +2032,10 @@
       if (probElem) probElem.textContent = currentProblem.text;
       
       const subElem = document.getElementById("problemSubDisplay");
-      if (subElem) subElem.textContent = currentProblem.subText || "";
+      if (subElem) {
+        const t = difficultyTier(currentProblem.rule);
+        subElem.textContent = (currentProblem.subText || "") + (t > 0 ? ((currentProblem.subText ? " " : "") + `⭐ Level ${t + 1}`) : "");
+      }
 
       const input = document.getElementById("answerInput");
       if (input) input.value = "";
