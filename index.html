@@ -864,7 +864,7 @@
             <select id="gradeSelect" class="custom-select" onchange="onGradeChange()">
               <option value="preschool">Preschool (Counting & Early Math)</option>
               <option value="grade1">1st Grade (Add/Sub to 20 & Missing Addends)</option>
-              <option value="grade2">2nd Grade (Skip Count & Make Ten)</option>
+              <option value="grade2">2nd Grade (Skip Count, Make Ten & Algebra)</option>
               <option value="grade3">3rd Grade (Times Tables & Inverse Division)</option>
               <option value="grade4" selected>4th Grade (2-Digit Multiplication Tricks)</option>
               <option value="grade5">5th Grade (Decimals & Advanced Operations)</option>
@@ -1109,13 +1109,15 @@
           { id: "g2_skip_count", name: "🦘 Skip Counting (Find the Next Number)" },
           { id: "g2_make_ten", name: "🎯 Make Ten (Bridge to 10)" },
           { id: "g2_doubles", name: "👯 Doubles & Near-Doubles" },
-          { id: "g2_mult_intro", name: "✖️ Basic Sets & Groups" }
+          { id: "g2_mult_intro", name: "✖️ Basic Sets & Groups" },
+          { id: "g2_algebra", name: "❓ Algebra: Find the Missing Number" }
         ],
         academy: [
           { id: "g2_skip_count", icon: "🦘", title: "Skip Counting Sequence", desc: "Keep the cadence going! Count up by 2s, 5s, or 10s to find the next missing number in line.", example: "5, 10, 15, 20, 25, ___ → 30!" },
           { id: "g2_make_ten", icon: "🎯", title: "Bridge to 10", desc: "Turn the bigger number into 10! Borrow from the other number to make 10, then add the leftovers.", example: "8 + 7 → 8 + (2 + 5) → 10 + 5 = 15" },
           { id: "g2_doubles", icon: "👯", title: "Doubles Fast-Strike", desc: "Remember twins: 6+6=12, 7+7=14, 8+8=16. For 7+8, do 7+7 and add 1!", example: "7 + 8 → (7 + 7) + 1 = 15" },
-          { id: "g2_mult_intro", icon: "✖️", title: "Equal Groups & Sets", desc: "Equal groups are just repeated addition: 3 groups of 4!", example: "3 groups of 4 = 4 + 4 + 4 = 12" }
+          { id: "g2_mult_intro", icon: "✖️", title: "Equal Groups & Sets", desc: "Equal groups are just repeated addition: 3 groups of 4!", example: "3 groups of 4 = 4 + 4 + 4 = 12" },
+          { id: "g2_algebra", icon: "❓", title: "Find the Missing Number", desc: "Algebra is just a number hiding! Use addition or subtraction to figure out what ? stands for.", example: "7 + ? = 15 → ? = 8" }
         ]
       },
       grade3: {
@@ -1680,7 +1682,7 @@
       // 3. 2ND GRADE (Micah)
       if (currentGrade === "grade2") {
         let chosen = selectedRule === "mixed" 
-          ? ["g2_skip_count", "g2_make_ten", "g2_doubles", "g2_mult_intro"][Math.floor(Math.random() * 4)] 
+          ? ["g2_skip_count", "g2_make_ten", "g2_doubles", "g2_mult_intro", "g2_algebra"][Math.floor(Math.random() * 5)] 
           : selectedRule;
 
         if (chosen === "g2_skip_count") {
@@ -1735,6 +1737,57 @@
               answer: base * 2,
               hint: `Twins: Double ${base} is${base * 2}!`,
               rule: "g2_doubles"
+            };
+          }
+        } else if (chosen === "g2_algebra") {
+          const kind = Math.floor(Math.random() * 4);
+          if (kind === 0) {
+            const a = Math.floor(Math.random() * 9) + 2;
+            const missing = Math.floor(Math.random() * 8) + 2;
+            const total = a + missing;
+            return {
+              text: `${a} + ? = ${total}`,
+              subText: `What number makes this true?`,
+              leadingPrompt: `“A number is hiding! What plus ${a} makes ${total}?”`,
+              answer: missing,
+              hint: `Count up from ${a} to ${total}. You counted ${missing}!`,
+              rule: "g2_algebra"
+            };
+          } else if (kind === 1) {
+            const a = Math.floor(Math.random() * 9) + 2;
+            const missing = Math.floor(Math.random() * 8) + 2;
+            const total = a + missing;
+            return {
+              text: `? + ${a} = ${total}`,
+              subText: `What number makes this true?`,
+              leadingPrompt: `“A number is hiding! What plus ${a} makes ${total}?”`,
+              answer: missing,
+              hint: `Count up from ${a} to ${total}. You counted ${missing}!`,
+              rule: "g2_algebra"
+            };
+          } else if (kind === 2) {
+            const total = Math.floor(Math.random() * 11) + 10;
+            const missing = Math.floor(Math.random() * (total - 2)) + 2;
+            const remainder = total - missing;
+            return {
+              text: `${total} - ? = ${remainder}`,
+              subText: `What number makes this true?`,
+              leadingPrompt: `“A number is hiding! ${total} take away what leaves ${remainder}?”`,
+              answer: missing,
+              hint: `Ask: what plus ${remainder} makes ${total}? That is ${missing}!`,
+              rule: "g2_algebra"
+            };
+          } else {
+            const b = Math.floor(Math.random() * 8) + 2;
+            const remainder = Math.floor(Math.random() * 9) + 2;
+            const missing = b + remainder;
+            return {
+              text: `? - ${b} = ${remainder}`,
+              subText: `What number makes this true?`,
+              leadingPrompt: `“A number is hiding! What take away ${b} leaves ${remainder}?”`,
+              answer: missing,
+              hint: `Add them back together: ${b} + ${remainder} = ${missing}!`,
+              rule: "g2_algebra"
             };
           }
         } else {
