@@ -1422,7 +1422,9 @@
             playerXP = Math.max(playerXP, backup.xp || cloud.xp || 0);
             totalSolved = Math.max(totalSolved, backup.totalSolved || cloud.totalSolved || 0);
             totalCorrect = Math.max(totalCorrect, backup.totalCorrect || 0);
-            if (backup.ninja) equippedNinja = backup.ninja;
+            if (backup.equippedNinja) equippedNinja = backup.equippedNinja;
+            else if (backup.ninja) equippedNinja = backup.ninja;
+            else if (cloud.equippedNinja) equippedNinja = cloud.equippedNinja;
             if (backup.grade) currentGrade = backup.grade;
           } else {
             playerXP = Math.max(playerXP, cloud.xp || 0);
@@ -1470,8 +1472,13 @@
             }
 
             local.xp = Math.max(Number(local.xp) || 0, Number(pData.xp) || 0);
-            if (pData.equippedNinja && !local.ninja) local.ninja = pData.equippedNinja;
+            if (backup && backup.grade) local.grade = backup.grade;
+            else if (pData.grade) local.grade = pData.grade;
+            if (backup && (backup.equippedNinja || backup.ninja)) local.ninja = backup.equippedNinja || backup.ninja;
+            else if (pData.equippedNinja) local.ninja = pData.equippedNinja;
             if (pData.totalSolved) local.totalSolved = Math.max(Number(local.totalSolved) || 0, Number(pData.totalSolved) || 0);
+            if (backup && backup.totalCorrect) local.totalCorrect = Math.max(Number(local.totalCorrect) || 0, Number(backup.totalCorrect) || 0);
+            else if (pData.totalCorrect) local.totalCorrect = Math.max(Number(local.totalCorrect) || 0, Number(pData.totalCorrect) || 0);
 
             localStorage.setItem(`math_ninja_data_${pName}`, JSON.stringify(local));
 
@@ -1519,6 +1526,7 @@
       renderAcademyScrolls();
       saveActiveProfileData();
       updateUI();
+      syncToGoogleSheets(null, true, 0);
       renderProblem();
     }
 
@@ -1564,6 +1572,7 @@
       currentProfile = name;
       currentGrade = "grade4";
       saveActiveProfileData();
+      syncToGoogleSheets(null, true, 0);
       renderProfileSelector();
       loadActiveProfileData();
       populateRulesDropdown();
@@ -2188,6 +2197,7 @@
       equippedNinja = name;
       saveActiveProfileData();
       updateUI();
+      syncToGoogleSheets(null, true, 0);
     }
 
     // SILENT BACKGROUND SYNC
@@ -2209,13 +2219,13 @@
         totalSolved: totalSolved,
         totalCorrect: totalCorrect,
         accuracy: accuracyPct,
-        log: {
+        log: prob ? {
           mode: (GRADE_CONFIG[currentGrade] || GRADE_CONFIG.grade4).title,
           problem: prob.text,
           correct: isCorrect,
           xpGained: gainedXP,
           rule: prob.rule
-        }
+        } : null
       };
 
       try {
@@ -2267,16 +2277,19 @@
 
     function submitSpeedAnswer() {
       const val = parseFloat(document.getElementById("speedAnswerInput").value);
+      let speedGained = 0;
       if (Math.abs(val - currentSpeedProblem.answer) < 0.001) {
         playBeep(587.33, 0.1);
         speedScoreVal++;
         playerXP += 20;
+        speedGained = 20;
         const rKey = currentSpeedProblem.rule || `${currentGrade}_overall`;
         ruleXP[rKey] = (ruleXP[rKey] || 0) + 20;
         document.getElementById("speedScore").textContent = speedScoreVal;
       }
       saveActiveProfileData();
       updateUI();
+      if (speedGained > 0) syncToGoogleSheets(currentSpeedProblem, true, speedGained);
       nextSpeedProblem();
     }
 
