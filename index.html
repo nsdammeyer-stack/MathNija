@@ -1698,7 +1698,7 @@
             subText: `Count up from ${a} until you reach${total}!`,
             leadingPrompt: `“What number completes the sum?”`,
             answer: missing,
-            hint: `Start at ${a} and count up to${total}. You added ${missing}!`,
+            hint: `Count up from ${a} until you reach ${total}, one step at a time.`,
             rule: "g1_missing_addend"
           };
         } else if (chosen === "g1_tens_ones") {
@@ -1709,7 +1709,7 @@
             subText: `${baseTen / 10} Tens and ${ones} Ones = ?`,
             leadingPrompt: `“${baseTen} plus single units!”`,
             answer: baseTen + ones,
-            hint: `${baseTen} + ${ones} puts ${ones} in the ones place:${baseTen + ones}!`,
+            hint: `Put ${ones} in the ones place and keep the tens where they are.`,
             rule: "g1_tens_ones"
           };
         } else if (chosen === "g1_comp_20") {
@@ -1731,7 +1731,7 @@
             subText: ``,
             leadingPrompt: `“Add the numbers!”`,
             answer: a + b,
-            hint: `Start at ${a} and count on ${b} more:${a + b}!`,
+            hint: `Start at ${a} and count on ${b} more, one at a time.`,
             rule: "g1_add_sub_20"
           };
         }
@@ -1773,7 +1773,7 @@
             subText: `${a} + (${needed} + ${leftover})  →  ${target} +${leftover} = ?`,
             leadingPrompt: `“${a} needs ${needed} to make ${target}! ${target} +${leftover} = ?”`,
             answer: a + b,
-            hint: `Bridge to ${target}: Turn ${a} into ${target} by taking ${needed} from${b}. Now add ${target} + ${leftover} =${a + b}!`,
+            hint: `Bridge to ${target}: Turn ${a} into ${target} by taking ${needed} from ${b}, then add what is left.`,
             rule: "g2_make_ten"
           };
         } else if (chosen === "g2_doubles") {
@@ -1787,7 +1787,7 @@
               subText: `(${base} + ${base}) + 1  →${base * 2} + 1 = ?`,
               leadingPrompt: `“Double ${base} is${base * 2}. Now add 1 more!”`,
               answer: base + b,
-              hint: `Near Doubles: Double ${base} is ${base * 2}, plus 1 more makes${base + b}!`,
+              hint: `Near Doubles: Start with double ${base}, then add 1 more.`,
               rule: "g2_doubles"
             };
           } else {
@@ -1796,7 +1796,7 @@
               subText: `Double ${base} = ?`,
               leadingPrompt: `“Twins strike! What is double ${base}?”`,
               answer: base * 2,
-              hint: `Twins: Double ${base} is${base * 2}!`,
+              hint: `Twins: Double means two of the same number — add them together.`,
               rule: "g2_doubles"
             };
           }
@@ -1812,7 +1812,7 @@
               subText: `What number makes this true?`,
               leadingPrompt: `“A number is hiding! What plus ${a} makes ${total}?”`,
               answer: missing,
-              hint: `Count up from ${a} to ${total}. You counted ${missing}!`,
+              hint: `Count up from ${a} to ${total}, one step at a time.`,
               rule: "g2_algebra"
             };
           } else if (kind === 1) {
@@ -1824,7 +1824,7 @@
               subText: `What number makes this true?`,
               leadingPrompt: `“A number is hiding! What plus ${a} makes ${total}?”`,
               answer: missing,
-              hint: `Count up from ${a} to ${total}. You counted ${missing}!`,
+              hint: `Count up from ${a} to ${total}, one step at a time.`,
               rule: "g2_algebra"
             };
           } else if (kind === 2) {
@@ -1836,7 +1836,7 @@
               subText: `What number makes this true?`,
               leadingPrompt: `“A number is hiding! ${total} take away what leaves ${remainder}?”`,
               answer: missing,
-              hint: `Ask: what plus ${remainder} makes ${total}? That is ${missing}!`,
+              hint: `Ask yourself: what plus ${remainder} makes ${total}?`,
               rule: "g2_algebra"
             };
           } else {
@@ -1849,7 +1849,7 @@
               subText: `What number makes this true?`,
               leadingPrompt: `“A number is hiding! What take away ${b} leaves ${remainder}?”`,
               answer: missing,
-              hint: `Add them back together: ${b} + ${remainder} = ${missing}!`,
+              hint: `Try adding ${b} and ${remainder} back together.`,
               rule: "g2_algebra"
             };
           }
@@ -1861,7 +1861,7 @@
             subText: `${Array(a).fill(b).join(" + ")} = ?`,
             leadingPrompt: `“Add ${b} repeated${a} times!”`,
             answer: a * b,
-            hint: `${a} groups of${b}: That's ${Array(a).fill(b).join(" + ")} = ${a * b}!`,
+            hint: `${a} groups of ${b}: Add ${b} to itself ${a} times.`,
             rule: "g2_mult_intro"
           };
         }
@@ -1883,7 +1883,7 @@
             subText: `What times ${b} =${total}?`,
             leadingPrompt: `“Think in reverse: ? × ${b} =${total}!”`,
             answer: ans,
-            hint: `Reverse multiplication: ${ans} ×${b} = ${total}, so${total} ÷ ${b} =${ans}!`,
+            hint: `Think in reverse: what number times ${b} gives ${total}?`,
             rule: "g3_div_inverse"
           };
         } else if (chosen === "g3_distrib_intro") {
@@ -1895,7 +1895,7 @@
             subText: `(5 × ${b}) + (${a - 5} ×${b}) = ?`,
             leadingPrompt: `“Break ${a} into 5 +${a - 5}!”`,
             answer: a * b,
-            hint: `Breakup trick: (5 × ${b}) + (${a - 5} × ${b}) =${5 * b} + ${(a - 5) * b} =${a * b}!`,
+            hint: `Break ${a} into 5 + ${a - 5}, multiply each part by ${b}, then add the two parts together.`,
             rule: "g3_distrib_intro"
           };
         } else if (chosen === "g3_multi_steps") {
@@ -1907,7 +1907,7 @@
             subText: `Multiply first, then add!`,
             leadingPrompt: `“Solve the inside multiplication first!”`,
             answer: (a * b) + add,
-            hint: `${a} × ${b} =${a * b}. Now add ${add} =${(a * b) + add}!`,
+            hint: `Multiply first, then add ${add}.`,
             rule: "g3_multi_steps"
           };
         } else {
@@ -1918,7 +1918,7 @@
             subText: ``,
             leadingPrompt: `“Fast strike times table!”`,
             answer: a * b,
-            hint: `Core fact: ${a} × ${b} =${a * b}!`,
+            hint: `Count by ${a}, ${b} times, or use a times-table fact you know.`,
             rule: "g3_facts_12"
           };
         }
@@ -1935,7 +1935,7 @@
         if (chosen === "g4_zeros") {
           a = (Math.floor(Math.random() * (tier === 0 ? 8 : tier === 1 ? 11 : 18)) + 2) * 10;
           b = (Math.floor(Math.random() * (tier === 0 ? 8 : tier === 1 ? 11 : 18)) + 2) * 10;
-          hint = `Zero Hero: Multiply ${a/10} ×${b/10} = ${(a/10)*(b/10)}. Then add both zeros to make${a * b}!`;
+          hint = `Zero Hero: Multiply the front digits first, then attach both zeros.`;
         } else if (chosen === "g4_eleven") {
           if (tier === 0) {
             a = Math.floor(Math.random() * 80) + 11;
@@ -1949,28 +1949,28 @@
             const h = Math.floor(a / 100);
             const t = Math.floor(a / 10) % 10;
             const o = a % 10;
-            hint = `11s Trick: Keep the outer digits ${h} and ${o}. Add neighbors: ${h}+${t}=${h + t}, ${t}+${o}=${t + o}. Combine them (carrying tens where needed) to get${a * b}!`;
+            hint = `11s Trick: Keep the outer digits, add each pair of neighboring digits, and combine them (carrying tens where needed).`;
           } else {
             const tens = Math.floor(a / 10);
             const ones = a % 10;
             const mid = tens + ones;
-            hint = `11s Trick: Pull ${tens} and${ones} apart. Add ${tens} +${ones} = ${mid}. Place ${mid} in the middle (carry if over 9)!`;
+            hint = `11s Trick: Pull the two digits apart, add them together, and place that sum in the middle (carry if it is over 9).`;
           }
         } else if (chosen === "g4_ending_five") {
           const t = Math.floor(Math.random() * (tier === 0 ? 7 : tier === 1 ? 11 : 15)) + (tier === 2 ? 5 : 2);
           a = t * 10 + 5;
           b = a;
-          hint = `Square 5s: Multiply tens by next number (${t} ×${t + 1} = ${t * (t + 1)}), then attach 25 to get${a * b}!`;
+          hint = `Square 5s: Multiply the tens digit by the next number up, then attach 25.`;
         } else if (chosen === "g4_double_half") {
           const aList = tier === 0 ? [15, 25, 35, 45] : tier === 1 ? [15, 25, 35, 45, 55, 65] : [25, 35, 45, 55, 65, 75, 85];
           a = aList[Math.floor(Math.random() * aList.length)];
           b = (Math.floor(Math.random() * (tier === 0 ? 6 : tier === 1 ? 8 : 10)) + (tier === 2 ? 3 : 2)) * 2;
-          hint = `Double & Halve: Double ${a} into ${a * 2}, halve${b} into ${b / 2}. Now calculate${a * 2} × ${b / 2} =${a * b}!`;
+          hint = `Double & Halve: Double ${a}, halve ${b}, then multiply those two new numbers.`;
         } else {
           const aList = tier === 0 ? [21, 31, 41, 51] : tier === 1 ? [21, 31, 41, 51, 61, 71] : [31, 41, 51, 61, 71, 81, 91];
           a = aList[Math.floor(Math.random() * aList.length)];
           b = Math.floor(Math.random() * (tier === 0 ? 30 : tier === 1 ? 50 : 69)) + (tier === 0 ? 12 : tier === 1 ? 12 : 21);
-          hint = `Break & Split: Split ${a} into${a - 1} + 1. Calculate (${a - 1} ×${b}) + (1 × ${b}) =${a * b}!`;
+          hint = `Break & Split: Split ${a} into ${a - 1} + 1, multiply each part by ${b}, then add the two parts together.`;
         }
 
         return {
@@ -2025,7 +2025,7 @@
               subText: `Solve parentheses first!`,
               leadingPrompt: `“Parentheses have first priority!”`,
               answer: (a + b) * c,
-              hint: `Parentheses first: ${a} + ${b} = ${a + b}. Then multiply by ${c} = ${(a + b) * c}!`,
+              hint: `Parentheses first, then multiply by ${c}.`,
               rule: "g5_pemdas"
             };
           } else {
@@ -2034,7 +2034,7 @@
               subText: `Multiplication takes priority over addition!`,
               leadingPrompt: `“Multiplication strikes before addition!”`,
               answer: a + (b * c),
-              hint: `Order of Operations: multiply ${b} × ${c} = ${b * c} first, then add ${a} = ${a + (b * c)}!`,
+              hint: `Order of Operations: multiply first, then add ${a}.`,
               rule: "g5_pemdas"
             };
           }
@@ -2048,13 +2048,13 @@
             subText: `Line up the decimal points!`,
             leadingPrompt: `“Add tenths and whole units!”`,
             answer: Math.round((a + b) * places) / places,
-            hint: `Line up the decimal points: ${a} + ${b} = ${Math.round((a + b) * places) / places}!`,
+            hint: `Line up the decimal points, then add column by column.`,
             rule: "g5_decimals"
           };
         }
       }
 
-      return { text: "10 + 10", subText: "", answer: 20, hint: "10 + 10 = 20", rule: "mixed" };
+      return { text: "10 + 10", subText: "", answer: 20, hint: "Add the two tens together.", rule: "mixed" };
     }
 
     function renderProblem() {
