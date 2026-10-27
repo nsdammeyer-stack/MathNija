@@ -1840,8 +1840,8 @@
             };
           }
         } else if (chosen === "g2_algebra") {
-          const kind = Math.floor(Math.random() * 4);
-          const totalCap = tier === 0 ? 20 : tier === 1 ? 50 : 100;
+          const kind = Math.floor(Math.random() * 6);
+          const totalCap = tier === 0 ? 50 : tier === 1 ? 100 : 200;
           if (kind === 0) {
             const total = Math.floor(Math.random() * (totalCap - 4)) + 5;
             const a = Math.floor(Math.random() * (total - 3)) + 2;
@@ -1878,8 +1878,8 @@
               hint: `Ask yourself: what plus ${remainder} makes ${total}?`,
               rule: "g2_algebra"
             };
-          } else {
-            const partRange = tier === 0 ? 8 : tier === 1 ? 23 : 48;
+          } else if (kind === 3) {
+            const partRange = tier === 0 ? 23 : tier === 1 ? 48 : 98;
             const b = Math.floor(Math.random() * partRange) + 2;
             const remainder = Math.floor(Math.random() * partRange) + 2;
             const missing = b + remainder;
@@ -1889,6 +1889,33 @@
               leadingPrompt: `“A number is hiding! What take away ${b} leaves ${remainder}?”`,
               answer: missing,
               hint: `Try adding ${b} and ${remainder} back together.`,
+              rule: "g2_algebra"
+            };
+          } else if (kind === 4) {
+            const missing = Math.floor(Math.random() * (totalCap - 4)) + 5;
+            const a = Math.floor(Math.random() * Math.floor(totalCap / 2)) + 2;
+            let b = Math.floor(Math.random() * (missing + a - 2)) + 2;
+            if (b === a) b = b + 1 <= missing + a - 2 ? b + 1 : b - 1;
+            const result = missing + a - b;
+            return {
+              text: `? + ${a} - ${b} = ${result}`,
+              subText: `Two steps to undo!`,
+              leadingPrompt: `“A number is hiding! What plus ${a}, take away ${b}, makes ${result}?”`,
+              answer: missing,
+              hint: `Undo it backwards: add ${b} to ${result} first, then take away ${a}.`,
+              rule: "g2_algebra"
+            };
+          } else {
+            const a = Math.floor(Math.random() * Math.floor(totalCap / 2)) + 2;
+            const missing = a + Math.floor(Math.random() * (totalCap - a - 2)) + 2;
+            const b = Math.floor(Math.random() * Math.floor(totalCap / 2)) + 2;
+            const result = missing - a + b;
+            return {
+              text: `? - ${a} + ${b} = ${result}`,
+              subText: `Two steps to undo!`,
+              leadingPrompt: `“A number is hiding! What take away ${a}, add ${b}, makes ${result}?”`,
+              answer: missing,
+              hint: `Undo it backwards: take ${b} away from ${result} first, then add ${a}.`,
               rule: "g2_algebra"
             };
           }
