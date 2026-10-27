@@ -991,6 +991,16 @@
       <h3>Enter Ninja Name</h3>
       <p style="font-size: 0.85rem; color: var(--text-muted);">Create a training profile for a new challenger:</p>
       <input type="text" id="newProfileNameInput" class="modal-input" placeholder="Ninja Name" maxlength="15" autocomplete="off">
+      <label for="newProfileGradeSelect" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 700;">🎓 Starting Grade:</label>
+      <select id="newProfileGradeSelect" class="custom-select" style="width: 100%; margin: 0.5rem 0 1rem 0;">
+        <option value="" selected disabled>Choose a grade…</option>
+        <option value="preschool">Preschool (Counting & Early Math)</option>
+        <option value="grade1">1st Grade (Add/Sub to 20 & Missing Addends)</option>
+        <option value="grade2">2nd Grade (Skip Count & Make Ten)</option>
+        <option value="grade3">3rd Grade (Times Tables & Inverse Division)</option>
+        <option value="grade4">4th Grade (2-Digit Multiplication Tricks)</option>
+        <option value="grade5">5th Grade (Decimals & Advanced Operations)</option>
+      </select>
       <div class="modal-actions">
         <button class="btn btn-secondary" onclick="closeNewProfileModal()">Cancel</button>
         <button class="btn" onclick="createNewProfile()">Join Dojo</button>
@@ -1548,9 +1558,11 @@
     function openNewProfileModal() {
       const modal = document.getElementById("newProfileModal");
       const input = document.getElementById("newProfileNameInput");
+      const gradeSelect = document.getElementById("newProfileGradeSelect");
       if (modal && input) {
         modal.classList.add("active");
         input.value = "";
+        if (gradeSelect) gradeSelect.value = "";
         input.focus();
       }
     }
@@ -1566,11 +1578,30 @@
       const name = input.value.trim();
       if (!name) return;
 
-      if (!profilesList.includes(name)) {
-        profilesList.push(name);
+      if (profilesList.some(p => p.toLowerCase() === name.toLowerCase())) {
+        alert(`"${name}" already has a profile. Choose a different ninja name.`);
+        return;
       }
+
+      const gradeSelect = document.getElementById("newProfileGradeSelect");
+      const chosenGrade = gradeSelect ? gradeSelect.value : "";
+      if (!chosenGrade) {
+        alert("Choose a starting grade for the new profile.");
+        return;
+      }
+
+      // Fresh start: do not carry over the previous profile's XP, rule XP,
+      // totals, or equipped ninja. A new child starts at 0 with the starter ninja.
+      profilesList.push(name);
       currentProfile = name;
-      currentGrade = "grade4";
+      currentGrade = chosenGrade;
+      playerXP = 0;
+      ruleXP = {};
+      totalSolved = 0;
+      totalCorrect = 0;
+      currentStreak = 0;
+      const roster = GRADE_NINJAS[currentGrade] || GRADE_NINJAS.grade4;
+      equippedNinja = roster[0].name;
       saveActiveProfileData();
       syncToGoogleSheets(null, true, 0);
       renderProfileSelector();
