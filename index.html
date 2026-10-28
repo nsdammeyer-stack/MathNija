@@ -869,7 +869,7 @@
               <option value="grade1">1st Grade (Add/Sub to 20 & Missing Addends)</option>
               <option value="grade2">2nd Grade (Skip Count, Make Ten & Algebra)</option>
               <option value="grade3">3rd Grade (Times Tables & Inverse Division)</option>
-              <option value="grade4" selected>4th Grade (2-Digit Multiplication Tricks)</option>
+              <option value="grade4" selected>4th Grade (Multiplication Tricks & Geometry)</option>
               <option value="grade5">5th Grade (Decimals & Advanced Operations)</option>
             </select>
           </div>
@@ -1001,7 +1001,7 @@
         <option value="grade1">1st Grade (Add/Sub to 20 & Missing Addends)</option>
         <option value="grade2">2nd Grade (Skip Count & Make Ten)</option>
         <option value="grade3">3rd Grade (Times Tables & Inverse Division)</option>
-        <option value="grade4">4th Grade (2-Digit Multiplication Tricks)</option>
+        <option value="grade4">4th Grade (Multiplication Tricks & Geometry)</option>
         <option value="grade5">5th Grade (Decimals & Advanced Operations)</option>
       </select>
       <div class="modal-actions">
@@ -1156,14 +1156,16 @@
           { id: "g4_eleven", name: "🪄 The 11s Magic Trick (e.g. 35 × 11)" },
           { id: "g4_split", name: "🪓 The Break & Split (e.g. 31 × 35)" },
           { id: "g4_double_half", name: "⚖️ Double & Halve (e.g. 15 × 24)" },
-          { id: "g4_ending_five", name: "⚡ Square Ending in 5 (e.g. 35 × 35)" }
+          { id: "g4_ending_five", name: "⚡ Square Ending in 5 (e.g. 35 × 35)" },
+          { id: "g4_angles", name: "📐 Angle Measure (e.g. 65° − 40°)" }
         ],
         academy: [
           { id: "g4_zeros", icon: "0️⃣", title: "The Zero Hero", desc: "Multiply the non-zero front digits first, then count and attach all the zeros!", example: "30 × 40 → (3 × 4) & 00 = 1,200" },
           { id: "g4_eleven", icon: "🪄", title: "The 11s Magic Trick", desc: "Pull the two digits apart, sum them (3 + 5 = 8), and place that sum in the middle!", example: "35 × 11 → 3 [3+5] 5 = 385" },
           { id: "g4_split", icon: "🪓", title: "The Break & Split", desc: "Split a tricky factor into friendly tens and ones to make mental addition easy!", example: "31 × 35 → (30 × 35) + (1 × 35) = 1,085" },
           { id: "g4_double_half", icon: "⚖️", title: "Double & Halve", desc: "Double the number ending in 5 and halve the even number to make simple products!", example: "15 × 24 → 30 × 12 = 360" },
-          { id: "g4_ending_five", icon: "⚡", title: "Square Ending in 5", desc: "Multiply the tens digit by the next integer (3 × 4 = 12), then append 25 to the end!", example: "35 × 35 → (3 × 4) & 25 = 1,225" }
+          { id: "g4_ending_five", icon: "⚡", title: "Square Ending in 5", desc: "Multiply the tens digit by the next integer (3 × 4 = 12), then append 25 to the end!", example: "35 × 35 → (3 × 4) & 25 = 1,225" },
+          { id: "g4_angles", icon: "📐", title: "Protractor Power", desc: "An angle is the bigger ray reading minus the smaller ray reading. A right angle is 90°, a straight line is 180°!", example: "Rays at 65° and 40° → 65 − 40 = 25°" }
         ]
       },
       grade5: {
@@ -1993,9 +1995,55 @@
       // 5. 4TH GRADE (Aaron)
       if (currentGrade === "grade4") {
         let chosen = selectedRule === "mixed" 
-          ? ["g4_zeros", "g4_eleven", "g4_ending_five", "g4_double_half", "g4_split"][Math.floor(Math.random() * 5)] 
+          ? ["g4_zeros", "g4_eleven", "g4_ending_five", "g4_double_half", "g4_split", "g4_angles"][Math.floor(Math.random() * 6)] 
           : selectedRule;
         const tier = difficultyTier(chosen);
+
+        if (chosen === "g4_angles") {
+          const step = tier === 2 ? 1 : 5;
+          const maxAngle = tier === 0 ? 90 : 180;
+          const kind = Math.floor(Math.random() * 3);
+          if (kind === 0) {
+            const diffSteps = Math.floor(Math.random() * ((maxAngle - 5) / step)) + 1;
+            const diff = diffSteps * step;
+            const lowSteps = Math.floor(Math.random() * ((180 - diff) / step + 1));
+            const low = lowSteps * step;
+            const high = low + diff;
+            return {
+              text: `Rays: ${low}° and ${high}°`,
+              subText: `How big is the angle between them?`,
+              leadingPrompt: null,
+              answer: diff,
+              hint: `Subtract the smaller reading from the larger one.`,
+              rule: "g4_angles"
+            };
+          } else if (kind === 1) {
+            const total = tier === 0 ? 90 : (Math.random() > 0.5 ? 90 : 180);
+            const partSteps = Math.floor(Math.random() * ((total - 5) / step)) + 1;
+            const part = partSteps * step;
+            return {
+              text: `Total: ${total}°, Part: ${part}°`,
+              subText: `How big is the other part?`,
+              leadingPrompt: null,
+              answer: total - part,
+              hint: `Subtract the known part from the total.`,
+              rule: "g4_angles"
+            };
+          } else {
+            const p1Steps = Math.floor(Math.random() * ((maxAngle - step) / step)) + 1;
+            const p1 = p1Steps * step;
+            const p2Steps = Math.floor(Math.random() * ((maxAngle - p1) / step)) + 1;
+            const p2 = p2Steps * step;
+            return {
+              text: `Parts: ${p1}° and ${p2}°`,
+              subText: `How big is the combined angle?`,
+              leadingPrompt: null,
+              answer: p1 + p2,
+              hint: `Add the two parts together.`,
+              rule: "g4_angles"
+            };
+          }
+        }
 
         let a, b, hint;
         if (chosen === "g4_zeros") {
