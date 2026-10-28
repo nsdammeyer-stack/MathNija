@@ -903,6 +903,7 @@
         <div class="problem-box-container">
           <div class="problem-box" id="problemDisplay">30 × 40</div>
           <div class="problem-leading-sub" id="problemSubDisplay"></div>
+          <div id="problemDiagram" style="width: 100%; max-width: 360px;"></div>
         </div>
 
         <div class="input-row">
@@ -967,6 +968,7 @@
 
         <div id="speedPlayArea" style="display: none; width: 100%; max-width: 320px;">
           <div class="problem-box" id="speedProblemDisplay" style="margin-bottom: 1rem;">20 × 30</div>
+          <div id="speedProblemDiagram" style="width: 100%; margin-bottom: 1rem;"></div>
           <div class="input-row">
             <input type="number" id="speedAnswerInput" placeholder="?">
             <button class="btn" onclick="submitSpeedAnswer()">Hit!</button>
@@ -1157,7 +1159,8 @@
           { id: "g4_split", name: "🪓 The Break & Split (e.g. 31 × 35)" },
           { id: "g4_double_half", name: "⚖️ Double & Halve (e.g. 15 × 24)" },
           { id: "g4_ending_five", name: "⚡ Square Ending in 5 (e.g. 35 × 35)" },
-          { id: "g4_angles", name: "📐 Angle Measure (e.g. 65° − 40°)" }
+          { id: "g4_angles", name: "📐 Angle Measure (e.g. 65° − 40°)" },
+          { id: "g4_protractor", name: "📐 Protractor (read the diagram)" }
         ],
         academy: [
           { id: "g4_zeros", icon: "0️⃣", title: "The Zero Hero", desc: "Multiply the non-zero front digits first, then count and attach all the zeros!", example: "30 × 40 → (3 × 4) & 00 = 1,200" },
@@ -1165,7 +1168,8 @@
           { id: "g4_split", icon: "🪓", title: "The Break & Split", desc: "Split a tricky factor into friendly tens and ones to make mental addition easy!", example: "31 × 35 → (30 × 35) + (1 × 35) = 1,085" },
           { id: "g4_double_half", icon: "⚖️", title: "Double & Halve", desc: "Double the number ending in 5 and halve the even number to make simple products!", example: "15 × 24 → 30 × 12 = 360" },
           { id: "g4_ending_five", icon: "⚡", title: "Square Ending in 5", desc: "Multiply the tens digit by the next integer (3 × 4 = 12), then append 25 to the end!", example: "35 × 35 → (3 × 4) & 25 = 1,225" },
-          { id: "g4_angles", icon: "📐", title: "Protractor Power", desc: "An angle is the bigger ray reading minus the smaller ray reading. A right angle is 90°, a straight line is 180°!", example: "Rays at 65° and 40° → 65 − 40 = 25°" }
+          { id: "g4_angles", icon: "📐", title: "Protractor Power", desc: "An angle is the bigger ray reading minus the smaller ray reading. A right angle is 90°, a straight line is 180°!", example: "Rays at 65° and 40° → 65 − 40 = 25°" },
+          { id: "g4_protractor", icon: "📐", title: "Reading a Protractor", desc: "Line the baseline up, find the vertex, and read where the ray crosses the scale. The angle between two rays is the bigger reading minus the smaller one!", example: "Ray crosses the scale at 65° → the angle is 65°" }
         ]
       },
       grade5: {
@@ -1680,6 +1684,44 @@
       return 0;
     }
 
+    // Draws a protractor diagram for a set of ray angles (degrees from the
+    // baseline, 0 = right, 180 = left). Ticks every 5°, labels every 30°,
+    // so any multiple of 5° can be read off the scale.
+    function protractorSVG(rayAngles) {
+      const cx = 200, cy = 200;
+      const pt = (deg, rad) => {
+        const th = deg * Math.PI / 180;
+        return [cx + rad * Math.cos(th), cy - rad * Math.sin(th)];
+      };
+      const parts = [];
+      parts.push(`<svg viewBox="0 0 400 215" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Protractor diagram">`);
+      parts.push(`<rect x="2" y="2" width="396" height="211" rx="16" fill="#f8fafc"/>`);
+      parts.push(`<path d="M 30 200 A 170 170 0 0 1 370 200" fill="none" stroke="#0f172a" stroke-width="2"/>`);
+      parts.push(`<path d="M 55 200 A 145 145 0 0 1 345 200" fill="none" stroke="#94a3b8" stroke-width="1"/>`);
+      for (let deg = 0; deg <= 180; deg += 5) {
+        const major = deg % 30 === 0;
+        const medium = deg % 10 === 0;
+        const inner = major ? 152 : medium ? 160 : 165;
+        const [x1, y1] = pt(deg, 170);
+        const [x2, y2] = pt(deg, inner);
+        parts.push(`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#0f172a" stroke-width="${major ? 2 : 1}"/>`);
+        if (major) {
+          const [tx, ty] = pt(deg, 135);
+          parts.push(`<text x="${tx.toFixed(1)}" y="${(ty - 4).toFixed(1)}" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">${deg}</text>`);
+        }
+      }
+      parts.push(`<line x1="20" y1="200" x2="380" y2="200" stroke="#0f172a" stroke-width="2"/>`);
+      const colors = ["#2563eb", "#dc2626"];
+      rayAngles.forEach((deg, i) => {
+        const [x, y] = pt(deg, 165);
+        parts.push(`<line x1="200" y1="200" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${colors[i % 2]}" stroke-width="4" stroke-linecap="round"/>`);
+        parts.push(`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5" fill="${colors[i % 2]}"/>`);
+      });
+      parts.push(`<circle cx="200" cy="200" r="6" fill="#0f172a"/>`);
+      parts.push(`</svg>`);
+      return parts.join("");
+    }
+
     function generateProblem() {
       const visualElem = document.getElementById("visualCounter");
       if (visualElem) visualElem.textContent = "";
@@ -1995,9 +2037,51 @@
       // 5. 4TH GRADE (Aaron)
       if (currentGrade === "grade4") {
         let chosen = selectedRule === "mixed" 
-          ? ["g4_zeros", "g4_eleven", "g4_ending_five", "g4_double_half", "g4_split", "g4_angles"][Math.floor(Math.random() * 6)] 
+          ? ["g4_zeros", "g4_eleven", "g4_ending_five", "g4_double_half", "g4_split", "g4_angles", "g4_protractor"][Math.floor(Math.random() * 7)] 
           : selectedRule;
         const tier = difficultyTier(chosen);
+
+        if (chosen === "g4_protractor") {
+          const step = tier === 2 ? 5 : 10;
+          const kind = tier === 0 ? 0 : Math.floor(Math.random() * 2);
+          if (kind === 0) {
+            const minAngle = tier === 2 ? 15 : 20;
+            const maxAngle = tier === 2 ? 175 : 160;
+            const angle = (Math.floor(Math.random() * ((maxAngle - minAngle) / step)) + minAngle / step) * step;
+            return {
+              text: `📐 Read the protractor`,
+              subText: `What angle does the colored ray make with the baseline? Answer in degrees.`,
+              leadingPrompt: null,
+              answer: angle,
+              hint: `Find where the colored ray crosses the protractor scale. That reading is the angle.`,
+              diagram: protractorSVG([angle]),
+              rule: "g4_protractor"
+            };
+          } else {
+            const minDiff = tier === 2 ? 15 : 20;
+            let a = 0, b = 0, diff = 0;
+            for (let tries = 0; tries < 20; tries++) {
+              a = (Math.floor(Math.random() * 17) + 1) * step;
+              if (tier === 2) a = (Math.floor(Math.random() * 33) + 2) * step;
+              diff = (Math.floor(Math.random() * ((170 - minDiff) / step)) + minDiff / step) * step;
+              b = Math.random() > 0.5 ? a + diff : a - diff;
+              if (b >= 10 && b <= 170 && b !== a) break;
+              b = 0;
+            }
+            if (!b) {
+              a = 40; b = 110; diff = 70;
+            }
+            return {
+              text: `📐 Read the protractor`,
+              subText: `What is the angle between the two colored rays? Answer in degrees.`,
+              leadingPrompt: null,
+              answer: Math.abs(a - b),
+              hint: `Read both colored rays on the scale, then subtract the smaller reading from the larger one.`,
+              diagram: protractorSVG([a, b]),
+              rule: "g4_protractor"
+            };
+          }
+        }
 
         if (chosen === "g4_angles") {
           const step = tier === 2 ? 1 : 5;
@@ -2175,6 +2259,9 @@
       currentProblem = generateProblem();
       const probElem = document.getElementById("problemDisplay");
       if (probElem) probElem.textContent = currentProblem.text;
+
+      const diagramElem = document.getElementById("problemDiagram");
+      if (diagramElem) diagramElem.innerHTML = currentProblem.diagram || "";
       
       const subElem = document.getElementById("problemSubDisplay");
       if (subElem) {
@@ -2464,6 +2551,8 @@
     function nextSpeedProblem() {
       currentSpeedProblem = generateProblem();
       document.getElementById("speedProblemDisplay").textContent = currentSpeedProblem.text;
+      const speedDiagram = document.getElementById("speedProblemDiagram");
+      if (speedDiagram) speedDiagram.innerHTML = currentSpeedProblem.diagram || "";
       document.getElementById("speedAnswerInput").value = "";
       document.getElementById("speedAnswerInput").focus();
     }
